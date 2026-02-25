@@ -375,21 +375,23 @@ const extractDomain = email => {
 };
 
 /* ═══ SF LOGO SVG ═══ */
-const SFLogo = () => (
-  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" height="32" style={{display:"block",filter:"brightness(0) invert(1)"}} alt="Salesforce"/>
-);
+/* Logo rendered inline in Nav - no component to avoid re-renders */
 
 /* ═══ NAV ═══ */
-function Nav(){
+const Nav = React.memo(function Nav(){
   return(
     <nav className="nav">
-      <div className="nav-logo"><SFLogo/><div className="nav-div"/><span className="nav-title">B2B Sales Maturity Diagnostic</span></div>
+      <div className="nav-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" height="30" style={{display:"block",filter:"brightness(0) invert(1)"}} alt="Salesforce"/>
+        <div className="nav-div"/>
+        <span className="nav-title">B2B Sales Maturity Diagnostic</span>
+      </div>
       <div className="nav-badge">Consulting</div>
     </nav>
   );
-}
+});
 
-function ProgressBar({step}){
+const ProgressBar = React.memo(function ProgressBar({step}){
   const steps=["Welcome","About You","Strategy","Assessment","Results"];
   return(
     <div className="prog-wrap">
@@ -403,7 +405,7 @@ function ProgressBar({step}){
       </div>
     </div>
   );
-}
+});
 
 /* ═══ SCREENS ═══ */
 function WelcomeScreen({onNext}){
@@ -722,8 +724,8 @@ function App(){
     }
   },[]);
 
-  const upA=(k,v)=>setAbout(p=>({...p,[k]:v}));
-  const upS=(k,v)=>setStrategy(p=>({...p,[k]:v}));
+  const upA=React.useCallback((k,v)=>setAbout(p=>({...p,[k]:v})),[]);
+  const upS=React.useCallback((k,v)=>setStrategy(p=>({...p,[k]:v})),[]);
   const scroll=()=>window.scrollTo({top:0,behavior:"smooth"});
   const next=()=>{setStep(s=>s+1);scroll();};
   const back=()=>{setStep(s=>s-1);scroll();};
