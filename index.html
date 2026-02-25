@@ -454,12 +454,12 @@ function AboutYouScreen({data,onChange,onNext,onBack}){
       <h2 className="stitle">About You</h2>
       <p className="sdesc">Tell us about yourself so we can personalize your results.</p>
       <p className="req-note">Fields marked * are required</p>
-      <F label="Full Name" req err={err.fullName}><input className="finput" placeholder="Jane Smith" value={data.fullName||""} onChange={e=>onChange("fullName",e.target.value)}/></F>
-      <F label="Business Email" req err={err.email}><input className="finput" type="email" placeholder="jane@company.com" value={data.email||""} onChange={e=>onChange("email",e.target.value)}/></F>
-      <F label="Business Name" req err={err.businessName}><input className="finput" placeholder="Acme Corp" value={data.businessName||""} onChange={e=>onChange("businessName",e.target.value)}/></F>
-      <F label="Your Title" req err={err.title}><input className="finput" placeholder="SVP of Sales" value={data.title||""} onChange={e=>onChange("title",e.target.value)}/></F>
+      <F label="Full Name" req err={err.fullName}><input className="finput" placeholder="Jane Smith" value={local.fullName} onChange={e=>upLocal("fullName",e.target.value)}/></F>
+      <F label="Business Email" req err={err.email}><input className="finput" type="email" placeholder="jane@company.com" value={local.email} onChange={e=>upLocal("email",e.target.value)}/></F>
+      <F label="Business Name" req err={err.businessName}><input className="finput" placeholder="Acme Corp" value={local.businessName} onChange={e=>upLocal("businessName",e.target.value)}/></F>
+      <F label="Your Title" req err={err.title}><input className="finput" placeholder="SVP of Sales" value={local.title} onChange={e=>upLocal("title",e.target.value)}/></F>
       <F label="Industry" req err={err.industry}>
-        <select className="fselect" value={data.industry||""} onChange={e=>onChange("industry",e.target.value)}>
+        <select className="fselect" value={local.industry} onChange={e=>upLocal("industry",e.target.value)}>
           <option value="">Select your industry…</option>
           {INDUSTRIES.map(i=><option key={i}>{i}</option>)}
         </select>
@@ -473,16 +473,23 @@ function AboutYouScreen({data,onChange,onNext,onBack}){
 }
 
 function StrategyScreen({data,onChange,onNext,onBack}){
+  const [local,setLocal]=useState({objectives:data.objectives||[],topOutcome:data.topOutcome||"",confidence:data.confidence||null,timeline:data.timeline||"",segments:data.segments||[]});
   const [err,setErr]=useState({});
+  const upLocal=(k,v)=>setLocal(p=>({...p,[k]:v}));
   const validate=()=>{
     const e={};
-    if(!data.objectives?.length)e.objectives="Select at least one";
-    if(!data.topOutcome?.trim())e.topOutcome="Required";
-    if(!data.timeline)e.timeline="Required";
-    if(!data.segments?.length)e.segments="Select at least one";
-    setErr(e);return!Object.keys(e).length;
+    if(!local.objectives?.length)e.objectives="Select at least one";
+    if(!local.topOutcome?.trim())e.topOutcome="Required";
+    if(!local.timeline)e.timeline="Required";
+    if(!local.segments?.length)e.segments="Select at least one";
+    setErr(e);
+    if(!Object.keys(e).length){
+      Object.entries(local).forEach(([k,v])=>onChange(k,v));
+      return true;
+    }
+    return false;
   };
-  const toggle=(field,val)=>{const a=data[field]||[];onChange(field,a.includes(val)?a.filter(x=>x!==val):[...a,val]);};
+  const toggle=(field,val)=>{const a=local[field]||[];upLocal(field,a.includes(val)?a.filter(x=>x!==val):[...a,val]);};
   return(
     <div className="card">
       <div className="eyebrow">Section 2 of 3</div>
@@ -490,23 +497,23 @@ function StrategyScreen({data,onChange,onNext,onBack}){
       <p className="sdesc">Help us understand your strategic priorities before we assess your maturity.</p>
       <div className="fg">
         <label className="flbl">Which objectives does your sales org own today? <span className="req">*</span></label>
-        <div className="chips">{OBJECTIVES.map(o=><div key={o} className={`chip ${(data.objectives||[]).includes(o)?"on":""}`} onClick={()=>toggle("objectives",o)}>{o}</div>)}</div>
+        <div className="chips">{OBJECTIVES.map(o=><div key={o} className={`chip ${(local.objectives||[]).includes(o)?"on":""}`} onClick={()=>toggle("objectives",o)}>{o}</div>)}</div>
         {err.objectives&&<div className="errmsg">{err.objectives}</div>}
       </div>
       <div className="divider"/>
       <div className="fg">
         <label className="flbl">If you could achieve ONE outcome by improving your sales engine, what would it be? <span className="req">*</span></label>
-        <textarea className="ftextarea" placeholder="e.g. Improve forecast accuracy to within 5% each quarter…" value={data.topOutcome||""} onChange={e=>onChange("topOutcome",e.target.value)}/>
+        <textarea className="ftextarea" placeholder="e.g. Improve forecast accuracy to within 5% each quarter…" value={local.topOutcome} onChange={e=>upLocal("topOutcome",e.target.value)}/>
         {err.topOutcome&&<div className="errmsg">{err.topOutcome}</div>}
       </div>
       <div className="fg">
         <label className="flbl">How confident are you that the right strategy and platform could move the needle?</label>
-        <div className="scale-row">{[1,2,3,4,5,6,7,8,9,10].map(n=><div key={n} className={`scale-btn ${data.confidence===n?"on":""}`} onClick={()=>onChange("confidence",n)}>{n}</div>)}</div>
+        <div className="scale-row">{[1,2,3,4,5,6,7,8,9,10].map(n=><div key={n} className={`scale-btn ${local.confidence===n?"on":""}`} onClick={()=>upLocal("confidence",n)}>{n}</div>)}</div>
         <div className="scale-lbls"><span>Not at all</span><span>Absolutely</span></div>
       </div>
       <div className="fg">
         <label className="flbl">Improving our sales process is a priority in the next… <span className="req">*</span></label>
-        <select className="fselect" value={data.timeline||""} onChange={e=>onChange("timeline",e.target.value)}>
+        <select className="fselect" value={local.timeline} onChange={e=>upLocal("timeline",e.target.value)}>
           <option value="">Select a timeframe…</option>
           {["1–3 Months","4–6 Months","7–12 Months","1–2 Years","Not a current priority"].map(t=><option key={t}>{t}</option>)}
         </select>
@@ -514,7 +521,7 @@ function StrategyScreen({data,onChange,onNext,onBack}){
       </div>
       <div className="fg">
         <label className="flbl">What are your primary sales segments or motions? <span className="req">*</span></label>
-        <div className="chips">{SEGMENTS.map(s=><div key={s} className={`chip ${(data.segments||[]).includes(s)?"on":""}`} onClick={()=>toggle("segments",s)}>{s}</div>)}</div>
+        <div className="chips">{SEGMENTS.map(s=><div key={s} className={`chip ${(local.segments||[]).includes(s)?"on":""}`} onClick={()=>toggle("segments",s)}>{s}</div>)}</div>
         {err.segments&&<div className="errmsg">{err.segments}</div>}
       </div>
       <div className="btn-nav">
