@@ -148,8 +148,8 @@ const { useState, useEffect, useMemo } = React;
 const { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart: RC, PolarGrid, PolarAngleAxis, Radar, LineChart, Line, CartesianGrid, Legend } = Recharts;
 
 /* ═══ CONFIG ═══ */
-const ADMIN_PASSWORD    = "salesforce2024";
-const GOOGLE_SHEETS_API = "YOUR_APPS_SCRIPT_URL_HERE";
+const ADMIN_PASSWORD    = "Martha314!";
+const GOOGLE_SHEETS_API = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
 const TESTER_DOMAINS    = ["salesforce.com"];
 
 /* ═══ SAMPLE DATA ═══ */
@@ -256,7 +256,7 @@ function SetupBanner({configured}){
       <div className="setup-body">
         <strong>1.</strong> Add <code>doGet()</code> to your Apps Script (see comment at bottom of this file)<br/>
         <strong>2.</strong> Create a new Deployment and copy the URL<br/>
-        <strong>3.</strong> Replace <code>YOUR_APPS_SCRIPT_URL_HERE</code> in both <code>GOOGLE_SHEETS_API</code> fields in this file and in index.html
+        <strong>3.</strong> Replace <code>https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec</code> in both <code>GOOGLE_SHEETS_API</code> fields in this file and in index.html
       </div>
     </div>
   );
@@ -745,7 +745,7 @@ function App(){
   const [selectedResponse,setSelectedResponse]=useState(null);
   const [selectedCompany,setSelectedCompany]=useState(null);
   const [loading,setLoading]=useState(false);
-  const configured=GOOGLE_SHEETS_API!=="YOUR_APPS_SCRIPT_URL_HERE";
+  const configured=GOOGLE_SHEETS_API!=="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
 
   useEffect(()=>{
     if(authed&&configured){
