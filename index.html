@@ -1,431 +1,399 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>B2B Sales Maturity Diagnostic | Salesforce</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --blue:#0176D3;--blue-dk:#014486;--blue-lt:#1B96FF;--blue-xlt:#D8EDFF;
-  --navy:#032D60;--teal:#06A59A;--green:#2E844A;--green-lt:#EBF7E6;
-  --yellow:#FFB75D;--orange:#FE5000;--red:#BA0517;
-  --g1:#F3F3F3;--g2:#E5E5E5;--g3:#C9C9C9;--g4:#706E6B;--g5:#444444;
-  --white:#fff;--r:8px;--sh:0 2px 16px rgba(0,0,0,.10);--sh-md:0 4px 32px rgba(0,0,0,.13);
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Sora',sans-serif;background:#F0F4FA;color:var(--g5);min-height:100vh;}
-#root{min-height:100vh;}
+  :root {
+    --sf-blue:#0176D3; --sf-blue-dark:#014486; --sf-blue-light:#1B96FF;
+    --sf-blue-lighter:#D8EDFF; --sf-navy:#032D60; --sf-teal:#06A59A;
+    --sf-yellow:#FFB75D; --sf-orange:#FE5000; --sf-red:#BA0517;
+    --sf-gray-1:#F3F3F3; --sf-gray-2:#E5E5E5; --sf-gray-4:#706E6B; --sf-gray-5:#444444;
+    --radius:8px; --shadow:0 2px 16px rgba(0,0,0,0.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Salesforce Sans',-apple-system,'Segoe UI',sans-serif;background:#F3F6FB;color:var(--sf-gray-5);min-height:100vh;}
+  #root{min-height:100vh;}
 
-/* NAV */
-.nav{background:var(--navy);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);}
-.nav-logo{display:flex;align-items:center;gap:12px;}
-.nav-logo img{height:30px;}
-.nav-div{width:1px;height:26px;background:rgba(255,255,255,.2);}
-.nav-title{color:rgba(255,255,255,.85);font-size:13px;font-weight:500;letter-spacing:.2px;}
-.nav-badge{background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:3px 11px;border-radius:20px;letter-spacing:1px;text-transform:uppercase;}
+  /* NAV */
+  .nav{background:var(--sf-navy);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.22);}
+  .nav-logo{display:flex;align-items:center;gap:12px;}
+  .nav-divider{width:1px;height:28px;background:rgba(255,255,255,0.2);}
+  .nav-title{color:rgba(255,255,255,0.85);font-size:13px;font-weight:500;}
+  .nav-badge{background:var(--sf-blue);color:white;font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;letter-spacing:0.8px;text-transform:uppercase;}
 
-/* PROGRESS */
-.prog-wrap{background:var(--navy);padding:0 32px 16px;border-bottom:1px solid rgba(255,255,255,.07);}
-.prog-steps{display:flex;align-items:center;max-width:680px;margin:0 auto;}
-.step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
-.step:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:rgba(255,255,255,.12);z-index:0;}
-.step.done::after{background:var(--teal);}
-.step-dot{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;position:relative;z-index:1;transition:all .25s;}
-.step.active .step-dot{background:var(--blue-lt);border-color:var(--blue-lt);box-shadow:0 0 0 4px rgba(27,150,255,.2);}
-.step.done .step-dot{background:var(--teal);border-color:var(--teal);}
-.step-lbl{color:rgba(255,255,255,.45);font-size:10px;margin-top:4px;font-weight:500;text-align:center;}
-.step.active .step-lbl{color:#fff;}
-.step.done .step-lbl{color:var(--teal);}
+  /* PROGRESS */
+  .progress-wrap{background:var(--sf-navy);padding:0 32px 16px;border-bottom:1px solid rgba(255,255,255,0.07);}
+  .progress-steps{display:flex;align-items:center;max-width:700px;margin:0 auto;}
+  .step-item{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+  .step-item:not(:last-child)::after{content:'';position:absolute;top:13px;left:50%;width:100%;height:2px;background:rgba(255,255,255,0.15);z-index:0;}
+  .step-item.done::after{background:var(--sf-teal);}
+  .step-dot{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:white;position:relative;z-index:1;transition:all 0.25s;}
+  .step-item.active .step-dot{background:var(--sf-blue-light);border-color:var(--sf-blue-light);box-shadow:0 0 0 4px rgba(27,150,255,0.22);}
+  .step-item.done .step-dot{background:var(--sf-teal);border-color:var(--sf-teal);}
+  .step-label{color:rgba(255,255,255,0.5);font-size:10px;margin-top:4px;font-weight:500;text-align:center;}
+  .step-item.active .step-label{color:white;}
+  .step-item.done .step-label{color:var(--sf-teal);}
 
-/* LAYOUT */
-.main{max-width:760px;margin:0 auto;padding:32px 20px 80px;}
-.card{background:#fff;border-radius:14px;box-shadow:var(--sh);padding:40px 44px;animation:up .3s ease;}
-@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .main{max-width:760px;margin:0 auto;padding:32px 20px 80px;}
+  .card{background:white;border-radius:12px;box-shadow:var(--shadow);padding:40px 44px;animation:fadeUp 0.3s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* TYPE */
-.eyebrow{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:8px;}
-.stitle{font-size:26px;font-weight:800;color:var(--navy);line-height:1.2;margin-bottom:10px;}
-.sdesc{font-size:15px;color:var(--g4);line-height:1.7;margin-bottom:28px;}
-.divider{height:1px;background:var(--g2);margin:24px 0;}
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:1.8px;text-transform:uppercase;color:var(--sf-blue);margin-bottom:8px;}
+  .section-title{font-size:26px;font-weight:700;color:var(--sf-navy);line-height:1.2;margin-bottom:10px;}
+  .section-desc{font-size:15px;color:var(--sf-gray-4);line-height:1.65;margin-bottom:28px;}
 
-/* FORM */
-.fg{margin-bottom:22px;}
-.flbl{display:block;font-size:13px;font-weight:600;color:var(--g5);margin-bottom:7px;}
-.req{color:var(--red);margin-left:2px;}
-.finput,.fselect,.ftextarea{width:100%;padding:10px 14px;border:1.5px solid var(--g2);border-radius:var(--r);font-size:14px;font-family:inherit;color:var(--g5);background:#fff;outline:none;transition:border-color .2s,box-shadow .2s;}
-.finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(1,118,211,.1);}
-.ftextarea{min-height:80px;resize:vertical;}
-.fselect{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23706E6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
-.errmsg{font-size:12px;color:var(--red);margin-top:5px;}
-.req-note{font-size:12px;color:var(--g4);margin-bottom:20px;}
+  .form-group{margin-bottom:22px;}
+  .form-label{display:block;font-size:13px;font-weight:600;color:var(--sf-gray-5);margin-bottom:7px;}
+  .req{color:var(--sf-red);margin-left:2px;}
+  .form-input,.form-select,.form-textarea{width:100%;padding:10px 14px;border:1.5px solid var(--sf-gray-2);border-radius:var(--radius);font-size:14px;font-family:inherit;color:var(--sf-gray-5);background:white;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+  .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--sf-blue);box-shadow:0 0 0 3px rgba(1,118,211,0.12);}
+  .form-textarea{min-height:80px;resize:vertical;}
+  .form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23706E6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;}
+  .error-msg{font-size:12px;color:var(--sf-red);margin-top:5px;}
+  .req-note{font-size:12px;color:var(--sf-gray-4);margin-bottom:20px;}
+  .divider{height:1px;background:var(--sf-gray-2);margin:24px 0;}
 
-/* CHIPS */
-.chips{display:flex;flex-wrap:wrap;gap:8px;}
-.chip{padding:7px 14px;border-radius:20px;border:1.5px solid var(--g2);font-size:13px;font-weight:500;color:var(--g4);cursor:pointer;transition:all .15s;background:#fff;user-select:none;}
-.chip:hover{border-color:var(--blue);color:var(--blue);}
-.chip.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+  .chip-grid{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{padding:7px 14px;border-radius:20px;border:1.5px solid var(--sf-gray-2);font-size:13px;font-weight:500;color:var(--sf-gray-4);cursor:pointer;transition:all 0.15s;background:white;user-select:none;}
+  .chip:hover{border-color:var(--sf-blue);color:var(--sf-blue);}
+  .chip.on{background:var(--sf-blue);border-color:var(--sf-blue);color:white;}
 
-/* SCALE */
-.scale-row{display:flex;gap:5px;}
-.scale-btn{flex:1;padding:10px 2px;border:1.5px solid var(--g2);border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;color:var(--g4);text-align:center;transition:all .15s;}
-.scale-btn:hover{border-color:var(--blue);color:var(--blue);}
-.scale-btn.on{background:var(--blue);border-color:var(--blue);color:#fff;}
-.scale-lbls{display:flex;justify-content:space-between;margin-top:5px;}
-.scale-lbls span{font-size:11px;color:var(--g4);}
+  .scale-row{display:flex;gap:5px;}
+  .scale-btn{flex:1;padding:10px 2px;border:1.5px solid var(--sf-gray-2);border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;background:white;color:var(--sf-gray-4);text-align:center;transition:all 0.15s;}
+  .scale-btn:hover{border-color:var(--sf-blue);color:var(--sf-blue);}
+  .scale-btn.on{background:var(--sf-blue);border-color:var(--sf-blue);color:white;}
+  .scale-labels{display:flex;justify-content:space-between;margin-top:5px;}
+  .scale-labels span{font-size:11px;color:var(--sf-gray-4);}
 
-/* QUESTION */
-.q-pips{display:flex;gap:4px;margin-bottom:22px;}
-.q-pip{height:4px;border-radius:2px;flex:1;background:var(--g2);transition:background .2s;}
-.q-pip.done{background:var(--blue);}
-.q-pip.cur{background:var(--blue-lt);}
-.q-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:var(--blue-xlt);color:var(--blue-dk);}
-.q-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.q-num{font-size:12px;color:var(--g4);font-weight:500;}
-.q-text{font-size:18px;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:20px;}
-.ans-grid{display:flex;flex-direction:column;gap:10px;}
-.ans-card{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid var(--g2);border-radius:10px;cursor:pointer;transition:all .15s;background:#fff;text-align:left;}
-.ans-card:hover{border-color:var(--blue);box-shadow:0 2px 8px rgba(1,118,211,.09);}
-.ans-card.on{border-color:var(--blue);background:var(--blue-xlt);}
-.ans-num{min-width:28px;height:28px;border-radius:50%;background:var(--g1);border:1.5px solid var(--g2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--g4);flex-shrink:0;margin-top:1px;}
-.ans-card.on .ans-num{background:var(--blue);border-color:var(--blue);color:#fff;}
-.ans-text{font-size:14px;color:var(--g5);line-height:1.5;}
-.ans-card.on .ans-text{color:var(--navy);font-weight:500;}
+  .q-pips{display:flex;gap:4px;margin-bottom:22px;}
+  .q-pip{height:4px;border-radius:2px;flex:1;background:var(--sf-gray-2);transition:background 0.2s;}
+  .q-pip.done{background:var(--sf-blue);}
+  .q-pip.cur{background:var(--sf-blue-light);}
+  .q-badge{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:var(--sf-blue-lighter);color:var(--sf-blue-dark);}
+  .q-meta{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .q-num{font-size:12px;color:var(--sf-gray-4);font-weight:500;}
+  .q-text{font-size:18px;font-weight:600;color:var(--sf-navy);line-height:1.4;margin-bottom:18px;}
+  .ans-grid{display:flex;flex-direction:column;gap:10px;}
+  .ans-card{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1.5px solid var(--sf-gray-2);border-radius:10px;cursor:pointer;transition:all 0.15s;background:white;text-align:left;}
+  .ans-card:hover{border-color:var(--sf-blue);box-shadow:0 2px 8px rgba(1,118,211,0.09);}
+  .ans-card.on{border-color:var(--sf-blue);background:var(--sf-blue-lighter);}
+  .ans-num{min-width:28px;height:28px;border-radius:50%;background:var(--sf-gray-1);border:1.5px solid var(--sf-gray-2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--sf-gray-4);flex-shrink:0;margin-top:1px;}
+  .ans-card.on .ans-num{background:var(--sf-blue);border-color:var(--sf-blue);color:white;}
+  .ans-text{font-size:14px;color:var(--sf-gray-5);line-height:1.5;}
+  .ans-card.on .ans-text{color:var(--sf-navy);font-weight:500;}
 
-/* BUTTONS */
-.btn{padding:11px 28px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;display:inline-flex;align-items:center;gap:8px;}
-.btn-primary{background:var(--blue);color:#fff;}
-.btn-primary:hover{background:var(--blue-dk);}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed;}
-.btn-secondary{background:#fff;color:var(--blue);border:1.5px solid var(--blue);}
-.btn-secondary:hover{background:var(--blue-xlt);}
-.btn-ghost{background:transparent;color:var(--g4);}
-.btn-ghost:hover{color:var(--g5);}
-.btn-green{background:var(--green);color:#fff;}
-.btn-green:hover{background:#1d6336;}
-.btn-green:disabled{opacity:.4;cursor:not-allowed;}
-.btn-nav{display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:22px;border-top:1px solid var(--g2);}
+  .btn{padding:11px 28px;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:inherit;display:inline-flex;align-items:center;gap:8px;}
+  .btn-primary{background:var(--sf-blue);color:white;}
+  .btn-primary:hover{background:var(--sf-blue-dark);}
+  .btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+  .btn-secondary{background:white;color:var(--sf-blue);border:1.5px solid var(--sf-blue);}
+  .btn-secondary:hover{background:var(--sf-blue-lighter);}
+  .btn-ghost{background:transparent;color:var(--sf-gray-4);}
+  .btn-ghost:hover{color:var(--sf-gray-5);}
+  .btn-nav{display:flex;justify-content:space-between;align-items:center;margin-top:30px;padding-top:22px;border-top:1px solid var(--sf-gray-2);}
+  .btn-submit{background:#2E844A;color:white;font-size:15px;padding:12px 32px;}
+  .btn-submit:hover{background:#1d6336;}
+  .btn-submit:disabled{opacity:0.4;cursor:not-allowed;}
 
-/* HERO */
-.hero{background:linear-gradient(135deg,var(--navy) 0%,#093a6e 55%,#0c56a0 100%);border-radius:14px;padding:52px 44px 44px;color:#fff;margin-bottom:22px;position:relative;overflow:hidden;animation:up .35s ease;}
-.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(27,150,255,.18) 0%,transparent 70%);border-radius:50%;}
-.hero::after{content:'';position:absolute;bottom:-40px;left:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(6,165,154,.1) 0%,transparent 70%);border-radius:50%;}
-.hero-eye{font-size:10px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;opacity:.55;margin-bottom:12px;}
-.hero-title{font-size:36px;font-weight:800;line-height:1.12;margin-bottom:14px;}
-.hero-desc{font-size:15px;opacity:.8;line-height:1.7;max-width:500px;margin-bottom:32px;}
-.hero-goals{display:flex;flex-direction:column;gap:10px;margin-bottom:36px;}
-.hero-goal{display:flex;align-items:center;gap:10px;font-size:14px;opacity:.88;}
-.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--blue-lt);flex-shrink:0;}
-.hero-meta{display:flex;flex-wrap:wrap;gap:18px;font-size:12px;opacity:.5;border-top:1px solid rgba(255,255,255,.12);padding-top:18px;}
-.info-boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
-.info-box{background:#fff;border-radius:10px;padding:16px;text-align:center;box-shadow:var(--sh);}
-.info-icon{font-size:24px;margin-bottom:6px;}
-.info-lbl{font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px;}
-.info-sub{font-size:11px;color:var(--g4);}
+  /* HERO */
+  .hero{background:linear-gradient(135deg,var(--sf-navy) 0%,#093a6e 60%,#0176D3 100%);border-radius:12px;padding:52px 44px 42px;color:white;margin-bottom:22px;position:relative;overflow:hidden;animation:fadeUp 0.35s ease;}
+  .hero::before{content:'';position:absolute;top:-80px;right:-80px;width:340px;height:340px;background:radial-gradient(circle,rgba(27,150,255,0.15) 0%,transparent 70%);border-radius:50%;}
+  .hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;opacity:0.6;margin-bottom:10px;}
+  .hero-title{font-size:34px;font-weight:800;line-height:1.15;margin-bottom:14px;}
+  .hero-desc{font-size:15px;opacity:0.82;line-height:1.65;max-width:520px;margin-bottom:30px;}
+  .hero-goals{display:flex;flex-direction:column;gap:10px;margin-bottom:34px;}
+  .hero-goal{display:flex;align-items:center;gap:10px;font-size:14px;opacity:0.88;}
+  .hero-dot{width:6px;height:6px;border-radius:50%;background:var(--sf-blue-light);flex-shrink:0;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:18px;font-size:12px;opacity:0.55;border-top:1px solid rgba(255,255,255,0.13);padding-top:18px;}
+  .info-boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+  .info-box{background:white;border-radius:8px;padding:16px;text-align:center;box-shadow:var(--shadow);}
+  .info-box-icon{font-size:24px;margin-bottom:6px;}
+  .info-box-label{font-size:12px;font-weight:700;color:var(--sf-navy);margin-bottom:3px;}
+  .info-box-sub{font-size:11px;color:var(--sf-gray-4);}
 
-/* RESULTS */
-.res-header{background:linear-gradient(135deg,var(--navy),#0c3d6e);border-radius:14px 14px 0 0;padding:36px 44px 30px;color:#fff;}
-.res-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;}
-.tier-badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:10px;}
-.t1{background:rgba(186,5,23,.22);color:#FFB3BA;}
-.t2{background:rgba(254,80,0,.22);color:#FFBE9D;}
-.t3{background:rgba(255,183,93,.22);color:#FFE0A3;}
-.t4{background:rgba(6,165,154,.22);color:#A3F0EB;}
-.res-tier-title{font-size:22px;font-weight:800;}
-.res-tier-desc{font-size:14px;opacity:.72;margin-top:6px;max-width:400px;line-height:1.55;}
-.score-block{text-align:right;}
-.score-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.5;margin-bottom:4px;}
-.score-num{font-size:56px;font-weight:800;line-height:1;color:#fff;}
-.score-sub{font-size:12px;opacity:.45;margin-top:3px;}
+  /* RESULTS */
+  .results-header{background:linear-gradient(135deg,var(--sf-navy),#0c3d6e);border-radius:12px 12px 0 0;padding:36px 44px 28px;color:white;}
+  .results-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;}
+  .tier-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:8px;}
+  .t1{background:rgba(186,5,23,0.22);color:#FFB3BA;}.t2{background:rgba(254,80,0,0.22);color:#FFBE9D;}.t3{background:rgba(255,183,93,0.22);color:#FFE0A3;}.t4{background:rgba(6,165,154,0.22);color:#A3F0EB;}
+  .results-tier-title{font-size:22px;font-weight:700;}
+  .results-tier-desc{font-size:14px;opacity:0.72;margin-top:5px;max-width:380px;line-height:1.5;}
+  .score-block{text-align:right;}
+  .score-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:0.55;margin-bottom:4px;}
+  .score-num{font-size:52px;font-weight:800;line-height:1;color:white;}
+  .score-sub{font-size:13px;opacity:0.5;margin-top:2px;}
+  .results-body{background:white;border-radius:0 0 12px 12px;padding:36px 44px;box-shadow:var(--shadow);}
+  .sec-head{font-size:15px;font-weight:700;color:var(--sf-navy);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .sec-head::after{content:'';flex:1;height:1px;background:var(--sf-gray-2);margin-left:8px;}
 
-.res-body{background:#fff;border-radius:0 0 14px 14px;padding:36px 44px;box-shadow:var(--sh);}
-.sec-head{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
-.sec-head::after{content:'';flex:1;height:1px;background:var(--g2);margin-left:8px;}
+  .heatmap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
+  .hm-item{padding:13px 15px;border-radius:8px;border:1.5px solid var(--sf-gray-2);}
+  .hm-dim{font-size:12px;font-weight:600;color:var(--sf-gray-4);margin-bottom:5px;}
+  .hm-row{display:flex;align-items:center;gap:10px;}
+  .hm-bg{flex:1;height:6px;border-radius:3px;background:var(--sf-gray-2);overflow:hidden;}
+  .hm-fill{height:100%;border-radius:3px;transition:width 1s cubic-bezier(0.4,0,0.2,1);}
+  .hm-val{font-size:14px;font-weight:700;min-width:26px;text-align:right;}
+  .hm-tier{font-size:10px;color:var(--sf-gray-4);font-weight:600;margin-top:3px;}
+  .c1{background:var(--sf-red);}.c2{background:var(--sf-orange);}.c3{background:var(--sf-yellow);}.c4{background:var(--sf-teal);}
+  .v1{color:var(--sf-red);}.v2{color:var(--sf-orange);}.v3{color:#B8860B;}.v4{color:var(--sf-teal);}
 
-/* SPECTRUM VISUAL */
-.spectrum-wrap{margin-bottom:32px;}
-.spectrum-track{display:flex;gap:3px;margin-bottom:14px;}
-.spec-seg{flex:1;border-radius:6px;height:10px;transition:all .3s;}
-.spec-seg.s1{background:#BA0517;}
-.spec-seg.s2{background:#FE5000;}
-.spec-seg.s3{background:#FFB75D;}
-.spec-seg.s4{background:#06A59A;}
-.spec-seg.active{height:16px;margin-top:-3px;box-shadow:0 0 0 3px rgba(1,118,211,.3);}
-.spectrum-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-.spec-tier{padding:14px 16px;border-radius:10px;border:1.5px solid var(--g2);transition:all .3s;position:relative;}
-.spec-tier.current{border-width:2px;}
-.spec-tier.current.t1-border{border-color:#BA0517;background:rgba(186,5,23,.03);}
-.spec-tier.current.t2-border{border-color:#FE5000;background:rgba(254,80,0,.03);}
-.spec-tier.current.t3-border{border-color:#FFB75D;background:rgba(255,183,93,.04);}
-.spec-tier.current.t4-border{border-color:#06A59A;background:rgba(6,165,154,.04);}
-.spec-tier-label{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
-.spec-tier-name{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px;}
-.spec-tier-desc{font-size:11px;color:var(--g4);line-height:1.55;}
-.you-pill{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:2px 8px;border-radius:20px;background:var(--navy);color:#fff;margin-bottom:6px;}
+  .int-list{display:flex;flex-direction:column;gap:11px;margin-bottom:28px;}
+  .int-card{padding:15px 17px;border-radius:10px;border:1.5px solid var(--sf-gray-2);display:flex;gap:13px;align-items:flex-start;}
+  .int-num{min-width:28px;height:28px;border-radius:50%;background:var(--sf-navy);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .int-title{font-size:14px;font-weight:700;color:var(--sf-navy);margin-bottom:4px;}
+  .int-body{font-size:13px;color:var(--sf-gray-4);line-height:1.55;}
+  .int-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-top:6px;background:var(--sf-blue-lighter);color:var(--sf-blue-dark);}
 
-/* HEATMAP */
-.heatmap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
-.hm-item{padding:14px 16px;border-radius:10px;border:1.5px solid var(--g2);}
-.hm-dim{font-size:12px;font-weight:600;color:var(--g4);margin-bottom:5px;}
-.hm-row{display:flex;align-items:center;gap:10px;}
-.hm-bg{flex:1;height:7px;border-radius:4px;background:var(--g2);overflow:hidden;}
-.hm-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.4,0,.2,1);}
-.hm-val{font-size:14px;font-weight:700;min-width:28px;text-align:right;}
-.hm-next{font-size:11px;color:var(--g4);margin-top:5px;line-height:1.5;font-style:italic;}
-.c1{background:var(--red)}.c2{background:var(--orange)}.c3{background:var(--yellow)}.c4{background:var(--teal)}
-.v1{color:var(--red)}.v2{color:var(--orange)}.v3{color:#B8860B}.v4{color:var(--teal)}
+  .plan{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:28px;}
+  .plan-col{padding:15px;border-radius:8px;background:var(--sf-gray-1);}
+  .plan-period{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sf-blue);margin-bottom:8px;}
+  .plan-items{list-style:none;display:flex;flex-direction:column;gap:6px;}
+  .plan-items li{font-size:13px;color:var(--sf-gray-5);padding-left:14px;position:relative;line-height:1.4;}
+  .plan-items li::before{content:'→';position:absolute;left:0;color:var(--sf-blue);font-size:11px;top:1px;}
 
-/* RADAR */
-.radar-wrap{display:flex;justify-content:center;margin-bottom:28px;}
+  .radar-wrap{display:flex;justify-content:center;margin-bottom:24px;}
 
-/* SUMMARY */
-.summary-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;background:var(--g1);border-radius:10px;padding:16px 18px;}
-.sum-item .sum-lbl{font-size:11px;color:var(--g4);font-weight:600;}
-.sum-item .sum-val{font-size:13px;color:var(--g5);font-weight:600;margin-top:2px;}
+  /* THANK YOU */
+  .ty-wrap{text-align:center;padding:60px 40px;animation:fadeUp 0.4s ease;}
+  .ty-icon{font-size:64px;margin-bottom:20px;}
+  .ty-title{font-size:30px;font-weight:800;color:var(--sf-navy);margin-bottom:12px;}
+  .ty-desc{font-size:16px;color:var(--sf-gray-4);line-height:1.7;max-width:480px;margin:0 auto 28px;}
+  .ty-score-block{background:linear-gradient(135deg,var(--sf-navy),#0176D3);border-radius:12px;padding:24px 32px;display:inline-flex;gap:32px;margin-bottom:28px;color:white;}
+  .ty-score-item{text-align:center;}
+  .ty-score-val{font-size:32px;font-weight:800;line-height:1;}
+  .ty-score-label{font-size:11px;opacity:0.6;margin-top:4px;letter-spacing:0.5px;}
+  .ty-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
 
-/* STATUS */
-.status-msg{padding:12px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:14px;text-align:center;}
-.st-sending{background:#EEF4FF;color:var(--blue);}
-.st-ok{background:var(--green-lt);color:var(--green);}
-.st-err{background:#FDECEA;color:var(--red);}
-.print-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;}
+  .submit-status{padding:12px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:16px;text-align:center;}
+  .st-sending{background:#EEF4FF;color:var(--sf-blue);}
+  .st-ok{background:#EBF7E6;color:#2E844A;}
+  .st-error{background:#FDECEA;color:var(--sf-red);}
 
-/* THANK YOU */
-.ty{text-align:center;padding:60px 40px;animation:up .4s ease;}
-.ty-icon{font-size:64px;margin-bottom:20px;}
-.ty-title{font-size:30px;font-weight:800;color:var(--navy);margin-bottom:12px;}
-.ty-desc{font-size:16px;color:var(--g4);line-height:1.7;max-width:460px;margin:0 auto 28px;}
-.ty-score{background:linear-gradient(135deg,var(--navy),#0176D3);border-radius:12px;padding:24px 32px;display:inline-flex;gap:32px;margin-bottom:24px;color:#fff;}
-.ty-score-item{text-align:center;}
-.ty-score-val{font-size:32px;font-weight:800;line-height:1;}
-.ty-score-lbl{font-size:11px;opacity:.6;margin-top:4px;letter-spacing:.5px;}
-.ty-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
-
-@media print{.nav,.prog-wrap,.print-bar,.btn-nav{display:none!important;}.main{padding:0;max-width:100%;}.card,.res-body,.res-header{box-shadow:none;border-radius:0;}}
-@media(max-width:600px){.card,.res-body,.res-header{padding:22px 16px;}.hero{padding:30px 18px;}.hero-title{font-size:26px;}.heatmap,.spectrum-tiers{grid-template-columns:1fr;}.info-boxes{grid-template-columns:1fr 1fr;}.ty-score{flex-direction:column;gap:16px;}}
+  .print-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap;}
+  @media print{.nav,.progress-wrap,.print-bar,.btn-nav{display:none!important;}.main{padding:0;max-width:100%;}}
+  @media(max-width:600px){
+    .card,.results-body,.results-header{padding:22px 16px;}
+    .hero{padding:30px 18px;}
+    .hero-title{font-size:24px;}
+    .heatmap,.plan{grid-template-columns:1fr;}
+    .info-boxes{grid-template-columns:1fr 1fr;}
+    .ty-score-block{flex-direction:column;gap:16px;}
+  }
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState } = React;
 
-/* ═══════════════════════════════════════════════════════════════════════
-   ⚙️  CONFIG — edit these before going live
-   ═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════
+   ████████████████████████████████████████████████████████████████████████
+   ██                                                                      ██
+   ██   🔗  GOOGLE SHEETS WEBHOOK — PASTE YOUR URL HERE                   ██
+   ██                                                                      ██
+   ██   Replace the placeholder below with your Google Apps Script URL.   ██
+   ██   Full setup instructions are at the very bottom of this file.      ██
+   ██                                                                      ██
+   ████████████████████████████████████████████████████████████████████████ */
+
 const GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
-const QUESTIONS_SHEET_URL   = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec"; // same URL, reads questions via ?action=getQuestions
-const TESTER_DOMAINS        = ["salesforce.com"];           // add more: ["salesforce.com","partner.com"]
-const CALENDAR_URL          = "";                           // leave blank — no CTA per spec
 
-/* ═══════════════════════════════════════════════════════════════════════
-   DEFAULT QUESTION BANK (used if sheet URL not configured)
-   ═══════════════════════════════════════════════════════════════════════ */
-const DEFAULT_QUESTIONS = [
-  {id:"q1",domain:"Sales Process",dimension:"Sales Process & Governance",active:true,
-   text:"Is your ICP (ideal customer profile) documented and used to qualify deals?",
-   answers:["Not defined — reps qualify based on gut feel","Defined informally; not consistently enforced","Documented and used by most teams to qualify opportunities","Operationalized in CRM, reviewed quarterly, and tied to routing rules"]},
-  {id:"q2",domain:"Sales Process",dimension:"Sales Process & Governance",active:true,
-   text:"Are sales stages defined with exit criteria and consistently followed?",
-   answers:["No common stages; each rep operates independently","Stages exist in CRM but inconsistently applied","Stages with exit criteria are used and enforced in pipeline reviews","Enforced, coached, and continuously improved using conversion data"]},
-  {id:"q3",domain:"CRM & Data",dimension:"Data, CRM & AI",active:true,
-   text:"How well does your CRM opportunity structure reflect how your business actually sells?",
-   answers:["Poor fit — CRM is a transactional log, not a sales tool","Partial fit — adapted but constrained by system limitations","Strong fit — CRM is aligned to actual sales motion and used daily","Strategic fit — CRM architecture optimized for revenue operations and trusted as system of record"]},
-  {id:"q4",domain:"Sales Process",dimension:"Sales Process & Governance",active:true,
-   text:"How would you rate your lead management and qualification process?",
-   answers:["Inconsistent lead routing; no defined qualification framework","Basic routing and manual qualification in place","Defined methodology (BANT, MEDDPICC, SPICED) with reporting","AI-assisted scoring, fast-response SLAs, and data-driven qualification"]},
-  {id:"q5",domain:"Forecasting",dimension:"Forecasting & Pipeline",active:true,
-   text:"How objective and accurate is your sales forecasting?",
-   answers:["Gut feel, low confidence — no real process","Manager judgment and spreadsheets; inconsistent accuracy","Criteria-based forecasting with a regular cadence and tracked accuracy","Data-driven with AI-assisted accuracy tracking and scenario modeling"]},
-  {id:"q6",domain:"Pipeline Mgmt",dimension:"Forecasting & Pipeline",active:true,
-   text:"How do you manage pipeline health — coverage, aging, and next steps?",
-   answers:["No standard — pipeline visibility is low and unreliable","Basic reviews only; no standardized KPIs","Pipeline KPIs tracked with weekly reviews and dashboards","Predictive scoring, AI-guided early warning triggers, and automated alerts"]},
-  {id:"q7",domain:"Pricing / CPQ",dimension:"Pricing & Quote-to-Cash",active:true,
-   text:"How controlled is your discounting and pricing approval process?",
-   answers:["Ad hoc — reps discount freely with no governance","Guidelines exist but exceptions are common and untracked","Policy and approval workflows enforced in the deal process","CPQ-enforced pricing with margin leakage analytics and deal-level visibility"]},
-  {id:"q8",domain:"Quote-to-Cash",dimension:"Pricing & Quote-to-Cash",active:true,
-   text:"How integrated is your quote → order → invoice → payment process?",
-   answers:["Fully manual handoffs; no integration between systems","Partial integration; major steps still require manual effort","Integrated for most products with clear process ownership","End-to-end integrated with cycle time measurement and exception management"]},
-  {id:"q9",domain:"AI & Automation",dimension:"Data, CRM & AI",active:true,
-   text:"How would you rate your use of AI, automation, or intelligent agents in your sales process?",
-   answers:["No AI usage — fully manual processes","Early experimentation with scoring or summaries","AI used in coaching, scoring, or call summaries at scale","Agentic workflows that plan, reason, and take action across the revenue lifecycle"]},
-  {id:"q10",domain:"Sales Operations",dimension:"Operations & Lifecycle",active:true,
-   text:"How would you rate your sales operations and post-sales account management integration?",
-   answers:["Fragmented — sales and post-sales operate in silos with no shared visibility","Basic alignment — handoffs defined but manual and inconsistently executed","Coordinated — clear ownership, structured handoffs, and shared CRM visibility","Integrated and proactive — shared KPIs, real-time insights, proactive account growth"]},
-  {id:"q11",domain:"Enablement",dimension:"Enablement & Coaching",active:true,
-   text:"Are playbooks and messaging standardized by segment or use case?",
-   answers:["No playbooks — reps create their own approaches","Some documents exist but not consistently used","Used in onboarding and coaching; embedded in workflow","Measured for effectiveness, continuously updated, tied to win/loss data"]},
-  {id:"q12",domain:"Coaching",dimension:"Enablement & Coaching",active:true,
-   text:"Do managers run a consistent, structured coaching cadence?",
-   answers:["Sporadic — coaching happens ad hoc, if at all","1:1s happen but are unstructured and deal-focused only","Structured coaching and deal reviews tied to skills development","Coaching tied to skills metrics, performance data, and business outcomes"]},
-  {id:"q13",domain:"CRM Adoption",dimension:"Data, CRM & AI",active:true,
-   text:"How would you rate CRM adoption and data hygiene across your sales org?",
-   answers:["Low trust in CRM data; heavy Excel shadow systems are the norm","Moderate usage; required fields often incomplete or outdated","Strong adoption — consistent updates and next steps logged","CRM is the single source of truth with automated capture and behavioral alignment"]},
-  {id:"q14",domain:"Data Governance",dimension:"Data, CRM & AI",active:true,
-   text:"Do you have shared definitions for key metrics — MQL/SQL, stages, ARR, churn?",
-   answers:["No shared definitions — every team measures differently","Partial alignment; frequent disputes over numbers","Definitions documented and used consistently across revenue teams","Governed with clear owners, change control, and a published metric catalog"]},
-  {id:"q15",domain:"Growth Strategy",dimension:"Growth Strategy",active:true,
-   text:"Where is incremental profit most likely to come from in your business today?",
-   answers:["Primarily from new lead volume alone","Mostly new leads with very limited expansion motion","Balanced acquisition and account expansion","Primarily from systematically expanding and renewing existing accounts"]},
-  {id:"q16",domain:"Revenue Constraint",dimension:"Growth Strategy",active:true,
-   text:"What is the biggest barrier to generating more revenue today?",
-   answers:["Insufficient high-quality new leads","Time lost chasing poor-fit or low-intent leads","Administrative and internal process burden on sellers","Post-sale servicing and order management friction impacting retention and expansion"]},
-  {id:"q17",domain:"Agility",dimension:"Operations & Lifecycle",active:true,
-   text:"How agile is your organization in updating pricing rules, approval workflows, or sales stages?",
-   answers:["IT-dependent — all changes are slow and require tickets","Minor changes can be made by sales ops with effort","Sales and ops can adjust key levers without engineering","Business users fully manage rules and strategies via a no-code UI"]},
-  {id:"q18",domain:"Partner / Data",dimension:"Operations & Lifecycle",active:true,
-   text:"How do external partners or 3rd-party data enhance your sales team's effectiveness?",
-   answers:["No external data or partnerships leveraged","Some 3rd-party data available; ad hoc partner collaboration","3rd-party data directly impacts lead and deal scoping; defined partner network","Integrated and automated 3rd-party data with a governed partner ecosystem"]},
+/* ════════════════════════════════════════════════════════════════════════════
+   ████████████████████████████████████████████████████████████████████████
+   ██                                                                      ██
+   ██   ✏️  EDIT YOUR QUESTIONS & ANSWERS HERE                            ██
+   ██                                                                      ██
+   ██   RULES:                                                             ██
+   ██   • Always keep exactly 4 answers per question                      ██
+   ██   • Answer 1 = worst/lowest maturity                                ██
+   ██   • Answer 4 = best/highest maturity                                ██
+   ██   • "domain" is the label shown on the question card badge          ██
+   ██   • "id" must be unique — use q1, q2, q3 ... q99                   ██
+   ██                                                                      ██
+   ██   TO ADD A QUESTION: Copy a block, give it a new id, add to        ██
+   ██   DIMENSIONS below.                                                 ██
+   ██                                                                      ██
+   ██   TO REMOVE A QUESTION: Delete the block and remove from           ██
+   ██   DIMENSIONS.                                                       ██
+   ██                                                                      ██
+   ████████████████████████████████████████████████████████████████████████ */
+
+const QUESTIONS = [
+  { id:"q1",  domain:"Sales Process",
+    text:"Is your ICP (ideal customer profile) documented and used to qualify deals?",
+    answers:["Not defined — reps qualify based on gut feel","Defined informally; not consistently enforced","Documented and used by most teams to qualify opportunities","Operationalized in CRM, reviewed quarterly, and tied to routing rules"]},
+  { id:"q2",  domain:"Sales Process",
+    text:"Are sales stages defined with exit criteria and consistently followed?",
+    answers:["No common stages; each rep operates independently","Stages exist in CRM but inconsistently applied","Stages with exit criteria are used and enforced in pipeline reviews","Measured, coached, and continuously improved using conversion data"]},
+  { id:"q3",  domain:"CRM & Data",
+    text:"How well does your CRM opportunity structure reflect how your business actually sells?",
+    answers:["Poor fit — CRM is mostly a transactional log, not a sales tool","Partial fit — adapted but constrained by system limitations","Strong fit — CRM is aligned to actual sales motion and used daily","Strategic fit — CRM architecture is optimized for revenue operations"]},
+  { id:"q4",  domain:"Sales Process",
+    text:"How would you rate your lead management and qualification process?",
+    answers:["Inconsistent lead routing; no defined qualification framework","Basic routing and manual qualification in place","Defined methodology (BANT, MEDDPICC, SPICED) with reporting","AI-assisted scoring, fast response SLAs, and data-driven qualification"]},
+  { id:"q5",  domain:"Forecasting",
+    text:"How objective and accurate is your sales forecasting?",
+    answers:["Gut feel, low confidence — no real process","Manager judgment + spreadsheets; inconsistent accuracy","Criteria-based forecasting with a regular cadence and tracked accuracy","Data-driven with AI-assisted accuracy tracking and scenario modeling"]},
+  { id:"q6",  domain:"Pipeline Mgmt",
+    text:"How do you manage pipeline health?",
+    answers:["No standard — pipeline visibility is low and unreliable","Basic reviews only; no standardized KPIs","Pipeline KPIs tracked (coverage, aging, conversion) with weekly reviews","Predictive scoring, AI-guided early warning triggers, and stage health monitoring"]},
+  { id:"q7",  domain:"Pricing / CPQ",
+    text:"How controlled is your discounting and pricing approval process?",
+    answers:["Ad hoc — reps discount freely with no governance","Guidelines exist but exceptions are common and untracked","Policy and approval workflows enforced in the deal process","CPQ-enforced pricing with margin leakage analytics and deal-level visibility"]},
+  { id:"q8",  domain:"Quote-to-Cash",
+    text:"How integrated is your quote → order → invoice → payment process?",
+    answers:["Fully manual handoffs; no integration between systems","Partial integration; major steps still require manual effort","Integrated for most products with clear process ownership","End-to-end integrated with cycle time measurement and exception management"]},
+  { id:"q9",  domain:"AI & Automation",
+    text:"How would you rate your use of AI, automation, or intelligent agents in your sales process?",
+    answers:["No AI usage — fully manual processes","Early experimentation with scoring or summaries","AI used in coaching, scoring, or call summaries at scale","Agentic workflows that plan, reason, and take action across the revenue lifecycle"]},
+  { id:"q10", domain:"Sales Operations",
+    text:"How would you rate your sales operations and post-sales account management integration?",
+    answers:["Fragmented — sales and post-sales operate in silos with no shared visibility","Basic alignment — handoffs are defined but manual and inconsistently executed","Coordinated — clear ownership, structured handoffs, and shared CRM visibility","Integrated and proactive — shared KPIs, real-time insights, proactive account growth"]},
+  { id:"q11", domain:"Enablement",
+    text:"Are playbooks and messaging standardized by segment or use case?",
+    answers:["No playbooks — reps create their own approaches","Some documents exist but not consistently used","Used in onboarding and coaching; embedded in workflow","Measured for effectiveness, continuously updated, tied to win/loss data"]},
+  { id:"q12", domain:"Coaching",
+    text:"Do managers run a consistent, structured coaching cadence?",
+    answers:["Sporadic — coaching happens ad hoc, if at all","1:1s happen but are unstructured and deal-focused only","Structured coaching and deal reviews tied to skills development","Coaching tied to skills metrics, performance data, and business outcomes"]},
+  { id:"q13", domain:"CRM Adoption",
+    text:"How would you rate CRM adoption and data hygiene across your sales org?",
+    answers:["Low trust in CRM data; heavy Excel shadow systems are the norm","Moderate usage; required fields often incomplete or outdated","Strong adoption — consistent opportunity updates and next steps logged","CRM is the single source of truth with high behavioral alignment and automated capture"]},
+  { id:"q14", domain:"Data Governance",
+    text:"Do you have shared definitions for key metrics (MQL/SQL, stages, ARR, churn)?",
+    answers:["No shared definitions — every team measures differently","Partial alignment; frequent disputes over numbers","Definitions documented and used consistently across revenue teams","Governed with clear owners, change control, and a published metric catalog"]},
+  { id:"q15", domain:"Growth Strategy",
+    text:"Where is incremental profit most likely to come from in your business today?",
+    answers:["Primarily from new lead volume alone","Mostly new leads with very limited expansion motion","Balanced acquisition and account expansion","Primarily from systematically expanding and renewing existing accounts"]},
+  { id:"q16", domain:"Revenue Constraint",
+    text:"What is the biggest barrier to generating more revenue today?",
+    answers:["Insufficient high-quality new leads","Time lost chasing poor-fit or low-intent leads","Administrative and internal process burden on sellers","Post-sale servicing and order management friction impacting retention and expansion"]},
+  { id:"q17", domain:"Agility",
+    text:"How agile is your organization in updating pricing rules, approval workflows, or sales stages?",
+    answers:["IT-dependent — all changes are slow and require tickets","Minor changes can be made by sales ops with effort","Sales and ops can adjust key levers without engineering","Business users fully manage rules and strategies via a no-code UI"]},
+  { id:"q18", domain:"Partner / Data",
+    text:"How do external partners or 3rd-party data enhance your sales team's effectiveness?",
+    answers:["No external data or partnerships leveraged","Some 3rd-party data available; ad hoc partner collaboration","3rd-party data directly impacts lead and deal scoping; defined partner network","Integrated and automated 3rd-party data with a governed partner ecosystem"]},
 ];
 
-/* ═══════════════════════════════════════════════════════════════════════
-   MATURITY MODEL DATA (drawn from briefing doc)
-   ═══════════════════════════════════════════════════════════════════════ */
-const TIER_INFO = [null,
-  {label:"Ad Hoc / Reactive", short:"Ad Hoc",
-   desc:"Revenue execution depends on individual heroics. Pipeline, forecasting, and handoffs are inconsistent. CRM reflects activity but is not yet a trusted system of record.",
-   color:"#BA0517", cls:"t1", border:"t1-border"},
-  {label:"Repeatable / Developing", short:"Repeatable",
-   desc:"Core processes exist but adoption varies across teams. Salesforce is used but shadow systems remain. Reporting is available but confidence in the numbers is mixed.",
-   color:"#FE5000", cls:"t2", border:"t2-border"},
-  {label:"Defined / Measured", short:"Defined",
-   desc:"Standardized motions, governed stages, and shared metrics are in place. Salesforce is the system of record. Leaders can make decisions from dashboards with confidence.",
-   color:"#B8860B", cls:"t3", border:"t3-border"},
-  {label:"Optimized / Agentic", short:"Optimized",
-   desc:"Cross-functional RevOps execution with automation, integration, and continuous improvement driven by trusted data. The organization is positioned to deploy intelligent agents that reason, act, and operate across the revenue lifecycle.",
-   color:"#06A59A", cls:"t4", border:"t4-border"},
-];
-
-// One sentence per dimension: current state + what next level looks like
-const DIM_NARRATIVES = {
-  "Growth Strategy":{
-    1:"At this level, growth is primarily driven by new lead volume with little intentional expansion motion. Organizations at the next level begin segmenting accounts and building a defined expansion pipeline alongside new business.",
-    2:"At this level, expansion activity exists but remains inconsistent and unmeasured. Organizations at the next level have balanced acquisition and retention motions with shared KPIs and account segmentation in Salesforce.",
-    3:"At this level, growth strategy is balanced between new logos and account expansion. Organizations at the next level systematically manage expansion and renewal as a primary profit driver, supported by automated account health signals.",
-    4:"At this level, expansion and renewal are the primary growth engine, measured and repeatable. Organizations here are typically exploring AI-assisted account scoring and proactive intervention triggers.",
-  },
-  "Sales Process & Governance":{
-    1:"At this level, qualification and stage management vary by rep with no consistent standard. Organizations at the next level have defined stages with documented exit criteria and basic enforcement in Salesforce.",
-    2:"At this level, processes exist but adoption is uneven across the team. Organizations at the next level use Salesforce Path to enforce stage discipline, required key fields, and in-flow guidance that reduces rep guesswork.",
-    3:"At this level, sales stages are defined, enforced, and used to drive forecast quality. Organizations at the next level continuously improve stage conversion using data, with coaching tied directly to process metrics.",
-    4:"At this level, sales process governance is a competitive advantage — coached, measured, and continuously improved. Organizations here are typically extending governance into AI-assisted qualification and next-best-action guidance.",
-  },
-  "Forecasting & Pipeline":{
-    1:"At this level, forecasting relies on manager judgment and spreadsheets with low confidence. Organizations at the next level adopt Salesforce forecast categories and a regular commit cadence.",
-    2:"At this level, a forecasting process exists but accuracy is inconsistent. Organizations at the next level have pipeline KPI dashboards, stage aging alerts, and a weekly governance cadence.",
-    3:"At this level, forecasting is criteria-based, cadenced, and tracked against actuals. Organizations at the next level layer in AI-assisted accuracy modeling and scenario planning within Salesforce.",
-    4:"At this level, forecasting is data-driven, accurate, and continuously improving. Organizations here are typically using predictive intelligence to identify risk and opportunity before pipeline reviews.",
-  },
-  "Pricing & Quote-to-Cash":{
-    1:"At this level, discounting is ad hoc and the quote-to-cash process is largely manual. Organizations at the next level establish pricing guidelines and begin enforcing approval workflows in Salesforce.",
-    2:"At this level, pricing guidelines exist but exceptions are common. Organizations at the next level deploy Salesforce CPQ to standardize quoting and enforce approval rules with margin visibility.",
-    3:"At this level, CPQ is in use with governed approvals and quote cycle time is tracked. Organizations at the next level integrate order and invoice status into Salesforce, eliminating seller distraction and post-sale friction.",
-    4:"At this level, the quote-to-cash process is end-to-end integrated and measurable. Organizations here are typically extending into automated renewal management and AI-assisted deal structuring.",
-  },
-  "Enablement & Coaching":{
-    1:"At this level, enablement is informal and coaching is sporadic. Organizations at the next level build segment-specific playbooks and establish a structured coaching cadence.",
-    2:"At this level, enablement content exists but is inconsistently applied. Organizations at the next level embed playbooks in Salesforce workflow and tie coaching to observable skill gaps.",
-    3:"At this level, enablement and coaching are structured, consistent, and tied to skills development. Organizations at the next level measure enablement effectiveness against win rates and continuously update playbooks.",
-    4:"At this level, enablement is a measured, data-driven function driving business outcomes. Organizations here are typically deploying AI-assisted coaching tools and real-time guidance agents.",
-  },
-  "Data, CRM & AI":{
-    1:"At this level, CRM data is inconsistent and shadow systems are common. Organizations at the next level simplify CRM fields, enforce data minimums, and begin building trust in the pipeline view.",
-    2:"At this level, Salesforce is used but data quality and adoption are uneven. Organizations at the next level establish shared metric definitions, duplicate prevention rules, and in-app guidance to reduce friction.",
-    3:"At this level, Salesforce is the system of record with strong adoption and trusted reporting. Organizations at the next level pilot AI-assisted data capture, lead scoring, and opportunity health monitoring.",
-    4:"At this level, CRM data is clean, trusted, and the foundation for intelligent automation. Organizations here are positioned to deploy Agentforce agents grounded in reliable CRM data with deterministic workflows as actions.",
-  },
-  "Operations & Lifecycle":{
-    1:"At this level, sales and post-sales operate in silos with manual, inconsistent handoffs. Organizations at the next level define handoff ownership and create standard artifacts for onboarding and service transitions.",
-    2:"At this level, handoff processes exist but lack consistency and measurement. Organizations at the next level implement standardized handoff packages and expose service and order status within Salesforce.",
-    3:"At this level, lifecycle handoffs are structured, measured, and improving. Organizations at the next level automate handoff creation, close feedback loops, and reduce seller time diverted to service inquiries.",
-    4:"At this level, the revenue lifecycle is integrated and proactively managed. Organizations here are typically deploying automation agents that monitor account health and trigger intervention workflows without human initiation.",
-  },
-};
-
+/* ════════════════════════════════════════════════════════════════════════════
+   DIMENSIONS — which question IDs roll up to each scoring dimension.
+   Edit this if you add/remove questions or want to regroup them.
+   ════════════════════════════════════════════════════════════════════════ */
 const DIMENSIONS = {
-  "Growth Strategy":["q15","q16"],
-  "Sales Process & Governance":["q1","q2","q3","q4"],
-  "Forecasting & Pipeline":["q5","q6"],
-  "Pricing & Quote-to-Cash":["q7","q8"],
-  "Enablement & Coaching":["q11","q12"],
-  "Data, CRM & AI":["q9","q13","q14"],
-  "Operations & Lifecycle":["q10","q17","q18"],
+  "Growth Strategy":            ["q15","q16"],
+  "Sales Process & Governance": ["q1","q2","q3","q4"],
+  "Forecasting & Pipeline":     ["q5","q6"],
+  "Pricing & Quote-to-Cash":    ["q7","q8"],
+  "Enablement & Coaching":      ["q11","q12"],
+  "Data, CRM & AI":             ["q9","q13","q14"],
+  "Operations & Lifecycle":     ["q10","q17","q18"],
 };
 
+/* ════════════════════════════════════════════════════════════════════════════
+   INTERVENTIONS — the recommendation shown for each dimension when its
+   score is low. Edit title/body/tag to customize your consulting narrative.
+   ════════════════════════════════════════════════════════════════════════ */
+const INTERVENTIONS = {
+  "Growth Strategy":            { title:"Build a Systematic Expansion Motion", tag:"Revenue Architecture", body:"Your growth is overly dependent on new lead volume. Implement account segmentation, define expansion playbooks, and build a dedicated renewal and upsell pipeline in Salesforce." },
+  "Sales Process & Governance": { title:"Standardize ICP, Stages & Exit Criteria", tag:"Process Foundation", body:"Without defined qualification and stage governance, pipeline is unreliable. Define your ICP, embed it in CRM routing, and add exit criteria guardrails to every stage." },
+  "Forecasting & Pipeline":     { title:"Implement a Criteria-Based Forecast Cadence", tag:"Revenue Predictability", body:"Introduce pipeline hygiene standards, a weekly commit cadence, and stage health KPIs. Enable Salesforce AI forecasting for predictive uplift." },
+  "Pricing & Quote-to-Cash":    { title:"Enforce Pricing Governance and Q2C Integration", tag:"Quote-to-Cash", body:"Uncontrolled discounting and manual handoffs are leaking margin. Implement CPQ approval workflows and integrate quote-to-order-to-invoice visibility in one process view." },
+  "Enablement & Coaching":      { title:"Deploy Segment-Specific Playbooks and Coaching", tag:"Seller Productivity", body:"Build segment-specific playbooks, embed them in Salesforce workflow, and implement structured coaching tied to skill metrics and deal reviews." },
+  "Data, CRM & AI":             { title:"Establish CRM as Single Source of Truth", tag:"Data Foundation", body:"Enforce CRM minimum data standards, simplify UX, govern your metric definitions, and pilot AI-assisted capture to reduce manual data entry." },
+  "Operations & Lifecycle":     { title:"Align Sales and Post-Sales with Shared Visibility", tag:"RevOps Integration", body:"Define clear lifecycle ownership, standardize handoff packages, and expose order and service status inside Salesforce to reduce seller distraction." },
+};
+
+// ── Static data ───────────────────────────────────────────────────────────────
+const TIER_INFO = [null,
+  {label:"Ad Hoc / Reactive",        desc:"Execution depends on individuals. Processes are manual, inconsistent, and outcomes are unpredictable.",cls:"t1"},
+  {label:"Repeatable / Developing",   desc:"Basic processes exist but adoption varies. Reporting is present but not fully trusted end-to-end.",cls:"t2"},
+  {label:"Defined / Measured",        desc:"Standardized motions and governance in place. Performance managed with reliable, shared metrics.",cls:"t3"},
+  {label:"Optimized / Best-in-Class", desc:"Cross-functional RevOps execution, strong single-source-of-truth posture, AI-powered, lifecycle-integrated.",cls:"t4"},
+];
 const INDUSTRIES=["Agriculture & Agribusiness","Automotive & Mobility","Aerospace & Defense","Chemicals & Materials","Construction & Engineering","Consumer Goods (CPG)","Retail","Food & Beverage","Hospitality, Travel & Leisure","Transportation & Logistics","Energy, Utilities & Resources","Manufacturing & Industrial","Life Sciences & Pharma","Healthcare Providers & Services","Financial Services (Banking)","Insurance","Capital Markets & Asset Management","Technology: Software / SaaS","Technology: Hardware & Devices","Telecommunications","Media, Sports & Entertainment","Education & EdTech","Government & Public Sector","Nonprofit & NGOs","Professional & Business Services","Legal Services","Real Estate & Property Management","Staffing, HR & Workforce Solutions","Technology Services / MSP"];
 const OBJECTIVES=["Acquiring New Logos","Pipeline Coverage","Lead-to-Opportunity Conversion","Deal Velocity","Average Deal Size","Forecast Accuracy","Win Rate","Sales Productivity","Cross-Sell / Upsell Growth","Account Penetration","Sales & Marketing Alignment","Sales & Operations Collaboration","Data Quality & CRM Adoption","Leveraging AI & Automation"];
 const SEGMENTS=["SMB / Transactional","Mid-Market","Enterprise / Strategic Accounts","Project-Based / Complex Sales","Channel / Partner-Led","Retention / Renewals","Expansion / Cross-Sell"];
 
-/* ═══ HELPERS ═══ */
-const getTier = a => a<1.75?1:a<2.5?2:a<3.25?3:4;
-const scoreStyle = s => s<1.75?{bar:"c1",val:"v1"}:s<2.5?{bar:"c2",val:"v2"}:s<3.25?{bar:"c3",val:"v3"}:{bar:"c4",val:"v4"};
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const getTier = avg => avg < 1.75 ? 1 : avg < 2.5 ? 2 : avg < 3.25 ? 3 : 4;
 const getDimScores = ans => Object.fromEntries(
-  Object.entries(DIMENSIONS).map(([d,ids])=>{
-    const v=ids.map(id=>ans[id]).filter(x=>x!==undefined);
-    return [d, v.length ? parseFloat((v.reduce((a,b)=>a+b,0)/v.length).toFixed(2)) : undefined];
+  Object.entries(DIMENSIONS).map(([d,ids]) => {
+    const vals = ids.map(id=>ans[id]).filter(v=>v!==undefined);
+    return [d, vals.length ? parseFloat((vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2)) : undefined];
   }).filter(([,v])=>v!==undefined)
 );
-const extractDomain = email => {
-  const m = (email||"").match(/@([^@]+)$/);
-  return m ? m[1].toLowerCase() : "";
-};
+const scoreStyle = s => s<1.75?{bar:"c1",val:"v1"}:s<2.5?{bar:"c2",val:"v2"}:s<3.25?{bar:"c3",val:"v3"}:{bar:"c4",val:"v4"};
 
-/* ═══ SF LOGO SVG ═══ */
-/* Logo rendered inline in Nav - no component to avoid re-renders */
+// ── Salesforce Cloud Logo SVG ─────────────────────────────────────────────────
+function SFLogo() {
+  return (
+    <svg height="30" viewBox="0 0 220 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      {/* Cloud shape */}
+      <path d="M38 42 Q22 42 22 30 Q22 20 32 18 Q30 12 36 8 Q46 0 56 6 Q62 0 72 2 Q84 2 88 12 Q96 8 102 14 Q110 14 110 22 Q110 30 102 32 L98 34 L42 42Z" fill="white"/>
+      {/* Text */}
+      <text x="118" y="36" fontFamily="Arial,Helvetica,sans-serif" fontSize="22" fontWeight="bold" fill="white" letterSpacing="0.5">salesforce</text>
+    </svg>
+  );
+}
 
-/* ═══ NAV ═══ */
-const Nav = React.memo(function Nav(){
-  return(
+// ── Components ────────────────────────────────────────────────────────────────
+function Nav() {
+  return (
     <nav className="nav">
       <div className="nav-logo">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" height="30" style={{display:"block",filter:"brightness(0) invert(1)"}} alt="Salesforce"/>
-        <div className="nav-div"/>
+        <span style={{color:"white",fontWeight:800,fontSize:18,letterSpacing:"-0.5px"}}>salesforce</span>
+        <div className="nav-divider"/>
         <span className="nav-title">B2B Sales Maturity Diagnostic</span>
       </div>
       <div className="nav-badge">Consulting</div>
     </nav>
   );
-});
+}
 
-const ProgressBar = React.memo(function ProgressBar({step}){
-  const steps=["Welcome","About You","Strategy","Assessment","Results"];
-  return(
-    <div className="prog-wrap">
-      <div className="prog-steps">
-        {steps.map((s,i)=>{const n=i+1,cls=n<step?"done":n===step?"active":"";return(
-          <div key={s} className={`step ${cls}`}>
-            <div className="step-dot">{n<step?"✓":n}</div>
-            <div className="step-lbl">{s}</div>
-          </div>
-        );})}
+function ProgressBar({step}) {
+  const steps = ["Welcome","About You","Strategy","Assessment","Results"];
+  return (
+    <div className="progress-wrap">
+      <div className="progress-steps">
+        {steps.map((s,i)=>{
+          const n=i+1, cls=n<step?"done":n===step?"active":"";
+          return (
+            <div key={s} className={`step-item ${cls}`}>
+              <div className="step-dot">{n<step?"✓":n}</div>
+              <div className="step-label">{s}</div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
-});
+}
 
-/* ═══ SCREENS ═══ */
-function WelcomeScreen({onNext}){
-  return(
+function WelcomeScreen({onNext}) {
+  return (
     <div>
       <div className="hero">
-        <div className="hero-eye">Salesforce Consulting — Confidential</div>
+        <div className="hero-eyebrow">Salesforce Consulting — Confidential</div>
         <h1 className="hero-title">B2B Sales Maturity<br/>Diagnostic</h1>
-        <p className="hero-desc">A research-backed assessment of your revenue engine across 7 RevOps dimensions. Understand where you stand today and what the path forward looks like.</p>
+        <p className="hero-desc">A research-backed assessment of your revenue engine across 7 RevOps dimensions. Complete in ~8 minutes for a scored readout, dimension heatmap, and prioritized action plan.</p>
         <div className="hero-goals">
-          <div className="hero-goal"><div className="hero-dot"/><span>Evaluate your sales engine against proven RevOps best practices</span></div>
-          <div className="hero-goal"><div className="hero-dot"/><span>Receive a scored readout across 7 capability dimensions</span></div>
-          <div className="hero-goal"><div className="hero-dot"/><span>Understand what organizations at the next maturity level typically have in place</span></div>
+          <div className="hero-goal"><div className="hero-dot"/><span>Evaluate your sales engine against RevOps best practices</span></div>
+          <div className="hero-goal"><div className="hero-dot"/><span>Illuminate your highest-impact revenue opportunities</span></div>
+          <div className="hero-goal"><div className="hero-dot"/><span>Walk away with a C-suite–ready readout and 30-60-90 day plan</span></div>
         </div>
-        <div className="hero-meta"><span>📋 4 sections</span><span>⏱ ~8 minutes</span><span>📊 18 questions</span><span>🎯 7 dimensions</span></div>
+        <div className="hero-meta">
+          <span>📋 4 sections</span><span>⏱ ~8 minutes</span><span>📊 18 diagnostic questions</span><span>🎯 7 RevOps dimensions</span>
+        </div>
       </div>
       <div className="info-boxes">
-        <div className="info-box"><div className="info-icon">🏆</div><div className="info-lbl">Maturity Score</div><div className="info-sub">1–4 scale, 7 dimensions</div></div>
-        <div className="info-box"><div className="info-icon">🗺️</div><div className="info-lbl">Dimension Heatmap</div><div className="info-sub">See where you lead & lag</div></div>
-        <div className="info-box"><div className="info-icon">📈</div><div className="info-lbl">Growth Narrative</div><div className="info-sub">What the next level looks like</div></div>
+        <div className="info-box"><div className="info-box-icon">🏆</div><div className="info-box-label">Maturity Score</div><div className="info-box-sub">1–4 scale, 7 dimensions</div></div>
+        <div className="info-box"><div className="info-box-icon">🗺️</div><div className="info-box-label">Dimension Heatmap</div><div className="info-box-sub">See where you lead &amp; lag</div></div>
+        <div className="info-box"><div className="info-box-icon">🚀</div><div className="info-box-label">Action Plan</div><div className="info-box-sub">30-60-90 day priorities</div></div>
       </div>
       <div style={{textAlign:"center",marginTop:28}}>
         <button className="btn btn-primary" style={{fontSize:16,padding:"14px 44px"}} onClick={onNext}>Begin Assessment →</button>
@@ -434,45 +402,40 @@ function WelcomeScreen({onNext}){
   );
 }
 
-function AboutYouScreen({data,onChange,onNext,onBack}){
+function AboutYouScreen({data,onChange,onNext,onBack}) {
   const [err,setErr]=useState({});
   const validate=()=>{
     const e={};
-    if(!local.fullName?.trim())e.fullName="Required";
-    if(!local.email?.trim()||!/\S+@\S+\.\S+/.test(local.email))e.email="Valid email required";
-    if(!local.businessName?.trim())e.businessName="Required";
-    if(!local.title?.trim())e.title="Required";
-    if(!local.industry)e.industry="Please select your industry";
-    setErr(e);
-    if(!Object.keys(e).length){
-      onChange("fullName",local.fullName);
-      onChange("email",local.email);
-      onChange("businessName",local.businessName);
-      onChange("title",local.title);
-      onChange("industry",local.industry);
-      return true;
-    }
-    return false;
+    if(!data.fullName?.trim()) e.fullName="Required";
+    if(!data.email?.trim()||!/\S+@\S+\.\S+/.test(data.email)) e.email="Valid email required";
+    if(!data.businessName?.trim()) e.businessName="Required";
+    if(!data.title?.trim()) e.title="Required";
+    if(!data.industry) e.industry="Please select your industry";
+    setErr(e); return !Object.keys(e).length;
   };
-  const F=({label,req,err:e,children})=>(
-    <div className="fg"><label className="flbl">{label}{req&&<span className="req"> *</span>}</label>{children}{e&&<div className="errmsg">{e}</div>}</div>
+  const Field=({label,req,err:e,children})=>(
+    <div className="form-group">
+      <label className="form-label">{label}{req&&<span className="req"> *</span>}</label>
+      {children}
+      {e&&<div className="error-msg">{e}</div>}
+    </div>
   );
-  return(
+  return (
     <div className="card">
       <div className="eyebrow">Section 1 of 3</div>
-      <h2 className="stitle">About You</h2>
-      <p className="sdesc">Tell us about yourself so we can personalize your results.</p>
+      <h2 className="section-title">About You</h2>
+      <p className="section-desc">Tell us about yourself so we can personalize your results and follow up with next steps.</p>
       <p className="req-note">Fields marked * are required</p>
-      <F label="Full Name" req err={err.fullName}><input className="finput" placeholder="Jane Smith" value={local.fullName} onChange={e=>upLocal("fullName",e.target.value)}/></F>
-      <F label="Business Email" req err={err.email}><input className="finput" type="email" placeholder="jane@company.com" value={local.email} onChange={e=>upLocal("email",e.target.value)}/></F>
-      <F label="Business Name" req err={err.businessName}><input className="finput" placeholder="Acme Corp" value={local.businessName} onChange={e=>upLocal("businessName",e.target.value)}/></F>
-      <F label="Your Title" req err={err.title}><input className="finput" placeholder="SVP of Sales" value={local.title} onChange={e=>upLocal("title",e.target.value)}/></F>
-      <F label="Industry" req err={err.industry}>
-        <select className="fselect" value={local.industry} onChange={e=>upLocal("industry",e.target.value)}>
+      <Field label="Full Name" req err={err.fullName}><input className="form-input" placeholder="Jane Smith" defaultValue={data.fullName||""} onBlur={e=>onChange("fullName",e.target.value)}/></Field>
+      <Field label="Business Email" req err={err.email}><input className="form-input" type="email" placeholder="jane@company.com" defaultValue={data.email||""} onBlur={e=>onChange("email",e.target.value)}/></Field>
+      <Field label="Business Name" req err={err.businessName}><input className="form-input" placeholder="Acme Corp" defaultValue={data.businessName||""} onBlur={e=>onChange("businessName",e.target.value)}/></Field>
+      <Field label="Your Title" req err={err.title}><input className="form-input" placeholder="SVP of Sales" defaultValue={data.title||""} onBlur={e=>onChange("title",e.target.value)}/></Field>
+      <Field label="Industry" req err={err.industry}>
+        <select className="form-select" value={data.industry||""} onChange={e=>onChange("industry",e.target.value)}>
           <option value="">Select your industry…</option>
           {INDUSTRIES.map(i=><option key={i}>{i}</option>)}
         </select>
-      </F>
+      </Field>
       <div className="btn-nav">
         <button className="btn btn-ghost" onClick={onBack}>← Back</button>
         <button className="btn btn-primary" onClick={()=>{if(validate())onNext();}}>Continue →</button>
@@ -481,57 +444,53 @@ function AboutYouScreen({data,onChange,onNext,onBack}){
   );
 }
 
-function StrategyScreen({data,onChange,onNext,onBack}){
-  const [local,setLocal]=useState({objectives:data.objectives||[],topOutcome:data.topOutcome||"",confidence:data.confidence||null,timeline:data.timeline||"",segments:data.segments||[]});
+function StrategyScreen({data,onChange,onNext,onBack}) {
   const [err,setErr]=useState({});
-  const upLocal=(k,v)=>setLocal(p=>({...p,[k]:v}));
   const validate=()=>{
     const e={};
-    if(!local.objectives?.length)e.objectives="Select at least one";
-    if(!local.topOutcome?.trim())e.topOutcome="Required";
-    if(!local.timeline)e.timeline="Required";
-    if(!local.segments?.length)e.segments="Select at least one";
-    setErr(e);
-    if(!Object.keys(e).length){
-      Object.entries(local).forEach(([k,v])=>onChange(k,v));
-      return true;
-    }
-    return false;
+    if(!data.objectives?.length) e.objectives="Select at least one";
+    if(!data.topOutcome?.trim()) e.topOutcome="Required";
+    if(!data.timeline) e.timeline="Required";
+    if(!data.segments?.length) e.segments="Select at least one";
+    setErr(e); return !Object.keys(e).length;
   };
-  const toggle=(field,val)=>{const a=local[field]||[];upLocal(field,a.includes(val)?a.filter(x=>x!==val):[...a,val]);};
-  return(
+  const toggle=(field,val)=>{
+    const arr=data[field]||[];
+    onChange(field,arr.includes(val)?arr.filter(x=>x!==val):[...arr,val]);
+  };
+  return (
     <div className="card">
       <div className="eyebrow">Section 2 of 3</div>
-      <h2 className="stitle">Sales Strategy Context</h2>
-      <p className="sdesc">Help us understand your strategic priorities before we assess your maturity.</p>
-      <div className="fg">
-        <label className="flbl">Which objectives does your sales org own today? <span className="req">*</span></label>
-        <div className="chips">{OBJECTIVES.map(o=><div key={o} className={`chip ${(local.objectives||[]).includes(o)?"on":""}`} onClick={()=>toggle("objectives",o)}>{o}</div>)}</div>
-        {err.objectives&&<div className="errmsg">{err.objectives}</div>}
+      <h2 className="section-title">Sales Strategy Context</h2>
+      <p className="section-desc">Help us understand your strategic priorities before we assess your sales engine maturity.</p>
+      <div className="form-group">
+        <label className="form-label">Which objectives does your sales org deliver on today? <span className="req">*</span></label>
+        <div className="chip-grid">{OBJECTIVES.map(o=><div key={o} className={`chip ${(data.objectives||[]).includes(o)?"on":""}`} onClick={()=>toggle("objectives",o)}>{o}</div>)}</div>
+        {err.objectives&&<div className="error-msg">{err.objectives}</div>}
       </div>
       <div className="divider"/>
-      <div className="fg">
-        <label className="flbl">If you could achieve ONE outcome by improving your sales engine, what would it be? <span className="req">*</span></label>
-        <textarea className="ftextarea" placeholder="e.g. Improve forecast accuracy to within 5% each quarter…" value={local.topOutcome} onChange={e=>upLocal("topOutcome",e.target.value)}/>
-        {err.topOutcome&&<div className="errmsg">{err.topOutcome}</div>}
+      <div className="form-group">
+        <label className="form-label">If you could achieve ONE outcome by improving your sales engine, what would it be? <span className="req">*</span></label>
+        <textarea className="form-textarea" placeholder="e.g. Improve forecast accuracy so we can predict revenue within 5% each quarter…" defaultValue={data.topOutcome||""} onBlur={e=>onChange("topOutcome",e.target.value)}/>
+        {err.topOutcome&&<div className="error-msg">{err.topOutcome}</div>}
       </div>
-      <div className="fg">
-        <label className="flbl">How confident are you that the right strategy and platform could move the needle?</label>
-        <div className="scale-row">{[1,2,3,4,5,6,7,8,9,10].map(n=><div key={n} className={`scale-btn ${local.confidence===n?"on":""}`} onClick={()=>upLocal("confidence",n)}>{n}</div>)}</div>
-        <div className="scale-lbls"><span>Not at all</span><span>Absolutely</span></div>
+      <div className="form-group">
+        <label className="form-label">How confident are you that the right strategy and platform could move the needle?</label>
+        <div className="scale-row">{[1,2,3,4,5,6,7,8,9,10].map(n=><div key={n} className={`scale-btn ${data.confidence===n?"on":""}`} onClick={()=>onChange("confidence",n)}>{n}</div>)}</div>
+        <div className="scale-labels"><span>Not at all</span><span>Absolutely</span></div>
       </div>
-      <div className="fg">
-        <label className="flbl">Improving our sales process is a priority in the next… <span className="req">*</span></label>
-        <select className="fselect" value={local.timeline} onChange={e=>upLocal("timeline",e.target.value)}>
+      <div className="form-group">
+        <label className="form-label">Improving our sales process is a priority in the next… <span className="req">*</span></label>
+        <select className="form-select" value={data.timeline||""} onChange={e=>onChange("timeline",e.target.value)}>
           <option value="">Select a timeframe…</option>
           {["1–3 Months","4–6 Months","7–12 Months","1–2 Years","Not a current priority"].map(t=><option key={t}>{t}</option>)}
         </select>
-        {err.timeline&&<div className="errmsg">{err.timeline}</div>}
+        {err.timeline&&<div className="error-msg">{err.timeline}</div>}
       </div>
-      <div className="fg">
-        <label className="flbl">What are your primary sales segments or motions? <span className="req">*</span></label>
-        <div className="chips">{SEGMENTS.map(s=><div key={s} className={`chip ${(local.segments||[]).includes(s)?"on":""}`} onClick={()=>toggle("segments",s)}>{s}</div>)}</div>
-        {err.segments&&<div className="errmsg">{err.segments}</div>}
+      <div className="form-group">
+        <label className="form-label">What are your primary sales segments or motions? <span className="req">*</span></label>
+        <div className="chip-grid">{SEGMENTS.map(s=><div key={s} className={`chip ${(data.segments||[]).includes(s)?"on":""}`} onClick={()=>toggle("segments",s)}>{s}</div>)}</div>
+        {err.segments&&<div className="error-msg">{err.segments}</div>}
       </div>
       <div className="btn-nav">
         <button className="btn btn-ghost" onClick={onBack}>← Back</button>
@@ -541,18 +500,19 @@ function StrategyScreen({data,onChange,onNext,onBack}){
   );
 }
 
-function AssessmentScreen({questions,answers,onAnswer,onNext,onBack}){
+function AssessmentScreen({answers,onAnswer,onNext,onBack}) {
   const [cur,setCur]=useState(0);
-  const active=questions.filter(q=>q.active!==false);
-  const total=active.length,q=active[cur],ans=answers[q?.id];
-  if(!q)return null;
+  const total=QUESTIONS.length, q=QUESTIONS[cur], ans=answers[q.id];
   const goNext=()=>cur<total-1?setCur(cur+1):onNext();
   const goPrev=()=>cur>0?setCur(cur-1):onBack();
-  return(
+  return (
     <div className="card">
       <div className="eyebrow">Section 3 of 3 — Maturity Diagnostic</div>
-      <div className="q-pips">{active.map((qq,i)=><div key={qq.id} className={`q-pip ${answers[qq.id]!==undefined?"done":i===cur?"cur":""}`}/>)}</div>
-      <div className="q-meta"><span className="q-badge">{q.domain}</span><span className="q-num">Question {cur+1} of {total}</span></div>
+      <div className="q-pips">{QUESTIONS.map((qq,i)=><div key={qq.id} className={`q-pip ${answers[qq.id]!==undefined?"done":i===cur?"cur":""}`}/>)}</div>
+      <div className="q-meta">
+        <span className="q-badge">{q.domain}</span>
+        <span className="q-num">Question {cur+1} of {total}</span>
+      </div>
       <div className="q-text">{q.text}</div>
       <div className="ans-grid">
         {q.answers.map((a,i)=>(
@@ -564,36 +524,38 @@ function AssessmentScreen({questions,answers,onAnswer,onNext,onBack}){
       </div>
       <div className="btn-nav">
         <button className="btn btn-ghost" onClick={goPrev}>← {cur===0?"Back":"Previous"}</button>
-        <button className="btn btn-primary" disabled={!ans} onClick={goNext}>{cur<total-1?"Next →":"View My Results →"}</button>
+        <button className="btn btn-primary" disabled={!ans} onClick={goNext}>{cur<total-1?"Next Question →":"View My Results →"}</button>
       </div>
     </div>
   );
 }
 
-function RadarChart({dimScores}){
+function RadarChart({dimScores}) {
   const dims=Object.keys(dimScores);
-  if(!dims.length)return null;
-  const cx=200,cy=200,r=130,n=dims.length,step=(2*Math.PI)/n;
+  if(!dims.length) return null;
+  const cx=200,cy=200,r=135,n=dims.length,step=(2*Math.PI)/n;
   const pt=(val,i,max=4)=>{const a=i*step-Math.PI/2,rr=(val/max)*r;return{x:cx+rr*Math.cos(a),y:cy+rr*Math.sin(a)};};
   const grid=[1,2,3,4].map(lv=>dims.map((_,i)=>pt(lv,i)).map(p=>`${p.x},${p.y}`).join(" "));
   const dataPts=dims.map((d,i)=>pt(dimScores[d]||0,i));
   const poly=dataPts.map(p=>`${p.x},${p.y}`).join(" ");
   const labels=dims.map((d,i)=>{const lp=pt(5.0,i);return{d,x:lp.x,y:lp.y,score:dimScores[d]||0};});
-  return(
+  return (
     <div className="radar-wrap">
       <svg width="400" height="400" viewBox="0 0 400 400" style={{maxWidth:"100%"}}>
         {grid.map((pts,li)=><polygon key={li} points={pts} fill="none" stroke="#E5E5E5" strokeWidth="1"/>)}
         {dims.map((_,i)=><line key={i} x1={cx} y1={cy} x2={pt(4,i).x} y2={pt(4,i).y} stroke="#E5E5E5" strokeWidth="1.5"/>)}
-        <polygon points={poly} fill="#0176D3" fillOpacity="0.12" stroke="#0176D3" strokeWidth="2.5"/>
+        <polygon points={poly} fill="#0176D3" fillOpacity="0.13" stroke="#0176D3" strokeWidth="2.5"/>
         {dataPts.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="5" fill="#0176D3" stroke="white" strokeWidth="2"/>)}
         {labels.map((l,i)=>{
           const s=scoreStyle(l.score);
           const vc=s.val==="v1"?"#BA0517":s.val==="v2"?"#FE5000":s.val==="v3"?"#B8860B":"#06A59A";
           const anchor=l.x<cx-15?"end":l.x>cx+15?"start":"middle";
-          return(<g key={i}>
-            <text x={l.x} y={l.y-4} textAnchor={anchor} fontSize="11" fontWeight="700" fill="#032D60" fontFamily="sans-serif">{l.d.length>18?l.d.substring(0,16)+"…":l.d}</text>
-            <text x={l.x} y={l.y+11} textAnchor={anchor} fontSize="11" fontWeight="700" fill={vc} fontFamily="sans-serif">{l.score.toFixed(1)}</text>
-          </g>);
+          return(
+            <g key={i}>
+              <text x={l.x} y={l.y-4} textAnchor={anchor} fontSize="11" fontWeight="700" fill="#032D60" fontFamily="sans-serif">{l.d.length>18?l.d.substring(0,17)+"…":l.d}</text>
+              <text x={l.x} y={l.y+11} textAnchor={anchor} fontSize="11" fontWeight="700" fill={vc} fontFamily="sans-serif">{l.score.toFixed(1)}</text>
+            </g>
+          );
         })}
         <circle cx={cx} cy={cy} r="3" fill="#E5E5E5"/>
       </svg>
@@ -601,120 +563,112 @@ function RadarChart({dimScores}){
   );
 }
 
-function ResultsScreen({about,answers,onSubmit,submitState}){
-  const allScores=Object.values(answers).filter(Boolean);
+function ResultsScreen({about,answers,onSubmit,submitState}) {
+  const allScores=QUESTIONS.map(q=>answers[q.id]).filter(Boolean);
   const avg=allScores.length?allScores.reduce((a,b)=>a+b,0)/allScores.length:0;
-  const overall=Math.round(avg*10)/10,tier=getTier(avg),ti=TIER_INFO[tier];
+  const overall=Math.round(avg*10)/10, tier=getTier(avg), ti=TIER_INFO[tier];
   const dimScores=getDimScores(answers);
-  const rawTotal=allScores.reduce((a,b)=>a+b,0),maxTotal=Object.keys(answers).length*4;
-
-  return(
-    <div style={{animation:"up .35s ease"}}>
-      <div className="res-header">
-        <div className="res-top">
+  const top3=Object.entries(dimScores).sort((a,b)=>a[1]-b[1]).slice(0,3).map(([d])=>({d,...INTERVENTIONS[d]})).filter(x=>x.title);
+  const plan={"0–30 Days":["Conduct a full CRM data audit and close field completeness gaps","Define and document ICP with sales leadership","Align on shared metric definitions (MQL, SQL, stages, ARR)"],"31–60 Days":["Implement pipeline hygiene standards and weekly review cadence","Deploy segment-specific playbooks in Salesforce","Launch structured manager coaching cadence with defined criteria"],"61–90 Days":["Enable AI-assisted lead scoring and opportunity health monitoring","Integrate quote-to-order handoff with clear process ownership","Publish first Executive Readout with maturity benchmarks vs. industry"]};
+  const rawTotal=allScores.reduce((a,b)=>a+b,0), maxTotal=QUESTIONS.length*4;
+  return (
+    <div style={{animation:"fadeUp 0.35s ease"}}>
+      <div className="results-header">
+        <div className="results-top">
           <div>
             <div className={`tier-badge ${ti.cls}`}>● {ti.label}</div>
-            <div className="res-tier-title">{about.businessName||"Your Organization"}'s Sales Maturity</div>
-            <div className="res-tier-desc">{ti.desc}</div>
+            <div className="results-tier-title">{about.businessName||"Your Organization"}'s Sales Maturity</div>
+            <div className="results-tier-desc">{ti.desc}</div>
           </div>
           <div className="score-block">
-            <div className="score-lbl">Overall Score</div>
-            <div className="score-num">{overall}<span style={{fontSize:22,opacity:.4}}>/4.0</span></div>
+            <div className="score-label">Overall Score</div>
+            <div className="score-num">{overall}<span style={{fontSize:22,opacity:0.45}}>/4.0</span></div>
             <div className="score-sub">{rawTotal} pts of {maxTotal} possible</div>
           </div>
         </div>
       </div>
-
-      <div className="res-body">
-        {/* MATURITY SPECTRUM */}
-        <div className="sec-head">Where You Stand on the Maturity Spectrum</div>
-        <div className="spectrum-wrap">
-          <div className="spectrum-track">
-            {[1,2,3,4].map(t=><div key={t} className={`spec-seg s${t} ${t===tier?"active":""}`}/>)}
+      <div className="results-body">
+        {about.topOutcome&&(
+          <div style={{background:"#F3F6FB",borderRadius:8,padding:"13px 17px",marginBottom:22,borderLeft:"3px solid var(--sf-blue)"}}>
+            <div style={{fontSize:11,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--sf-blue)",marginBottom:3}}>Your Stated Priority</div>
+            <div style={{fontSize:14,color:"var(--sf-gray-5)",fontStyle:"italic"}}>"{about.topOutcome}"</div>
           </div>
-          <div className="spectrum-tiers">
-            {[1,2,3,4].map(t=>{
-              const ti2=TIER_INFO[t];
-              return(
-                <div key={t} className={`spec-tier ${t===tier?`current ${ti2.border}`:""}`}>
-                  {t===tier&&<div className="you-pill">▶ You are here</div>}
-                  <div className="spec-tier-label" style={{color:ti2.color}}>{ti2.short}</div>
-                  <div className="spec-tier-name">{ti2.label}</div>
-                  <div className="spec-tier-desc">{ti2.desc}</div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* RADAR */}
-        <div className="sec-head">Maturity by Dimension</div>
+        )}
+        <div className="sec-head">Maturity by Dimension — Radar View</div>
         <RadarChart dimScores={dimScores}/>
-
-        {/* HEATMAP + DIMENSION NARRATIVES */}
-        <div className="sec-head">Dimension Scores & Growth Considerations</div>
-        <div className="heatmap" style={{marginBottom:32}}>
+        <div className="sec-head">Dimension Heatmap</div>
+        <div className="heatmap" style={{marginBottom:28}}>
           {Object.entries(dimScores).map(([dim,score])=>{
             const s=scoreStyle(score),t=getTier(score);
-            const narrative=DIM_NARRATIVES[dim]?.[t]||"";
             return(
               <div key={dim} className="hm-item">
                 <div className="hm-dim">{dim}</div>
-                <div className="hm-row">
-                  <div className="hm-bg"><div className={`hm-fill ${s.bar}`} style={{width:`${(score/4)*100}%`}}/></div>
-                  <div className={`hm-val ${s.val}`}>{score.toFixed(1)}</div>
-                </div>
-                {narrative&&<div className="hm-next">{narrative}</div>}
+                <div className="hm-row"><div className="hm-bg"><div className={`hm-fill ${s.bar}`} style={{width:`${(score/4)*100}%`}}/></div><div className={`hm-val ${s.val}`}>{score.toFixed(1)}</div></div>
+                <div className="hm-tier">{TIER_INFO[t].label}</div>
               </div>
             );
           })}
         </div>
-
-        {/* SUMMARY */}
-        {about.topOutcome&&(
-          <div style={{background:"#F3F6FB",borderRadius:10,padding:"14px 18px",marginBottom:22,borderLeft:"3px solid var(--blue)"}}>
-            <div style={{fontSize:10,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--blue)",marginBottom:4}}>Your Stated Priority</div>
-            <div style={{fontSize:14,color:"var(--g5)",fontStyle:"italic"}}>"{about.topOutcome}"</div>
-          </div>
-        )}
-        <div style={{marginBottom:8}}>
-          <div className="sec-head">Assessment Summary</div>
-          <div className="summary-grid">
+        <div className="sec-head">Priority Interventions</div>
+        <div className="int-list">
+          {top3.map((x,i)=>(
+            <div key={i} className="int-card">
+              <div className="int-num">{i+1}</div>
+              <div>
+                <div style={{fontSize:10,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--sf-gray-4)",marginBottom:3}}>{x.d} — Score: {dimScores[x.d]?.toFixed(1)}</div>
+                <div className="int-title">{x.title}</div>
+                <div className="int-body">{x.body}</div>
+                <div className="int-tag">{x.tag}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="sec-head">Recommended 30-60-90 Day Action Plan</div>
+        <div className="plan">
+          {Object.entries(plan).map(([period,items])=>(
+            <div key={period} className="plan-col">
+              <div className="plan-period">{period}</div>
+              <ul className="plan-items">{items.map((it,i)=><li key={i}>{it}</li>)}</ul>
+            </div>
+          ))}
+        </div>
+        <div style={{background:"var(--sf-gray-1)",borderRadius:8,padding:"14px 18px",marginBottom:16}}>
+          <div style={{fontSize:11,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--sf-gray-4)",marginBottom:8}}>Assessment Summary</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(175px,1fr))",gap:8}}>
             {[["Respondent",about.fullName],["Title",about.title],["Company",about.businessName],["Industry",about.industry],["Timeline",about.timeline],["Confidence",about.confidence?`${about.confidence}/10`:"—"]].map(([k,v])=>(
-              <div key={k} className="sum-item"><div className="sum-lbl">{k}</div><div className="sum-val">{v||"—"}</div></div>
+              <div key={k}><div style={{fontSize:11,color:"var(--sf-gray-4)",fontWeight:600}}>{k}</div><div style={{fontSize:13,color:"var(--sf-gray-5)",fontWeight:500}}>{v||"—"}</div></div>
             ))}
           </div>
         </div>
-
-        {submitState==="sending"&&<div className="status-msg st-sending">⏳ Submitting results…</div>}
-        {submitState==="ok"&&<div className="status-msg st-ok">✅ Results saved successfully.</div>}
-        {submitState==="error"&&<div className="status-msg st-err">⚠️ Could not reach Google Sheets. Check the webhook URL in the config.</div>}
-
+        {submitState==="sending"&&<div className="submit-status st-sending">⏳ Submitting your results to Google Sheets…</div>}
+        {submitState==="ok"&&<div className="submit-status st-ok">✅ Results saved to Google Sheets!</div>}
+        {submitState==="error"&&<div className="submit-status st-error">⚠️ Could not reach Google Sheets. Check the webhook URL in the config. Your results are still shown here.</div>}
         <div className="print-bar">
           <button className="btn btn-secondary" onClick={()=>window.print()}>🖨 Print / Save PDF</button>
-          {submitState!=="ok"&&<button className="btn btn-green" onClick={onSubmit} disabled={submitState==="sending"}>{submitState==="sending"?"Submitting…":"✓ Submit Results"}</button>}
+          {submitState!=="ok"&&<button className="btn btn-submit" onClick={onSubmit} disabled={submitState==="sending"}>{submitState==="sending"?"Submitting…":"✓ Submit Results"}</button>}
         </div>
       </div>
     </div>
   );
 }
 
-function ThankYouScreen({about,overall,tier}){
+function ThankYouScreen({about,overall,tier}) {
   const ti=TIER_INFO[tier];
-  return(
+  const firstName=about.fullName?.split(" ")[0]||"there";
+  return (
     <div className="card">
-      <div className="ty">
+      <div className="ty-wrap">
         <div className="ty-icon">🎯</div>
-        <h2 className="ty-title">Thank you, {about.fullName?.split(" ")[0]||"there"}!</h2>
-        <p className="ty-desc">Your B2B Sales Maturity Assessment is complete. A Salesforce consultant will review your results and be in touch.</p>
-        <div className="ty-score">
-          <div className="ty-score-item"><div className="ty-score-val">{overall}</div><div className="ty-score-lbl">Overall Score</div></div>
-          <div className="ty-score-item"><div className="ty-score-val">/4.0</div><div className="ty-score-lbl">Max Possible</div></div>
-          <div className="ty-score-item"><div className="ty-score-val" style={{fontSize:18}}>{ti.short}</div><div className="ty-score-lbl">Maturity Tier</div></div>
+        <h2 className="ty-title">Thank you, {firstName}!</h2>
+        <p className="ty-desc">Your B2B Sales Maturity Assessment is complete and has been saved. A Salesforce consultant will review your results and reach out to discuss your personalized roadmap.</p>
+        <div className="ty-score-block">
+          <div className="ty-score-item"><div className="ty-score-val">{overall}</div><div className="ty-score-label">Overall Score</div></div>
+          <div className="ty-score-item"><div className="ty-score-val">/4.0</div><div className="ty-score-label">Max Possible</div></div>
+          <div className="ty-score-item"><div className="ty-score-val" style={{fontSize:20}}>{ti.label.split("/")[0].trim()}</div><div className="ty-score-label">Maturity Tier</div></div>
         </div>
-        <p style={{fontSize:13,color:"var(--g4)",marginBottom:24}}>We'll follow up at <strong>{about.email}</strong>.</p>
+        <p style={{fontSize:13,color:"var(--sf-gray-4)",marginBottom:24}}>We'll follow up at <strong>{about.email}</strong> within 1–2 business days.</p>
         <div className="ty-actions">
-          <button className="btn btn-secondary" onClick={()=>window.print()}>🖨 Download Results</button>
+          <button className="btn btn-secondary" onClick={()=>window.print()}>🖨 Download / Print Results</button>
           <button className="btn btn-primary" onClick={()=>window.location.reload()}>Start New Assessment</button>
         </div>
       </div>
@@ -722,69 +676,60 @@ function ThankYouScreen({about,overall,tier}){
   );
 }
 
-/* ═══ APP ═══ */
-function App(){
+// ── App ───────────────────────────────────────────────────────────────────────
+function App() {
   const [step,setStep]=useState(1);
   const [about,setAbout]=useState({});
   const [strategy,setStrategy]=useState({});
   const [answers,setAnswers]=useState({});
   const [submitState,setSubmitState]=useState("idle");
-  const [questions,setQuestions]=useState(DEFAULT_QUESTIONS);
-
-  useEffect(()=>{
-    if(QUESTIONS_SHEET_URL!=="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec"){
-      fetch(QUESTIONS_SHEET_URL+"?action=getQuestions")
-        .then(r=>r.json())
-        .then(d=>{if(d.questions?.length)setQuestions(d.questions);})
-        .catch(()=>{});
-    }
-  },[]);
-
-  const upA=React.useCallback((k,v)=>setAbout(p=>({...p,[k]:v})),[]);
-  const upS=React.useCallback((k,v)=>setStrategy(p=>({...p,[k]:v})),[]);
+  const upAbout=(k,v)=>setAbout(p=>({...p,[k]:v}));
+  const upStrategy=(k,v)=>setStrategy(p=>({...p,[k]:v}));
   const scroll=()=>window.scrollTo({top:0,behavior:"smooth"});
   const next=()=>{setStep(s=>s+1);scroll();};
   const back=()=>{setStep(s=>s-1);scroll();};
   const allData={...about,...strategy};
-
-  const allScores=Object.values(answers).filter(Boolean);
+  const allScores=QUESTIONS.map(q=>answers[q.id]).filter(Boolean);
   const avg=allScores.length?allScores.reduce((a,b)=>a+b,0)/allScores.length:0;
-  const overall=Math.round(avg*10)/10,tier=getTier(avg);
-  const dimScores=getDimScores(answers);
-  const emailDomain=extractDomain(about.email||"");
-  const isTester=TESTER_DOMAINS.includes(emailDomain);
+  const overall=Math.round(avg*10)/10, tier=getTier(avg);
 
   const handleSubmit=async()=>{
     setSubmitState("sending");
+    const dimScores=getDimScores(answers);
     const payload={
       timestamp:new Date().toISOString(),
-      fullName:about.fullName,email:about.email,businessName:about.businessName,
-      title:about.title,industry:about.industry,timeline:strategy.timeline,
-      confidence:strategy.confidence,objectives:(strategy.objectives||[]).join(", "),
-      segments:(strategy.segments||[]).join(", "),topOutcome:strategy.topOutcome,
-      overallScore:overall,overallTier:TIER_INFO[tier].label,
-      emailDomain,isTester,
-      ...Object.fromEntries(questions.filter(q=>q.active!==false).map(q=>[`Q_${q.id}_${q.domain.replace(/\s+/g,"_")}`,answers[q.id]||""])),
+      fullName:about.fullName, email:about.email,
+      businessName:about.businessName, title:about.title,
+      industry:about.industry, timeline:strategy.timeline,
+      confidence:strategy.confidence,
+      objectives:(strategy.objectives||[]).join(", "),
+      segments:(strategy.segments||[]).join(", "),
+      topOutcome:strategy.topOutcome,
+      overallScore:overall, overallTier:TIER_INFO[tier].label,
+      ...Object.fromEntries(QUESTIONS.map(q=>[`Q_${q.id}_${q.domain.replace(/\s+/g,"_")}`,answers[q.id]||""])),
       ...Object.fromEntries(Object.entries(dimScores).map(([d,s])=>[`DIM_${d.replace(/[^a-zA-Z0-9]/g,"_")}`,s])),
     };
     if(GOOGLE_SHEETS_WEBHOOK==="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec"){
-      setSubmitState("ok");setTimeout(()=>{setStep(6);scroll();},800);return;
+      setSubmitState("ok");
+      setTimeout(()=>{setStep(6);scroll();},800);
+      return;
     }
     try{
       await fetch(GOOGLE_SHEETS_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
-      setSubmitState("ok");setTimeout(()=>{setStep(6);scroll();},1000);
+      setSubmitState("ok");
+      setTimeout(()=>{setStep(6);scroll();},1000);
     }catch(e){setSubmitState("error");}
   };
 
-  return(
+  return (
     <div>
       <Nav/>
       {step<6&&<ProgressBar step={step}/>}
       <div className="main">
         {step===1&&<WelcomeScreen onNext={next}/>}
-        {step===2&&<AboutYouScreen data={about} onChange={upA} onNext={next} onBack={back}/>}
-        {step===3&&<StrategyScreen data={strategy} onChange={upS} onNext={next} onBack={back}/>}
-        {step===4&&<AssessmentScreen questions={questions} answers={answers} onAnswer={(id,val)=>setAnswers(p=>({...p,[id]:val}))} onNext={next} onBack={back}/>}
+        {step===2&&<AboutYouScreen data={about} onChange={upAbout} onNext={next} onBack={back}/>}
+        {step===3&&<StrategyScreen data={strategy} onChange={upStrategy} onNext={next} onBack={back}/>}
+        {step===4&&<AssessmentScreen answers={answers} onAnswer={(id,val)=>setAnswers(p=>({...p,[id]:val}))} onNext={next} onBack={back}/>}
         {step===5&&<ResultsScreen about={allData} answers={answers} onSubmit={handleSubmit} submitState={submitState}/>}
         {step===6&&<ThankYouScreen about={allData} overall={overall} tier={tier}/>}
       </div>
@@ -794,5 +739,69 @@ function App(){
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
+
+<!--
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║   📋  GOOGLE SHEETS SETUP — ONE-TIME SETUP, ABOUT 10 MINUTES                ║
+║                                                                               ║
+║   STEP 1 — Create your tracking sheet                                        ║
+║   • Go to sheets.google.com and create a blank spreadsheet                   ║
+║   • Name it something like "Sales Maturity Responses"                        ║
+║   • Leave it blank — the script will auto-create headers on first submit     ║
+║                                                                               ║
+║   STEP 2 — Open Apps Script                                                  ║
+║   • In the sheet, click: Extensions → Apps Script                            ║
+║   • Delete ALL existing code in the editor                                   ║
+║   • Paste in this code exactly:                                               ║
+║                                                                               ║
+║   ─────────────────────────────────────────────────────────                  ║
+║   function doPost(e) {                                                        ║
+║     var sheet =                                                               ║
+║       SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();                ║
+║     var data = JSON.parse(e.postData.contents);                              ║
+║     if (sheet.getLastRow() === 0) {                                           ║
+║       sheet.appendRow(Object.keys(data));                                    ║
+║     }                                                                         ║
+║     sheet.appendRow(Object.values(data));                                    ║
+║     return ContentService                                                     ║
+║       .createTextOutput(JSON.stringify({ status: "ok" }))                    ║
+║       .setMimeType(ContentService.MimeType.JSON);                            ║
+║   }                                                                           ║
+║   ─────────────────────────────────────────────────────────                  ║
+║                                                                               ║
+║   STEP 3 — Deploy as a Web App                                               ║
+║   • Click Deploy → New Deployment                                             ║
+║   • Click the gear icon → select "Web app"                                   ║
+║   • Set "Execute as" to: Me                                                   ║
+║   • Set "Who has access" to: Anyone                                           ║
+║   • Click Deploy → copy the Web App URL                                      ║
+║                                                                               ║
+║   STEP 4 — Paste the URL into this file                                      ║
+║   • Open this HTML file in a text editor (Notepad, TextEdit, VS Code)        ║
+║   • Find this line near the top of the <script> section:                     ║
+║                                                                               ║
+║     const GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";              ║
+║                                                                               ║
+║   • Replace https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec with the URL you copied                ║
+║   • Save the file                                                             ║
+║                                                                               ║
+║   STEP 5 — Test it                                                           ║
+║   • Complete the assessment and click "Submit Results"                        ║
+║   • Open your Google Sheet — a new row should appear within seconds          ║
+║   • Row 1 = column headers, Row 2+ = one row per submission                  ║
+║                                                                               ║
+║   ⚠️  IMPORTANT: Each time you edit the Apps Script code you must            ║
+║   create a NEW Deployment (not re-deploy the old one) and update the         ║
+║   URL in this file.                                                           ║
+║                                                                               ║
+║   💡  TO UPDATE QUESTIONS: Open this file in a text editor and find the      ║
+║   QUESTIONS array. Edit question text or answers directly. Rules:            ║
+║   • Keep exactly 4 answers per question                                       ║
+║   • Answer 1 = worst maturity, Answer 4 = best maturity                      ║
+║   • Save the file — changes take effect immediately on next load             ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+-->
 </body>
 </html>
