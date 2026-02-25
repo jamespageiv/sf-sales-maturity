@@ -122,8 +122,8 @@ body{font-family:'Sora',sans-serif;background:#F0F4FA;color:var(--g5);min-height
 const { useState, useEffect } = React;
 
 /* ═══ CONFIG ═══ */
-const ADMIN_PASSWORD    = "salesforce2024";
-const GOOGLE_SHEETS_API = "YOUR_APPS_SCRIPT_URL_HERE";
+const ADMIN_PASSWORD    = "Martha314!";
+const GOOGLE_SHEETS_API = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
 
 /* ═══ DEFAULT QUESTIONS (fallback if sheet not connected) ═══ */
 const DEFAULT_QUESTIONS = [
@@ -232,7 +232,7 @@ function App(){
   const [showInactive,setShowInactive]=useState(true);
   const [saveState,setSaveState]=useState("idle"); // idle | saving | ok | err | local
   const [loaded,setLoaded]=useState(false);
-  const configured=GOOGLE_SHEETS_API!=="YOUR_APPS_SCRIPT_URL_HERE";
+  const configured=GOOGLE_SHEETS_API!=="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
 
   // Load questions from sheet on mount
   useEffect(()=>{
