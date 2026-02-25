@@ -438,12 +438,21 @@ function AboutYouScreen({data,onChange,onNext,onBack}){
   const [err,setErr]=useState({});
   const validate=()=>{
     const e={};
-    if(!data.fullName?.trim())e.fullName="Required";
-    if(!data.email?.trim()||!/\S+@\S+\.\S+/.test(data.email))e.email="Valid email required";
-    if(!data.businessName?.trim())e.businessName="Required";
-    if(!data.title?.trim())e.title="Required";
-    if(!data.industry)e.industry="Please select your industry";
-    setErr(e);return!Object.keys(e).length;
+    if(!local.fullName?.trim())e.fullName="Required";
+    if(!local.email?.trim()||!/\S+@\S+\.\S+/.test(local.email))e.email="Valid email required";
+    if(!local.businessName?.trim())e.businessName="Required";
+    if(!local.title?.trim())e.title="Required";
+    if(!local.industry)e.industry="Please select your industry";
+    setErr(e);
+    if(!Object.keys(e).length){
+      onChange("fullName",local.fullName);
+      onChange("email",local.email);
+      onChange("businessName",local.businessName);
+      onChange("title",local.title);
+      onChange("industry",local.industry);
+      return true;
+    }
+    return false;
   };
   const F=({label,req,err:e,children})=>(
     <div className="fg"><label className="flbl">{label}{req&&<span className="req"> *</span>}</label>{children}{e&&<div className="errmsg">{e}</div>}</div>
