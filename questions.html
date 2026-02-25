@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Question Editor | Sales Maturity</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0176D3;--blue-dk:#014486;--blue-lt:#1B96FF;--blue-xlt:#D8EDFF;--navy:#032D60;--teal:#06A59A;--green:#2E844A;--green-lt:#EBF7E6;--red:#BA0517;--orange:#FE5000;--g1:#F3F3F3;--g2:#E5E5E5;--g4:#706E6B;--g5:#444444;--r:8px;--sh:0 2px 16px rgba(0,0,0,.10);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Sora',sans-serif;background:#F0F4FA;color:var(--g5);min-height:100vh;}
+#root{min-height:100vh;}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy) 0%,#093a6e 60%,#0176D3 100%);}
+.login-card{background:#fff;border-radius:16px;padding:48px 44px;width:380px;box-shadow:0 8px 40px rgba(0,0,0,.22);text-align:center;}
+.login-title{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+.login-sub{font-size:14px;color:var(--g4);margin-bottom:28px;}
+.login-input{width:100%;padding:11px 14px;border:1.5px solid var(--g2);border-radius:var(--r);font-size:14px;font-family:inherit;outline:none;margin-bottom:12px;transition:border-color .2s;}
+.login-input:focus{border-color:var(--blue);}
+.login-btn{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.login-btn:hover{background:var(--blue-dk);}
+.login-err{font-size:12px;color:var(--red);margin-bottom:10px;}
+
+/* NAV */
+.nav{background:var(--navy);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);}
+.nav-logo{display:flex;align-items:center;gap:12px;}
+.nav-div{width:1px;height:26px;background:rgba(255,255,255,.2);}
+.nav-title{color:rgba(255,255,255,.85);font-size:13px;font-weight:500;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-btn{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;}
+.nav-save{background:var(--teal);color:#fff;}
+.nav-save:hover{background:#048a80;}
+.nav-save:disabled{opacity:.5;cursor:not-allowed;}
+.nav-out{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.65);padding:5px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.nav-out:hover{background:rgba(255,255,255,.1);color:#fff;}
+
+/* LAYOUT */
+.main{max-width:900px;margin:0 auto;padding:28px 20px 80px;}
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+.page-title{font-size:22px;font-weight:800;color:var(--navy);}
+.page-sub{font-size:13px;color:var(--g4);margin-top:4px;line-height:1.5;}
+
+/* STATUS BAR */
+.status-bar{padding:12px 16px;border-radius:8px;font-size:13px;font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+.st-idle{background:var(--g1);color:var(--g4);}
+.st-saving{background:#EEF4FF;color:var(--blue);}
+.st-ok{background:var(--green-lt);color:var(--green);}
+.st-err{background:#FDECEA;color:var(--red);}
+.st-local{background:#FFF8E1;color:#8A6200;}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
+.dim-filter{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
+.dim-chip{padding:5px 12px;border-radius:20px;border:1.5px solid var(--g2);font-size:12px;font-weight:600;color:var(--g4);cursor:pointer;transition:all .15s;background:#fff;white-space:nowrap;}
+.dim-chip:hover{border-color:var(--blue);color:var(--blue);}
+.dim-chip.on{background:var(--blue);border-color:var(--blue);color:#fff;}
+.show-toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--g4);cursor:pointer;white-space:nowrap;}
+
+/* QUESTION CARDS */
+.q-list{display:flex;flex-direction:column;gap:12px;}
+.q-card{background:#fff;border-radius:10px;box-shadow:var(--sh);border:1.5px solid var(--g2);overflow:hidden;transition:border-color .15s;}
+.q-card.inactive{opacity:.55;}
+.q-card.editing{border-color:var(--blue);box-shadow:0 4px 20px rgba(1,118,211,.14);}
+.q-header{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;user-select:none;}
+.q-header:hover{background:#FAFAFA;}
+.q-drag-handle{color:var(--g4);font-size:16px;cursor:grab;flex-shrink:0;padding:0 2px;}
+.q-num-badge{min-width:26px;height:26px;border-radius:50%;background:var(--g1);border:1.5px solid var(--g2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--g4);flex-shrink:0;}
+.q-card.inactive .q-num-badge{background:var(--g2);}
+.q-domain-badge{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;background:var(--blue-xlt);color:var(--blue-dk);white-space:nowrap;}
+.q-preview{flex:1;font-size:14px;font-weight:600;color:var(--navy);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.q-card.inactive .q-preview{color:var(--g4);text-decoration:line-through;}
+.q-actions{display:flex;gap:6px;flex-shrink:0;}
+.q-btn{padding:5px 10px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--g2);background:#fff;color:var(--g4);font-family:inherit;transition:all .15s;white-space:nowrap;}
+.q-btn:hover{border-color:var(--blue);color:var(--blue);}
+.q-btn.danger:hover{border-color:var(--red);color:var(--red);}
+.q-btn.green{border-color:var(--green);color:var(--green);}
+.q-btn.green:hover{background:var(--green-lt);}
+.q-btn.up-dn{padding:5px 8px;}
+
+/* EDIT FORM */
+.q-form{padding:16px 20px;border-top:1px solid var(--g2);background:#FAFBFF;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px;}
+.form-row.single{grid-template-columns:1fr;}
+.fg{margin-bottom:0;}
+.flbl{display:block;font-size:12px;font-weight:700;color:var(--g5);margin-bottom:5px;letter-spacing:.3px;}
+.finput,.fselect{width:100%;padding:9px 13px;border:1.5px solid var(--g2);border-radius:var(--r);font-size:13px;font-family:inherit;color:var(--g5);background:#fff;outline:none;transition:border-color .2s;}
+.finput:focus,.fselect:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(1,118,211,.1);}
+.fselect{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23706E6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:32px;}
+.ans-labels{display:flex;justify-content:space-between;margin-bottom:6px;}
+.ans-label{font-size:10px;font-weight:700;color:var(--g4);text-align:center;flex:1;}
+.ans-label.l1{color:var(--red);text-align:left;}.ans-label.l4{color:var(--teal);text-align:right;}
+.answers-grid{display:flex;flex-direction:column;gap:7px;}
+.ans-row{display:flex;gap:10px;align-items:center;}
+.ans-idx{min-width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+.a1{background:var(--red)}.a2{background:var(--orange)}.a3{background:#B8860B}.a4{background:var(--teal)}
+.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--g2);}
+.btn{padding:8px 18px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit;}
+.btn-primary{background:var(--blue);color:#fff;}
+.btn-primary:hover{background:var(--blue-dk);}
+.btn-ghost{background:transparent;color:var(--g4);border:1.5px solid var(--g2);}
+.btn-ghost:hover{border-color:var(--g4);}
+
+/* ADD FORM */
+.add-panel{background:#fff;border-radius:10px;box-shadow:var(--sh);border:2px dashed var(--blue);padding:24px 22px;margin-bottom:20px;}
+.add-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+/* STATS */
+.stats-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.stat-pill{background:#fff;border-radius:8px;padding:10px 16px;box-shadow:var(--sh);font-size:13px;font-weight:600;color:var(--navy);display:flex;align-items:center;gap:8px;}
+.stat-pill span{font-size:11px;color:var(--g4);font-weight:400;}
+
+.SFLogo svg{display:block;}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ═══ CONFIG ═══ */
+const ADMIN_PASSWORD    = "salesforce2024";
+const GOOGLE_SHEETS_API = "YOUR_APPS_SCRIPT_URL_HERE";
+
+/* ═══ DEFAULT QUESTIONS (fallback if sheet not connected) ═══ */
+const DEFAULT_QUESTIONS = [
+  {id:"q1",domain:"Sales Process",dimension:"Sales Process & Governance",active:true,text:"Is your ICP (ideal customer profile) documented and used to qualify deals?",answers:["Not defined — reps qualify based on gut feel","Defined informally; not consistently enforced","Documented and used by most teams to qualify opportunities","Operationalized in CRM, reviewed quarterly, and tied to routing rules"]},
+  {id:"q2",domain:"Sales Process",dimension:"Sales Process & Governance",active:true,text:"Are sales stages defined with exit criteria and consistently followed?",answers:["No common stages; each rep operates independently","Stages exist in CRM but inconsistently applied","Stages with exit criteria are used and enforced in pipeline reviews","Enforced, coached, and continuously improved using conversion data"]},
+  {id:"q3",domain:"CRM & Data",dimension:"Data, CRM & AI",active:true,text:"How well does your CRM opportunity structure reflect how your business actually sells?",answers:["Poor fit — CRM is a transactional log, not a sales tool","Partial fit — adapted but constrained by system limitations","Strong fit — CRM is aligned to actual sales motion and used daily","Strategic fit — CRM architecture optimized for revenue operations and trusted as system of record"]},
+  {id:"q4",domain:"Sales Process",dimension:"Sales Process & Governance",active:true,text:"How would you rate your lead management and qualification process?",answers:["Inconsistent lead routing; no defined qualification framework","Basic routing and manual qualification in place","Defined methodology (BANT, MEDDPICC, SPICED) with reporting","AI-assisted scoring, fast-response SLAs, and data-driven qualification"]},
+  {id:"q5",domain:"Forecasting",dimension:"Forecasting & Pipeline",active:true,text:"How objective and accurate is your sales forecasting?",answers:["Gut feel, low confidence — no real process","Manager judgment and spreadsheets; inconsistent accuracy","Criteria-based forecasting with a regular cadence and tracked accuracy","Data-driven with AI-assisted accuracy tracking and scenario modeling"]},
+  {id:"q6",domain:"Pipeline Mgmt",dimension:"Forecasting & Pipeline",active:true,text:"How do you manage pipeline health — coverage, aging, and next steps?",answers:["No standard — pipeline visibility is low and unreliable","Basic reviews only; no standardized KPIs","Pipeline KPIs tracked with weekly reviews and dashboards","Predictive scoring, AI-guided early warning triggers, and automated alerts"]},
+  {id:"q7",domain:"Pricing / CPQ",dimension:"Pricing & Quote-to-Cash",active:true,text:"How controlled is your discounting and pricing approval process?",answers:["Ad hoc — reps discount freely with no governance","Guidelines exist but exceptions are common and untracked","Policy and approval workflows enforced in the deal process","CPQ-enforced pricing with margin leakage analytics and deal-level visibility"]},
+  {id:"q8",domain:"Quote-to-Cash",dimension:"Pricing & Quote-to-Cash",active:true,text:"How integrated is your quote → order → invoice → payment process?",answers:["Fully manual handoffs; no integration between systems","Partial integration; major steps still require manual effort","Integrated for most products with clear process ownership","End-to-end integrated with cycle time measurement and exception management"]},
+  {id:"q9",domain:"AI & Automation",dimension:"Data, CRM & AI",active:true,text:"How would you rate your use of AI, automation, or intelligent agents in your sales process?",answers:["No AI usage — fully manual processes","Early experimentation with scoring or summaries","AI used in coaching, scoring, or call summaries at scale","Agentic workflows that plan, reason, and take action across the revenue lifecycle"]},
+  {id:"q10",domain:"Sales Operations",dimension:"Operations & Lifecycle",active:true,text:"How would you rate your sales operations and post-sales account management integration?",answers:["Fragmented — sales and post-sales operate in silos with no shared visibility","Basic alignment — handoffs defined but manual and inconsistently executed","Coordinated — clear ownership, structured handoffs, and shared CRM visibility","Integrated and proactive — shared KPIs, real-time insights, proactive account growth"]},
+  {id:"q11",domain:"Enablement",dimension:"Enablement & Coaching",active:true,text:"Are playbooks and messaging standardized by segment or use case?",answers:["No playbooks — reps create their own approaches","Some documents exist but not consistently used","Used in onboarding and coaching; embedded in workflow","Measured for effectiveness, continuously updated, tied to win/loss data"]},
+  {id:"q12",domain:"Coaching",dimension:"Enablement & Coaching",active:true,text:"Do managers run a consistent, structured coaching cadence?",answers:["Sporadic — coaching happens ad hoc, if at all","1:1s happen but are unstructured and deal-focused only","Structured coaching and deal reviews tied to skills development","Coaching tied to skills metrics, performance data, and business outcomes"]},
+  {id:"q13",domain:"CRM Adoption",dimension:"Data, CRM & AI",active:true,text:"How would you rate CRM adoption and data hygiene across your sales org?",answers:["Low trust in CRM data; heavy Excel shadow systems are the norm","Moderate usage; required fields often incomplete or outdated","Strong adoption — consistent updates and next steps logged","CRM is the single source of truth with automated capture and behavioral alignment"]},
+  {id:"q14",domain:"Data Governance",dimension:"Data, CRM & AI",active:true,text:"Do you have shared definitions for key metrics — MQL/SQL, stages, ARR, churn?",answers:["No shared definitions — every team measures differently","Partial alignment; frequent disputes over numbers","Definitions documented and used consistently across revenue teams","Governed with clear owners, change control, and a published metric catalog"]},
+  {id:"q15",domain:"Growth Strategy",dimension:"Growth Strategy",active:true,text:"Where is incremental profit most likely to come from in your business today?",answers:["Primarily from new lead volume alone","Mostly new leads with very limited expansion motion","Balanced acquisition and account expansion","Primarily from systematically expanding and renewing existing accounts"]},
+  {id:"q16",domain:"Revenue Constraint",dimension:"Growth Strategy",active:true,text:"What is the biggest barrier to generating more revenue today?",answers:["Insufficient high-quality new leads","Time lost chasing poor-fit or low-intent leads","Administrative and internal process burden on sellers","Post-sale servicing and order management friction impacting retention and expansion"]},
+  {id:"q17",domain:"Agility",dimension:"Operations & Lifecycle",active:true,text:"How agile is your organization in updating pricing rules, approval workflows, or sales stages?",answers:["IT-dependent — all changes are slow and require tickets","Minor changes can be made by sales ops with effort","Sales and ops can adjust key levers without engineering","Business users fully manage rules and strategies via a no-code UI"]},
+  {id:"q18",domain:"Partner / Data",dimension:"Operations & Lifecycle",active:true,text:"How do external partners or 3rd-party data enhance your sales team's effectiveness?",answers:["No external data or partnerships leveraged","Some 3rd-party data available; ad hoc partner collaboration","3rd-party data directly impacts lead and deal scoping; defined partner network","Integrated and automated 3rd-party data with a governed partner ecosystem"]},
+];
+
+const DIMENSIONS=["Growth Strategy","Sales Process & Governance","Forecasting & Pipeline","Pricing & Quote-to-Cash","Enablement & Coaching","Data, CRM & AI","Operations & Lifecycle"];
+
+const SFLogo=()=>(
+  <svg height="26" viewBox="0 0 280 60" fill="white" xmlns="http://www.w3.org/2000/svg">
+    <path d="M42 38.5c-1.5.8-3.2 1.3-5 1.3-5.5 0-10-4.5-10-10s4.5-10 10-10c2.3 0 4.5.8 6.2 2.1 1.8-3.5 5.5-5.9 9.8-5.9 2 0 3.8.5 5.4 1.4C60.5 13.5 65.7 10 71.8 10c8.3 0 15 6.7 15 15 0 .7 0 1.4-.1 2 1-.3 2.1-.5 3.2-.5 6.1 0 11 4.9 11 11s-4.9 11-11 11H36c-5 0-9-4-9-9 0-4.2 2.8-7.7 6.8-8.7L42 38.5z"/>
+    <text x="100" y="42" fontFamily="'Sora','Helvetica Neue',Arial,sans-serif" fontSize="28" fontWeight="700" fill="white" letterSpacing="0.5">salesforce</text>
+  </svg>
+);
+
+function LoginScreen({onLogin}){
+  const [pw,setPw]=useState(""), [err,setErr]=useState(false);
+  const attempt=()=>{if(pw===ADMIN_PASSWORD)onLogin();else{setErr(true);setPw("");}};
+  return(
+    <div className="login-wrap">
+      <div className="login-card">
+        <div style={{marginBottom:20}}><SFLogo/></div>
+        <div className="login-title">Question Editor</div>
+        <div className="login-sub">Manage assessment questions</div>
+        {err&&<div className="login-err">Incorrect password.</div>}
+        <input className="login-input" type="password" placeholder="Admin password" value={pw} onChange={e=>{setPw(e.target.value);setErr(false);}} onKeyDown={e=>e.key==="Enter"&&attempt()}/>
+        <button className="login-btn" onClick={attempt}>Sign In →</button>
+      </div>
+    </div>
+  );
+}
+
+const emptyQ=()=>({
+  id:`q${Date.now()}`,domain:"",dimension:DIMENSIONS[0],active:true,
+  text:"",answers:["","","",""],
+});
+
+function QuestionForm({q,onChange,onSave,onCancel,label="Save Changes"}){
+  const upAns=(i,v)=>{const a=[...q.answers];a[i]=v;onChange({...q,answers:a});};
+  const valid=q.text.trim()&&q.domain.trim()&&q.answers.every(a=>a.trim());
+  return(
+    <div className="q-form">
+      <div className="form-row">
+        <div className="fg"><label className="flbl">Domain Badge (shown on card)</label>
+          <input className="finput" placeholder="e.g. Sales Process" value={q.domain} onChange={e=>onChange({...q,domain:e.target.value})}/></div>
+        <div className="fg"><label className="flbl">Dimension</label>
+          <select className="fselect" value={q.dimension} onChange={e=>onChange({...q,dimension:e.target.value})}>
+            {DIMENSIONS.map(d=><option key={d}>{d}</option>)}
+          </select></div>
+      </div>
+      <div className="form-row single">
+        <div className="fg"><label className="flbl">Question Text</label>
+          <input className="finput" placeholder="Enter the question respondents will see…" value={q.text} onChange={e=>onChange({...q,text:e.target.value})}/></div>
+      </div>
+      <div>
+        <label className="flbl" style={{marginBottom:8}}>Answer Options (1 = lowest maturity, 4 = highest)</label>
+        <div className="ans-labels">
+          <span className="ans-label l1">← Ad Hoc</span>
+          <span className="ans-label" style={{textAlign:"center"}}>Developing</span>
+          <span className="ans-label" style={{textAlign:"center"}}>Defined</span>
+          <span className="ans-label l4">Optimized →</span>
+        </div>
+        <div className="answers-grid">
+          {[0,1,2,3].map(i=>(
+            <div key={i} className="ans-row">
+              <div className={`ans-idx a${i+1}`}>{i+1}</div>
+              <input className="finput" style={{marginBottom:0}} placeholder={`Answer ${i+1}…`} value={q.answers[i]||""} onChange={e=>upAns(i,e.target.value)}/>
+            </div>
+          ))}
+        </div>
+        <div style={{fontSize:11,color:"var(--g4)",marginTop:8}}>Answer 1 maps to Ad Hoc (score 1). Answer 4 maps to Optimized (score 4). Always provide all 4.</div>
+      </div>
+      <div className="form-actions">
+        <button className="btn btn-ghost" onClick={onCancel}>Cancel</button>
+        <button className="btn btn-primary" disabled={!valid} onClick={()=>valid&&onSave(q)}>{label}</button>
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const [authed,setAuthed]=useState(false);
+  const [questions,setQuestions]=useState(DEFAULT_QUESTIONS);
+  const [editingId,setEditingId]=useState(null);
+  const [editDraft,setEditDraft]=useState(null);
+  const [showAdd,setShowAdd]=useState(false);
+  const [newQ,setNewQ]=useState(emptyQ());
+  const [dimFilter,setDimFilter]=useState("all");
+  const [showInactive,setShowInactive]=useState(true);
+  const [saveState,setSaveState]=useState("idle"); // idle | saving | ok | err | local
+  const [loaded,setLoaded]=useState(false);
+  const configured=GOOGLE_SHEETS_API!=="YOUR_APPS_SCRIPT_URL_HERE";
+
+  // Load questions from sheet on mount
+  useEffect(()=>{
+    if(!authed)return;
+    if(configured){
+      fetch(GOOGLE_SHEETS_API+"?action=getQuestions")
+        .then(r=>r.json())
+        .then(d=>{if(d.questions?.length){setQuestions(d.questions);setSaveState("idle");}else{setSaveState("local");}})
+        .catch(()=>setSaveState("local"))
+        .finally(()=>setLoaded(true));
+    } else {
+      setSaveState("local");
+      setLoaded(true);
+    }
+  },[authed]);
+
+  const saveToSheet=async(qs)=>{
+    if(!configured){setSaveState("local");return;}
+    setSaveState("saving");
+    try{
+      await fetch(GOOGLE_SHEETS_API,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({action:"saveQuestions",questions:qs})});
+      setSaveState("ok");
+      setTimeout(()=>setSaveState("idle"),3000);
+    }catch(e){setSaveState("err");}
+  };
+
+  const updateQ=(updated)=>{
+    const next=questions.map(q=>q.id===updated.id?updated:q);
+    setQuestions(next);setEditingId(null);setEditDraft(null);
+    saveToSheet(next);
+  };
+
+  const addQ=(q)=>{
+    const next=[...questions,q];
+    setQuestions(next);setShowAdd(false);setNewQ(emptyQ());
+    saveToSheet(next);
+  };
+
+  const toggleActive=(id)=>{
+    const next=questions.map(q=>q.id===id?{...q,active:!q.active}:q);
+    setQuestions(next);saveToSheet(next);
+  };
+
+  const moveUp=(idx)=>{
+    if(idx===0)return;
+    const next=[...questions];[next[idx-1],next[idx]]=[next[idx],next[idx-1]];
+    setQuestions(next);saveToSheet(next);
+  };
+
+  const moveDown=(idx)=>{
+    if(idx===questions.length-1)return;
+    const next=[...questions];[next[idx],next[idx+1]]=[next[idx+1],next[idx]];
+    setQuestions(next);saveToSheet(next);
+  };
+
+  const startEdit=(q)=>{setEditingId(q.id);setEditDraft({...q,answers:[...q.answers]});};
+  const cancelEdit=()=>{setEditingId(null);setEditDraft(null);};
+
+  const filtered=questions.filter(q=>{
+    if(dimFilter!=="all"&&q.dimension!==dimFilter)return false;
+    if(!showInactive&&!q.active)return false;
+    return true;
+  });
+
+  const active=questions.filter(q=>q.active).length;
+  const inactive=questions.filter(q=>!q.active).length;
+
+  if(!authed)return<LoginScreen onLogin={()=>setAuthed(true)}/>;
+
+  const statusMsg={
+    idle:{cls:"st-idle",msg:"✓ All changes saved to Google Sheets"},
+    saving:{cls:"st-saving",msg:"⏳ Saving to Google Sheets…"},
+    ok:{cls:"st-ok",msg:"✅ Saved successfully — assessment updated live"},
+    err:{cls:"st-err",msg:"⚠️ Save failed. Check GOOGLE_SHEETS_API URL and re-deploy your Apps Script."},
+    local:{cls:"st-local",msg:"⚠️ Google Sheets not connected — changes are local only. Configure GOOGLE_SHEETS_API to save live."},
+  };
+
+  return(
+    <div>
+      <nav className="nav">
+        <div className="nav-logo"><SFLogo/><div className="nav-div"/><span className="nav-title">Question Editor</span></div>
+        <div className="nav-right">
+          <span style={{fontSize:12,color:"rgba(255,255,255,.5)"}}>{active} active · {inactive} inactive</span>
+          <button className="nav-btn nav-save" disabled={saveState==="saving"} onClick={()=>saveToSheet(questions)}>{saveState==="saving"?"Saving…":"↑ Save to Sheets"}</button>
+          <button className="nav-out" onClick={()=>setAuthed(false)}>Sign Out</button>
+        </div>
+      </nav>
+
+      <div className="main">
+        <div className="page-head">
+          <div>
+            <div className="page-title">Assessment Questions</div>
+            <div className="page-sub">Changes save live to Google Sheets and immediately affect the assessment. Deactivated questions are hidden from respondents but preserved for historical reporting.</div>
+          </div>
+          <button className="btn btn-primary" style={{flexShrink:0}} onClick={()=>{setShowAdd(true);setNewQ(emptyQ());window.scrollTo({top:0,behavior:"smooth"});}}>+ Add Question</button>
+        </div>
+
+        <div className={`status-bar ${statusMsg[saveState].cls}`}>{statusMsg[saveState].msg}</div>
+
+        {/* ADD FORM */}
+        {showAdd&&(
+          <div className="add-panel">
+            <div className="add-title">➕ New Question</div>
+            <QuestionForm q={newQ} onChange={setNewQ} onSave={addQ} onCancel={()=>setShowAdd(false)} label="Add Question"/>
+          </div>
+        )}
+
+        {/* STATS */}
+        <div className="stats-row">
+          <div className="stat-pill">📋 {questions.length} total questions <span>· {active} shown to respondents</span></div>
+          <div className="stat-pill">🏷️ {DIMENSIONS.length} dimensions</div>
+          {DIMENSIONS.map(d=>{const ct=questions.filter(q=>q.dimension===d&&q.active).length;return(
+            <div key={d} className="stat-pill" style={{fontSize:12}}>{d.split(" ")[0]}: {ct} <span>active</span></div>
+          );})}
+        </div>
+
+        {/* TOOLBAR */}
+        <div className="toolbar">
+          <div className="dim-filter">
+            <div className={`dim-chip ${dimFilter==="all"?"on":""}`} onClick={()=>setDimFilter("all")}>All Dimensions</div>
+            {DIMENSIONS.map(d=><div key={d} className={`dim-chip ${dimFilter===d?"on":""}`} onClick={()=>setDimFilter(d)}>{d}</div>)}
+          </div>
+          <label className="show-toggle">
+            <input type="checkbox" checked={showInactive} onChange={e=>setShowInactive(e.target.checked)}/> Show inactive
+          </label>
+        </div>
+
+        {/* QUESTION LIST */}
+        <div className="q-list">
+          {filtered.map((q,i)=>{
+            const globalIdx=questions.indexOf(q);
+            const isEditing=editingId===q.id;
+            return(
+              <div key={q.id} className={`q-card ${!q.active?"inactive":""} ${isEditing?"editing":""}`}>
+                <div className="q-header" onClick={()=>isEditing?cancelEdit():startEdit(q)}>
+                  <span className="q-drag-handle">⠿</span>
+                  <div className="q-num-badge">{globalIdx+1}</div>
+                  <span className="q-domain-badge">{q.domain||"No domain"}</span>
+                  <div className="q-preview">{q.text||<span style={{color:"var(--g4)",fontStyle:"italic"}}>No question text</span>}</div>
+                  <div className="q-actions" onClick={e=>e.stopPropagation()}>
+                    <button className="q-btn up-dn" title="Move up" disabled={globalIdx===0} onClick={()=>moveUp(globalIdx)}>↑</button>
+                    <button className="q-btn up-dn" title="Move down" disabled={globalIdx===questions.length-1} onClick={()=>moveDown(globalIdx)}>↓</button>
+                    <button className={`q-btn ${q.active?"danger":"green"}`} onClick={()=>toggleActive(q.id)}>
+                      {q.active?"Deactivate":"Reactivate"}
+                    </button>
+                    <button className="q-btn" style={{color:"var(--blue)",borderColor:"var(--blue)"}} onClick={()=>isEditing?cancelEdit():startEdit(q)}>
+                      {isEditing?"✕ Close":"✎ Edit"}
+                    </button>
+                  </div>
+                </div>
+                {isEditing&&editDraft&&(
+                  <QuestionForm q={editDraft} onChange={setEditDraft} onSave={updateQ} onCancel={cancelEdit} label="Save Changes"/>
+                )}
+                {!isEditing&&(
+                  <div style={{padding:"0 16px 12px 16px",display:"flex",flexDirection:"column",gap:4}}>
+                    <div style={{fontSize:11,color:"var(--g4)",marginBottom:4}}>
+                      <strong style={{color:"var(--navy)"}}>{q.dimension}</strong>
+                      {!q.active&&<span style={{marginLeft:8,color:"var(--red)",fontWeight:600}}>● Inactive</span>}
+                    </div>
+                    {q.answers.map((a,ai)=>(
+                      <div key={ai} style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+                        <div className={`ans-idx a${ai+1}`} style={{width:20,height:20,fontSize:10,marginTop:1}}>{ai+1}</div>
+                        <div style={{fontSize:12,color:"var(--g4)",flex:1,lineHeight:1.45}}>{a||<em>No answer text</em>}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {filtered.length===0&&(
+            <div style={{background:"#fff",borderRadius:10,padding:"40px",textAlign:"center",color:"var(--g4)",boxShadow:"var(--sh)"}}>
+              No questions match the current filter.
+            </div>
+          )}
+        </div>
+
+        {/* APPS SCRIPT INSTRUCTIONS */}
+        <div style={{background:"#fff",borderRadius:10,padding:"22px 24px",marginTop:28,boxShadow:"var(--sh)",borderLeft:"3px solid var(--blue)"}}>
+          <div style={{fontSize:13,fontWeight:700,color:"var(--navy)",marginBottom:8}}>📌 Apps Script — Add saveQuestions support</div>
+          <div style={{fontSize:12,color:"var(--g4)",lineHeight:1.8,marginBottom:10}}>Add this handler inside your existing <code style={{background:"var(--g1)",padding:"1px 5px",borderRadius:3}}>doPost()</code> function to enable live question saving:</div>
+          <pre style={{background:"#F8FAFF",border:"1px solid var(--g2)",borderRadius:8,padding:"14px 16px",fontSize:11,lineHeight:1.8,overflowX:"auto",color:"var(--g5)"}}>{`// Inside doPost(e), ADD this block:
+if (e.parameter && e.parameter.action === 'saveQuestions') {
+  var data = JSON.parse(e.postData.contents);
+  var sheet = SpreadsheetApp.getActiveSpreadsheet()
+    .getSheetByName('Questions')
+    || SpreadsheetApp.getActiveSpreadsheet()
+      .insertSheet('Questions');
+  sheet.getRange(1, 1).setValue(JSON.stringify(data.questions));
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'ok' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}`}</pre>
+          <div style={{fontSize:12,color:"var(--g4)",marginTop:10}}>After adding this code, create a <strong>New Deployment</strong> in Apps Script and update your <code style={{background:"var(--g1)",padding:"1px 5px",borderRadius:3}}>GOOGLE_SHEETS_API</code> URL in all three files.</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
