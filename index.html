@@ -217,8 +217,8 @@ const { useState, useEffect } = React;
 /* ═══════════════════════════════════════════════════════════════════════
    ⚙️  CONFIG — edit these before going live
    ═══════════════════════════════════════════════════════════════════════ */
-const GOOGLE_SHEETS_WEBHOOK = "YOUR_APPS_SCRIPT_URL_HERE";
-const QUESTIONS_SHEET_URL   = "YOUR_APPS_SCRIPT_URL_HERE"; // same URL, reads questions via ?action=getQuestions
+const GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
+const QUESTIONS_SHEET_URL   = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec"; // same URL, reads questions via ?action=getQuestions
 const TESTER_DOMAINS        = ["salesforce.com"];           // add more: ["salesforce.com","partner.com"]
 const CALENDAR_URL          = "";                           // leave blank — no CTA per spec
 
@@ -717,7 +717,7 @@ function App(){
   const [questions,setQuestions]=useState(DEFAULT_QUESTIONS);
 
   useEffect(()=>{
-    if(QUESTIONS_SHEET_URL!=="YOUR_APPS_SCRIPT_URL_HERE"){
+    if(QUESTIONS_SHEET_URL!=="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec"){
       fetch(QUESTIONS_SHEET_URL+"?action=getQuestions")
         .then(r=>r.json())
         .then(d=>{if(d.questions?.length)setQuestions(d.questions);})
@@ -752,7 +752,7 @@ function App(){
       ...Object.fromEntries(questions.filter(q=>q.active!==false).map(q=>[`Q_${q.id}_${q.domain.replace(/\s+/g,"_")}`,answers[q.id]||""])),
       ...Object.fromEntries(Object.entries(dimScores).map(([d,s])=>[`DIM_${d.replace(/[^a-zA-Z0-9]/g,"_")}`,s])),
     };
-    if(GOOGLE_SHEETS_WEBHOOK==="YOUR_APPS_SCRIPT_URL_HERE"){
+    if(GOOGLE_SHEETS_WEBHOOK==="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec"){
       setSubmitState("ok");setTimeout(()=>{setStep(6);scroll();},800);return;
     }
     try{
