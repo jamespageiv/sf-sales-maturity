@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>B2B Sales Maturity Diagnostic | Salesforce</title>
+<title>B2B Sales Maturity Assessment | Salesforce</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -189,7 +189,7 @@
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState } = React;
+const { useState , useRef } = React;
 
 /* ════════════════════════════════════════════════════════════════════════════
    ████████████████████████████████████████████████████████████████████████
@@ -309,6 +309,44 @@ const INTERVENTIONS = {
 };
 
 // ── Static data ───────────────────────────────────────────────────────────────
+const CAPABILITIES = {
+  "Growth Strategy": [{
+    title: "Land-and-Expand Motion with Account Intelligence",
+    body: "Organizations at the next maturity level have a structured expansion playbook — account tiers, named expansion plays, and renewal forecasting built directly into Salesforce. The strategic advantage is moving from reactive upsell to a predictable growth engine with measurable expansion ARR.",
+    sfCapability: "Einstein Account Intelligence, Revenue Lifecycle Management"
+  }],
+  "Sales Process & Governance": [{
+    title: "Enforced Qualification with AI-Assisted Deal Coaching",
+    body: "High-maturity teams use Salesforce Path with mandatory exit criteria and Einstein Opportunity Scoring to flag at-risk deals early. The result: better forecast accuracy, shorter cycles, and coaching that scales beyond what managers can deliver manually.",
+    sfCapability: "Salesforce Path, Einstein Opportunity Scoring, In-App Guidance"
+  }],
+  "Forecasting & Pipeline": [{
+    title: "Criteria-Based Forecasting with Predictive Analytics",
+    body: "Moving from gut-feel to criteria-based forecasting — with tracked accuracy over time — is the single highest-leverage shift in sales operations maturity. Einstein Forecasting and pipeline health dashboards enable leaders to submit a number they actually believe.",
+    sfCapability: "Einstein Forecasting, Pipeline Inspection, Forecast Rollups"
+  }],
+  "Pricing & Quote-to-Cash": [{
+    title: "CPQ-Enforced Pricing with Deal Desk Analytics",
+    body: "Unchecked discounting is one of the most common sources of margin leakage. Salesforce CPQ with automated approval tiers and deal-level margin visibility gives leadership the controls to protect margin while accelerating deal velocity.",
+    sfCapability: "Salesforce CPQ / Revenue Cloud, Advanced Approvals"
+  }],
+  "Enablement & Coaching": [{
+    title: "Skill-to-Outcome Coaching Tied to Win Rates",
+    body: "The strategic advantage of mature enablement is that it compounds — structured coaching tied to skill gaps and win rate data means top performer behaviors become systematized and teachable. This is where AI-assisted coaching and conversation intelligence unlock scale.",
+    sfCapability: "Einstein Call Coaching, In-App Guidance, Sales Programs"
+  }],
+  "Data, CRM & AI": [{
+    title: "AI-Ready CRM Foundation for Agentforce Deployment",
+    body: "Data quality isn't a hygiene project — it's the prerequisite for every intelligent capability. Organizations that invest in CRM data governance unlock the ability to deploy Agentforce agents that actually work, grounded in trustworthy customer data.",
+    sfCapability: "Data Cloud, Agentforce, Einstein AI, Duplicate Management"
+  }],
+  "Operations & Lifecycle": [{
+    title: "Coordinated Revenue Lifecycle with AI-Assisted Health Monitoring",
+    body: "Post-sale fragmentation is one of the most common causes of preventable churn and missed expansion. The strategic opportunity is to instrument account health, automate handoffs, and surface risk early — creating a proactive revenue model vs. a reactive one.",
+    sfCapability: "Agentforce Account Health Monitoring, Success Plans, Customer 360"
+  }]
+};
+
 const TIER_INFO = [null,
   {label:"Ad Hoc / Reactive",        desc:"Execution depends on individuals. Processes are manual, inconsistent, and outcomes are unpredictable.",cls:"t1"},
   {label:"Repeatable / Developing",   desc:"Basic processes exist but adoption varies. Reporting is present but not fully trusted end-to-end.",cls:"t2"},
@@ -332,12 +370,7 @@ const scoreStyle = s => s<1.75?{bar:"c1",val:"v1"}:s<2.5?{bar:"c2",val:"v2"}:s<3
 // ── Salesforce Cloud Logo SVG ─────────────────────────────────────────────────
 function SFLogo() {
   return (
-    <svg height="30" viewBox="0 0 220 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Cloud shape */}
-      <path d="M38 42 Q22 42 22 30 Q22 20 32 18 Q30 12 36 8 Q46 0 56 6 Q62 0 72 2 Q84 2 88 12 Q96 8 102 14 Q110 14 110 22 Q110 30 102 32 L98 34 L42 42Z" fill="white"/>
-      {/* Text */}
-      <text x="118" y="36" fontFamily="Arial,Helvetica,sans-serif" fontSize="22" fontWeight="bold" fill="white" letterSpacing="0.5">salesforce</text>
-    </svg>
+    <img src="data:image/png;base64,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" height="32" style={{display:"block"}} alt="Salesforce"/>
   );
 }
 
@@ -346,11 +379,11 @@ function Nav() {
   return (
     <nav className="nav">
       <div className="nav-logo">
-        <span style={{color:"white",fontWeight:800,fontSize:18,letterSpacing:"-0.5px"}}>salesforce</span>
+        <SFLogo/>
         <div className="nav-divider"/>
-        <span className="nav-title">B2B Sales Maturity Diagnostic</span>
+        <span className="nav-title">B2B Sales Maturity Assessment</span>
       </div>
-      <div className="nav-badge">Consulting</div>
+      
     </nav>
   );
 }
@@ -378,13 +411,13 @@ function WelcomeScreen({onNext}) {
   return (
     <div>
       <div className="hero">
-        <div className="hero-eyebrow">Salesforce Consulting — Confidential</div>
-        <h1 className="hero-title">B2B Sales Maturity<br/>Diagnostic</h1>
-        <p className="hero-desc">A research-backed assessment of your revenue engine across 7 RevOps dimensions. Complete in ~8 minutes for a scored readout, dimension heatmap, and prioritized action plan.</p>
+        <div className="hero-eyebrow">Salesforce — Confidential</div>
+        <h1 className="hero-title">B2B Sales Maturity<br/>Assessment</h1>
+        <p className="hero-desc">A research-backed assessment of your revenue engine across 7 RevOps dimensions. Complete in ~8 minutes for a scored readout, dimension heatmap, and prioritized capability recommendations.</p>
         <div className="hero-goals">
           <div className="hero-goal"><div className="hero-dot"/><span>Evaluate your sales engine against RevOps best practices</span></div>
           <div className="hero-goal"><div className="hero-dot"/><span>Illuminate your highest-impact revenue opportunities</span></div>
-          <div className="hero-goal"><div className="hero-dot"/><span>Walk away with a C-suite–ready readout and 30-60-90 day plan</span></div>
+          <div className="hero-goal"><div className="hero-dot"/><span>Understand what organizations at the next maturity level typically have in place</span></div>
         </div>
         <div className="hero-meta">
           <span>📋 4 sections</span><span>⏱ ~8 minutes</span><span>📊 18 diagnostic questions</span><span>🎯 7 RevOps dimensions</span>
@@ -393,7 +426,7 @@ function WelcomeScreen({onNext}) {
       <div className="info-boxes">
         <div className="info-box"><div className="info-box-icon">🏆</div><div className="info-box-label">Maturity Score</div><div className="info-box-sub">1–4 scale, 7 dimensions</div></div>
         <div className="info-box"><div className="info-box-icon">🗺️</div><div className="info-box-label">Dimension Heatmap</div><div className="info-box-sub">See where you lead &amp; lag</div></div>
-        <div className="info-box"><div className="info-box-icon">🚀</div><div className="info-box-label">Action Plan</div><div className="info-box-sub">30-60-90 day priorities</div></div>
+        <div className="info-box"><div className="info-box-icon">🚀</div><div className="info-box-label">Action Plan</div><div className="info-box-sub">Capability recommendations</div></div>
       </div>
       <div style={{textAlign:"center",marginTop:28}}>
         <button className="btn btn-primary" style={{fontSize:16,padding:"14px 44px"}} onClick={onNext}>Begin Assessment →</button>
@@ -403,16 +436,37 @@ function WelcomeScreen({onNext}) {
 }
 
 function AboutYouScreen({data,onChange,onNext,onBack}) {
-  const [err,setErr]=useState({});
-  const validate=()=>{
-    const e={};
-    if(!data.fullName?.trim()) e.fullName="Required";
-    if(!data.email?.trim()||!/\S+@\S+\.\S+/.test(data.email)) e.email="Valid email required";
-    if(!data.businessName?.trim()) e.businessName="Required";
-    if(!data.title?.trim()) e.title="Required";
-    if(!data.industry) e.industry="Please select your industry";
-    setErr(e); return !Object.keys(e).length;
+  const refs={
+    fullName:useRef(null),
+    email:useRef(null),
+    businessName:useRef(null),
+    title:useRef(null),
+    industry:useRef(null),
   };
+  const [err,setErr]=useState({});
+
+  const validate=()=>{
+    const v={
+      fullName:refs.fullName.current?.value||'',
+      email:refs.email.current?.value||'',
+      businessName:refs.businessName.current?.value||'',
+      title:refs.title.current?.value||'',
+      industry:refs.industry.current?.value||'',
+    };
+    const e={};
+    if(!v.fullName.trim()) e.fullName="Required";
+    if(!v.email.trim()||!/\S+@\S+\.\S+/.test(v.email)) e.email="Valid email required";
+    if(!v.businessName.trim()) e.businessName="Required";
+    if(!v.title.trim()) e.title="Required";
+    if(!v.industry) e.industry="Please select your industry";
+    setErr(e);
+    if(!Object.keys(e).length){
+      Object.entries(v).forEach(([k,val])=>onChange(k,val));
+      return true;
+    }
+    return false;
+  };
+
   const Field=({label,req,err:e,children})=>(
     <div className="form-group">
       <label className="form-label">{label}{req&&<span className="req"> *</span>}</label>
@@ -420,25 +474,38 @@ function AboutYouScreen({data,onChange,onNext,onBack}) {
       {e&&<div className="error-msg">{e}</div>}
     </div>
   );
+
   return (
     <div className="card">
       <div className="eyebrow">Section 1 of 3</div>
       <h2 className="section-title">About You</h2>
       <p className="section-desc">Tell us about yourself so we can personalize your results and follow up with next steps.</p>
       <p className="req-note">Fields marked * are required</p>
-      <Field label="Full Name" req err={err.fullName}><input className="form-input" placeholder="Jane Smith" defaultValue={data.fullName||""} onBlur={e=>onChange("fullName",e.target.value)}/></Field>
-      <Field label="Business Email" req err={err.email}><input className="form-input" type="email" placeholder="jane@company.com" defaultValue={data.email||""} onBlur={e=>onChange("email",e.target.value)}/></Field>
-      <Field label="Business Name" req err={err.businessName}><input className="form-input" placeholder="Acme Corp" defaultValue={data.businessName||""} onBlur={e=>onChange("businessName",e.target.value)}/></Field>
-      <Field label="Your Title" req err={err.title}><input className="form-input" placeholder="SVP of Sales" defaultValue={data.title||""} onBlur={e=>onChange("title",e.target.value)}/></Field>
+      <Field label="Full Name" req err={err.fullName}>
+        <input ref={refs.fullName} className="form-input" placeholder="Jane Smith"
+          defaultValue={data.fullName||""} autoComplete="name" name="name" tabIndex={1}/>
+      </Field>
+      <Field label="Business Email" req err={err.email}>
+        <input ref={refs.email} className="form-input" type="email" placeholder="jane@company.com"
+          defaultValue={data.email||""} autoComplete="email" name="email" tabIndex={2}/>
+      </Field>
+      <Field label="Company" req err={err.businessName}>
+        <input ref={refs.businessName} className="form-input" placeholder="Acme Corp"
+          defaultValue={data.businessName||""} autoComplete="organization" name="organization" tabIndex={3}/>
+      </Field>
+      <Field label="Job Title" req err={err.title}>
+        <input ref={refs.title} className="form-input" placeholder="SVP of Sales"
+          defaultValue={data.title||""} autoComplete="organization-title" name="title" tabIndex={4}/>
+      </Field>
       <Field label="Industry" req err={err.industry}>
-        <select className="form-select" value={data.industry||""} onChange={e=>onChange("industry",e.target.value)}>
+        <select ref={refs.industry} className="form-select" defaultValue={data.industry||""} tabIndex={5}>
           <option value="">Select your industry…</option>
-          {INDUSTRIES.map(i=><option key={i}>{i}</option>)}
+          {["Technology: Software / SaaS","Technology: Hardware / Infrastructure","Financial Services (Banking)","Financial Services (Insurance)","Financial Services (Wealth / Asset Management)","Healthcare: Provider","Healthcare: Payer / Insurance","Life Sciences & Pharma","Manufacturing","Retail","Consumer Goods","Energy & Utilities","Media & Entertainment","Telecommunications","Professional Services","Government / Public Sector","Nonprofit","Other"].map(i=><option key={i} value={i}>{i}</option>)}
         </select>
       </Field>
       <div className="btn-nav">
         <button className="btn btn-ghost" onClick={onBack}>← Back</button>
-        <button className="btn btn-primary" onClick={()=>{if(validate())onNext();}}>Continue →</button>
+        <button className="btn btn-primary" tabIndex={6} onClick={()=>{if(validate())onNext();}}>Continue →</button>
       </div>
     </div>
   );
@@ -503,11 +570,11 @@ function StrategyScreen({data,onChange,onNext,onBack}) {
 function AssessmentScreen({answers,onAnswer,onNext,onBack}) {
   const [cur,setCur]=useState(0);
   const total=QUESTIONS.length, q=QUESTIONS[cur], ans=answers[q.id];
-  const goNext=()=>cur<total-1?setCur(cur+1):onNext();
+  const goNext=()=>{if(cur<total-1){setCur(cur+1);}else{if(onSubmit)onSubmit();onNext();}};
   const goPrev=()=>cur>0?setCur(cur-1):onBack();
   return (
     <div className="card">
-      <div className="eyebrow">Section 3 of 3 — Maturity Diagnostic</div>
+      <div className="eyebrow">Section 3 of 3 — Maturity Assessment</div>
       <div className="q-pips">{QUESTIONS.map((qq,i)=><div key={qq.id} className={`q-pip ${answers[qq.id]!==undefined?"done":i===cur?"cur":""}`}/>)}</div>
       <div className="q-meta">
         <span className="q-badge">{q.domain}</span>
@@ -563,13 +630,13 @@ function RadarChart({dimScores}) {
   );
 }
 
-function ResultsScreen({about,answers,onSubmit,submitState}) {
+function ResultsScreen({about,answers}) {
   const allScores=QUESTIONS.map(q=>answers[q.id]).filter(Boolean);
   const avg=allScores.length?allScores.reduce((a,b)=>a+b,0)/allScores.length:0;
   const overall=Math.round(avg*10)/10, tier=getTier(avg), ti=TIER_INFO[tier];
   const dimScores=getDimScores(answers);
   const top3=Object.entries(dimScores).sort((a,b)=>a[1]-b[1]).slice(0,3).map(([d])=>({d,...INTERVENTIONS[d]})).filter(x=>x.title);
-  const plan={"0–30 Days":["Conduct a full CRM data audit and close field completeness gaps","Define and document ICP with sales leadership","Align on shared metric definitions (MQL, SQL, stages, ARR)"],"31–60 Days":["Implement pipeline hygiene standards and weekly review cadence","Deploy segment-specific playbooks in Salesforce","Launch structured manager coaching cadence with defined criteria"],"61–90 Days":["Enable AI-assisted lead scoring and opportunity health monitoring","Integrate quote-to-order handoff with clear process ownership","Publish first Executive Readout with maturity benchmarks vs. industry"]};
+
   const rawTotal=allScores.reduce((a,b)=>a+b,0), maxTotal=QUESTIONS.length*4;
   return (
     <div style={{animation:"fadeUp 0.35s ease"}}>
@@ -623,14 +690,23 @@ function ResultsScreen({about,answers,onSubmit,submitState}) {
             </div>
           ))}
         </div>
-        <div className="sec-head">Recommended 30-60-90 Day Action Plan</div>
-        <div className="plan">
-          {Object.entries(plan).map(([period,items])=>(
-            <div key={period} className="plan-col">
-              <div className="plan-period">{period}</div>
-              <ul className="plan-items">{items.map((it,i)=><li key={i}>{it}</li>)}</ul>
-            </div>
-          ))}
+        <div className="sec-head">Capabilities to Build for Strategic Advantage</div>
+        <div className="int-list">
+          {top3.map((x,i)=>{
+            const caps=CAPABILITIES[x.d]||[];
+            if(!caps.length)return null;
+            return(
+              <div key={i} className="int-card">
+                <div className="int-num" style={{background:"var(--sf-teal)"}}>{i+1}</div>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:10,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--sf-gray-4)",marginBottom:3}}>{x.d}</div>
+                  <div className="int-title">{caps[0].title}</div>
+                  <div className="int-body">{caps[0].body}</div>
+                  {caps[0].sfCapability&&<div className="int-tag">🔵 Salesforce Capability: {caps[0].sfCapability}</div>}
+                </div>
+              </div>
+            );
+          })}
         </div>
         <div style={{background:"var(--sf-gray-1)",borderRadius:8,padding:"14px 18px",marginBottom:16}}>
           <div style={{fontSize:11,fontWeight:700,letterSpacing:1,textTransform:"uppercase",color:"var(--sf-gray-4)",marginBottom:8}}>Assessment Summary</div>
@@ -640,36 +716,31 @@ function ResultsScreen({about,answers,onSubmit,submitState}) {
             ))}
           </div>
         </div>
-        {submitState==="sending"&&<div className="submit-status st-sending">⏳ Submitting your results to Google Sheets…</div>}
-        {submitState==="ok"&&<div className="submit-status st-ok">✅ Results saved to Google Sheets!</div>}
-        {submitState==="error"&&<div className="submit-status st-error">⚠️ Could not reach Google Sheets. Check the webhook URL in the config. Your results are still shown here.</div>}
         <div className="print-bar">
-          <button className="btn btn-secondary" onClick={()=>window.print()}>🖨 Print / Save PDF</button>
-          {submitState!=="ok"&&<button className="btn btn-submit" onClick={onSubmit} disabled={submitState==="sending"}>{submitState==="sending"?"Submitting…":"✓ Submit Results"}</button>}
+          <button className="btn btn-secondary" onClick={()=>window.print()}>📄 Download PDF</button>
         </div>
       </div>
     </div>
   );
 }
 
-function ThankYouScreen({about,overall,tier}) {
+function ThankYouScreen({about,overall,tier,onViewResults}) {
   const ti=TIER_INFO[tier];
   const firstName=about.fullName?.split(" ")[0]||"there";
   return (
     <div className="card">
       <div className="ty-wrap">
-        <div className="ty-icon">🎯</div>
+        <div className="ty-icon">✅</div>
         <h2 className="ty-title">Thank you, {firstName}!</h2>
-        <p className="ty-desc">Your B2B Sales Maturity Assessment is complete and has been saved. A Salesforce consultant will review your results and reach out to discuss your personalized roadmap.</p>
+        <p className="ty-desc">Your B2B Sales Maturity Assessment is complete and has been saved. We will review your results and be in touch soon.</p>
         <div className="ty-score-block">
           <div className="ty-score-item"><div className="ty-score-val">{overall}</div><div className="ty-score-label">Overall Score</div></div>
           <div className="ty-score-item"><div className="ty-score-val">/4.0</div><div className="ty-score-label">Max Possible</div></div>
           <div className="ty-score-item"><div className="ty-score-val" style={{fontSize:20}}>{ti.label.split("/")[0].trim()}</div><div className="ty-score-label">Maturity Tier</div></div>
         </div>
-        <p style={{fontSize:13,color:"var(--sf-gray-4)",marginBottom:24}}>We'll follow up at <strong>{about.email}</strong> within 1–2 business days.</p>
+        <p style={{fontSize:13,color:"var(--sf-gray-4)",marginBottom:28}}>We'll follow up at <strong>{about.email}</strong> within 1–2 business days.</p>
         <div className="ty-actions">
-          <button className="btn btn-secondary" onClick={()=>window.print()}>🖨 Download / Print Results</button>
-          <button className="btn btn-primary" onClick={()=>window.location.reload()}>Start New Assessment</button>
+          <button className="btn btn-primary" style={{fontSize:15,padding:"14px 28px"}} onClick={onViewResults}>View My Initial Diagnosis →</button>
         </div>
       </div>
     </div>
@@ -717,7 +788,6 @@ function App() {
     try{
       await fetch(GOOGLE_SHEETS_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
       setSubmitState("ok");
-      setTimeout(()=>{setStep(6);scroll();},1000);
     }catch(e){setSubmitState("error");}
   };
 
