@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Admin Dashboard | Sales Maturity</title>
+<title>B2B Sales Maturity Assessment | Admin</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
@@ -121,7 +121,7 @@ input.fi{flex:1;min-width:160px;}
 const {useState,useEffect,useMemo,useRef}=React;
 
 const ADMIN_PASSWORD="Martha314!";
-const GOOGLE_SHEETS_API="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
+const GOOGLE_SHEETS_API="https://script.google.com/macros/s/AKfycbxNKBVmPFc3OKrio5tMTAtmDhm0HHqvkcEAmF8uahf7aJGhJpBTLYkMfmysAICUAicxFA/exec";
 const TESTER_DOMAINS=["salesforce.com"];
 const LOGO="data:image/png;base64,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";
 
@@ -415,6 +415,25 @@ const CoModal=({co,onClose})=>{
   </div>);
 };
 
+
+/* ═══ CSV EXPORT ═══ */
+const downloadCSV=(data)=>{
+  if(!data.length)return;
+  const keys=Object.keys(data[0]);
+  const escape=(v)=>{
+    const s=String(v??'');
+    return s.includes(',')||s.includes('"')||s.includes('\n')?`"${s.replace(/"/g,'""')}"`:s;
+  };
+  const rows=[keys.join(','),...data.map(r=>keys.map(k=>escape(r[k])).join(','))];
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=`b2b-sales-maturity-responses-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
 /* OVERVIEW TAB */
 function OverviewTab({data}){
   const real=data.filter(r=>!isTester(r.emailDomain));
@@ -533,14 +552,17 @@ function App(){
   const [tab,setTab]=useState('overview');
   const [data,setData]=useState(SAMPLE);
   const [live,setLive]=useState(false);
-  const configured=GOOGLE_SHEETS_API!=="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
+  const configured=GOOGLE_SHEETS_API!=="https://script.google.com/macros/s/AKfycbxNKBVmPFc3OKrio5tMTAtmDhm0HHqvkcEAmF8uahf7aJGhJpBTLYkMfmysAICUAicxFA/exec";
 
   useEffect(()=>{
-    if(!authed||!configured)return;
-    fetch(GOOGLE_SHEETS_API+'?action=getAll')
-      .then(r=>r.json())
-      .then(d=>{if(d.data?.length){setData(d.data);setLive(true);}})
-      .catch(()=>{});
+    if(!authed)return;
+    try{
+      const stored=JSON.parse(localStorage.getItem("sf_maturity_responses")||"[]");
+      if(stored.length){
+        setData(stored);
+        setLive(true);
+      }
+    }catch(e){}
   },[authed]);
 
   const login=()=>{if(pw===ADMIN_PASSWORD){setAuthed(true);}else{setErr(true);setPw('');}};
@@ -550,7 +572,7 @@ function App(){
       <div className="login-card">
         <div style={{display:'flex',justifyContent:'center',marginBottom:20}}><img src={LOGO} height="42" alt="Salesforce"/></div>
         <div className="login-title">Admin Dashboard</div>
-        <div className="login-sub">B2B Sales Maturity Diagnostic</div>
+        <div className="login-sub">B2B Sales Maturity Assessment</div>
         {err&&<div className="login-err">Incorrect password.</div>}
         <input className="login-input" type="password" placeholder="Admin password" value={pw} onChange={e=>{setPw(e.target.value);setErr(false);}} onKeyDown={e=>e.key==='Enter'&&login()}/>
         <button className="login-btn" onClick={login}>Sign In →</button>
@@ -566,14 +588,16 @@ function App(){
       <div className="nav-left">
         <img src={LOGO} height="34" alt="Salesforce"/>
         <div className="nav-divider"/>
-        <span className="nav-label">Sales Maturity — Admin</span>
+        <span className="nav-label">B2B Sales Maturity Assessment — Admin</span>
       </div>
-      <button className="nav-out" onClick={()=>setAuthed(false)}>Sign Out</button>
+      <div style={{display:"flex",gap:8,alignItems:"center"}}>
+        <button className="nav-out" onClick={()=>downloadCSV(data.filter(r=>!isTester(r.emailDomain)))}>⬇ Download CSV</button>
+        <button className="nav-out" onClick={()=>setAuthed(false)}>Sign Out</button>
+      </div>
     </nav>
     <div className="tabs">{TABS.map(([id,lbl])=><div key={id} className={`tab ${tab===id?'active':''}`} onClick={()=>setTab(id)}>{lbl}</div>)}</div>
     <div className="main">
-      {!live&&configured&&<div className="banner">⚠️ Showing sample data — could not load from Google Sheets. Verify your Apps Script is deployed and the URL is correct.</div>}
-      {!configured&&<div className="banner">⚙️ Showing sample data — connect Google Sheets to see live responses.</div>}
+      {!live&&<div className="banner">📋 Showing sample data — no responses submitted yet. Complete an assessment to see live data here.</div>}
       {content[tab]}
     </div>
   </div>);
