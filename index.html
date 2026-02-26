@@ -848,12 +848,12 @@ function App() {
       existing.push(payload);
       localStorage.setItem("sf_maturity_responses",JSON.stringify(existing));
     }catch(e){}
-    // Send to Google Sheets via GET with encoded payload (most reliable cross-origin)
-    try {
-      const encoded = encodeURIComponent(JSON.stringify(payload));
-      const img = new Image();
-      img.src = GOOGLE_SHEETS_WEBHOOK + "?data=" + encoded;
-    } catch(err) {}
+    // Send to Google Sheets — text/plain avoids CORS preflight
+    fetch(GOOGLE_SHEETS_WEBHOOK, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(payload)
+    }).catch(()=>{});
     // Go straight to ThankYou
     setStep(5);
     scroll();
