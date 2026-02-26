@@ -336,13 +336,13 @@ const QUESTIONS = [
    Edit this if you add/remove questions or want to regroup them.
    ════════════════════════════════════════════════════════════════════════ */
 const DIMENSIONS = {
-  "Growth Strategy":            ["q15","q16"],
-  "Sales Process & Governance": ["q1","q2","q3","q4"],
-  "Forecasting & Pipeline":     ["q5","q6"],
-  "Pricing & Quote-to-Cash":    ["q7","q8"],
-  "Enablement & Coaching":      ["q11","q12"],
-  "Data, CRM & AI":             ["q9","q13","q14"],
-  "Operations & Lifecycle":     ["q10","q17","q18"],
+  "Growth Strategy":            ["q1","q13","q14"],
+  "Sales Process & Governance": ["q2","q4"],
+  "Data, CRM & AI":             ["q3","q5","q8"],
+  "Forecasting & Pipeline":     ["q6"],
+  "AI & Automation":            ["q7"],
+  "Enablement & Coaching":      ["q9"],
+  "Operations & Lifecycle":     ["q10","q11","q12"],
 };
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -848,14 +848,18 @@ function App() {
       existing.push(payload);
       localStorage.setItem("sf_maturity_responses",JSON.stringify(existing));
     }catch(e){}
-    // Send via script tag — guaranteed no CORS issues
+    // Send via sendBeacon — works cross-origin, no CORS preflight
     try {
-      const encoded = encodeURIComponent(JSON.stringify(payload));
-      const script = document.createElement("script");
-      script.src = GOOGLE_SHEETS_WEBHOOK + "?callback=cb&data=" + encoded;
-      window.cb = ()=>{ document.body.removeChild(script); };
-      document.body.appendChild(script);
-    } catch(e) {}
+      const blob = new Blob([JSON.stringify(payload)], {type: "text/plain"});
+      navigator.sendBeacon(GOOGLE_SHEETS_WEBHOOK, blob);
+    } catch(e) {
+      // fallback to no-cors fetch
+      fetch(GOOGLE_SHEETS_WEBHOOK, {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(payload)
+      }).catch(()=>{});
+    }
     // Go straight to ThankYou
     setStep(5);
     scroll();
