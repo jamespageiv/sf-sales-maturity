@@ -2,829 +2,584 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Admin Dashboard | Sales Maturity</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.min.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--blue:#0176D3;--blue-dk:#014486;--blue-lt:#1B96FF;--blue-xlt:#D8EDFF;--navy:#032D60;--teal:#06A59A;--green:#2E844A;--green-lt:#EBF7E6;--yellow:#FFB75D;--orange:#FE5000;--red:#BA0517;--g1:#F3F3F3;--g2:#E5E5E5;--g4:#706E6B;--g5:#444444;--r:8px;--sh:0 2px 16px rgba(0,0,0,.10);}
+:root{--blue:#0176D3;--navy:#032D60;--teal:#06A59A;--green:#2E844A;--red:#BA0517;--orange:#FE5000;--amber:#B8860B;--g1:#F3F3F3;--g2:#E5E5E5;--g4:#706E6B;--g5:#444;--sh:0 2px 12px rgba(0,0,0,.08);}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Sora',sans-serif;background:#F0F4FA;color:var(--g5);min-height:100vh;}
 #root{min-height:100vh;}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy) 0%,#093a6e 60%,#0176D3 100%);}
-.login-card{background:#fff;border-radius:16px;padding:48px 44px;width:380px;box-shadow:0 8px 40px rgba(0,0,0,.22);text-align:center;}
-.login-logo{margin-bottom:24px;}
-.login-title{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px;}
-.login-sub{font-size:14px;color:var(--g4);margin-bottom:28px;}
-.login-input{width:100%;padding:11px 14px;border:1.5px solid var(--g2);border-radius:var(--r);font-size:14px;font-family:inherit;outline:none;margin-bottom:12px;transition:border-color .2s;}
-.login-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(1,118,211,.1);}
-.login-btn{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
-.login-btn:hover{background:var(--blue-dk);}
-.login-err{font-size:12px;color:var(--red);margin-bottom:10px;}
-.nav{background:var(--navy);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 12px rgba(0,0,0,.25);}
-.nav-logo{display:flex;align-items:center;gap:12px;}
-.nav-div{width:1px;height:26px;background:rgba(255,255,255,.2);}
-.nav-title{color:rgba(255,255,255,.85);font-size:13px;font-weight:500;}
-.nav-right{display:flex;align-items:center;gap:12px;}
-.nav-count{background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:11px;padding:3px 10px;border-radius:20px;}
-.nav-out{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.65);padding:5px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
+.login-card{background:#fff;border-radius:16px;padding:48px 44px;width:360px;box-shadow:0 8px 40px rgba(0,0,0,.22);text-align:center;}
+.login-title{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:6px;}
+.login-sub{font-size:13px;color:var(--g4);margin-bottom:24px;}
+.login-input{width:100%;padding:11px 14px;border:1.5px solid var(--g2);border-radius:8px;font-size:14px;font-family:inherit;outline:none;margin-bottom:12px;transition:border-color .2s;}
+.login-input:focus{border-color:var(--blue);}
+.login-btn{width:100%;padding:12px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+.login-btn:hover{background:var(--navy);}
+.login-err{font-size:12px;color:var(--red);margin-bottom:8px;}
+.nav{background:var(--navy);padding:0 28px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.nav-left{display:flex;align-items:center;gap:14px;}
+.nav-divider{width:1px;height:26px;background:rgba(255,255,255,.2);}
+.nav-label{color:rgba(255,255,255,.8);font-size:13px;font-weight:500;}
+.nav-out{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);padding:5px 14px;border-radius:6px;font-size:12px;cursor:pointer;font-family:inherit;}
 .nav-out:hover{background:rgba(255,255,255,.1);color:#fff;}
-.tabs{background:#fff;border-bottom:1px solid var(--g2);padding:0 28px;display:flex;position:sticky;top:60px;z-index:90;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-.tab{padding:14px 18px;font-size:14px;font-weight:600;color:var(--g4);cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;}
-.tab:hover{color:var(--blue);}
+.tabs{background:#fff;border-bottom:1px solid var(--g2);display:flex;padding:0 28px;gap:2px;overflow-x:auto;}
+.tab{padding:14px 18px;font-size:13px;font-weight:600;color:var(--g4);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
+.tab:hover{color:var(--navy);}
 .tab.active{color:var(--blue);border-bottom-color:var(--blue);}
-.main{max-width:1200px;margin:0 auto;padding:28px 24px 80px;}
-.setup-banner{background:linear-gradient(135deg,#FFF8E1,#FFF3CD);border:1.5px solid var(--yellow);border-radius:10px;padding:18px 22px;margin-bottom:24px;}
-.setup-title{font-size:13px;font-weight:700;color:#8A6200;margin-bottom:5px;}
-.setup-body{font-size:12px;color:#7A5800;line-height:1.7;}
-.setup-body code{background:rgba(0,0,0,.07);padding:1px 5px;border-radius:3px;font-family:monospace;}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
-.stat-card{background:#fff;border-radius:10px;padding:20px 22px;box-shadow:var(--sh);}
-.stat-lbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--g4);margin-bottom:6px;}
-.stat-val{font-size:32px;font-weight:800;color:var(--navy);line-height:1;}
-.stat-sub{font-size:12px;color:var(--g4);margin-top:5px;}
-.card{background:#fff;border-radius:10px;box-shadow:var(--sh);padding:24px 26px;margin-bottom:20px;}
-.card-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
-.card-title::after{content:'';flex:1;height:1px;background:var(--g2);margin-left:8px;}
-.charts-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
-.tier-bars{display:flex;flex-direction:column;gap:10px;}
-.tier-row{display:flex;align-items:center;gap:12px;}
-.tier-lbl{font-size:12px;font-weight:600;width:150px;flex-shrink:0;}
-.tier-bg{flex:1;height:26px;border-radius:6px;background:var(--g1);overflow:hidden;}
-.tier-fill{height:100%;border-radius:6px;display:flex;align-items:center;padding-left:10px;font-size:12px;font-weight:700;color:#fff;transition:width .8s ease;}
-.tier-ct{font-size:13px;font-weight:700;width:28px;text-align:right;}
-.dim-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.dim-row{padding:11px 13px;border-radius:8px;border:1.5px solid var(--g2);}
-.dim-nm{font-size:11px;font-weight:600;color:var(--g4);margin-bottom:4px;}
-.dim-br{display:flex;align-items:center;gap:8px;}
-.dim-bg{flex:1;height:6px;border-radius:3px;background:var(--g2);overflow:hidden;}
-.dim-fill{height:100%;border-radius:3px;transition:width .8s;}
-.dim-val{font-size:13px;font-weight:700;min-width:26px;text-align:right;}
-.c1{background:var(--red)}.c2{background:var(--orange)}.c3{background:var(--yellow)}.c4{background:var(--teal)}
-.v1{color:var(--red)}.v2{color:var(--orange)}.v3{color:#B8860B}.v4{color:var(--teal)}
-.table-wrap{overflow-x:auto;}
+.main{max-width:1100px;margin:0 auto;padding:28px 20px 80px;}
+.banner{background:#FFF8E1;border:1.5px solid #FFD54F;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#6D4C00;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:22px;}
+.stat-card{background:#fff;border-radius:10px;padding:20px;box-shadow:var(--sh);}
+.stat-label{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--g4);margin-bottom:8px;}
+.stat-value{font-size:32px;font-weight:800;color:var(--navy);}
+.g2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+@media(max-width:800px){.g2col{grid-template-columns:1fr;}}
+.card{background:#fff;border-radius:10px;padding:20px;box-shadow:var(--sh);margin-bottom:16px;}
+.card-title{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.tier-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.t1{background:#FDECEA;color:var(--red);}
+.t2{background:#FFF3E0;color:var(--orange);}
+.t3{background:#FFFDE7;color:var(--amber);}
+.t4{background:#E0F7F6;color:var(--teal);}
+.tester-badge{background:#EEF4FF;color:var(--blue);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;}
+.hm-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.hm-cell{border-radius:6px;padding:7px 3px;text-align:center;}
+.hm-lbl{font-size:9px;font-weight:600;color:var(--g4);line-height:1.2;margin-bottom:3px;}
+.hm-val{font-size:13px;font-weight:800;}
 table{width:100%;border-collapse:collapse;font-size:13px;}
-th{background:var(--g1);padding:9px 13px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--g4);border-bottom:1.5px solid var(--g2);white-space:nowrap;}
-td{padding:11px 13px;border-bottom:1px solid var(--g2);vertical-align:middle;}
-tr:hover td{background:#FAFAFA;}
-tr:last-child td{border-bottom:none;}
-.badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;padding:3px 9px;border-radius:20px;white-space:nowrap;}
-.b1{background:rgba(186,5,23,.1);color:var(--red)}.b2{background:rgba(254,80,0,.1);color:var(--orange)}.b3{background:rgba(255,183,93,.15);color:#8A6200}.b4{background:rgba(6,165,154,.1);color:var(--teal)}
-.btester{background:rgba(1,118,211,.1);color:var(--blue);}
-.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
-.fsel{padding:7px 12px;border:1.5px solid var(--g2);border-radius:6px;font-size:13px;font-family:inherit;color:var(--g5);background:#fff;outline:none;cursor:pointer;}
-.fsel:focus{border-color:var(--blue);}
-.search{padding:7px 12px;border:1.5px solid var(--g2);border-radius:6px;font-size:13px;font-family:inherit;color:var(--g5);outline:none;flex:1;min-width:200px;}
-.search:focus{border-color:var(--blue);}
-.btn{padding:7px 16px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;display:inline-flex;align-items:center;gap:5px;transition:all .15s;}
-.btn-sm{padding:5px 11px;font-size:12px;}
-.btn-primary{background:var(--blue);color:#fff;}
-.btn-primary:hover{background:var(--blue-dk);}
-.btn-outline{background:#fff;color:var(--blue);border:1.5px solid var(--blue);}
-.btn-outline:hover{background:var(--blue-xlt);}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
-.modal{background:#fff;border-radius:12px;max-width:760px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 8px 40px rgba(0,0,0,.22);}
-.modal-hd{padding:22px 26px 16px;border-bottom:1px solid var(--g2);display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;background:#fff;z-index:1;}
-.modal-title{font-size:18px;font-weight:800;color:var(--navy);}
-.modal-close{background:none;border:none;font-size:22px;color:var(--g4);cursor:pointer;line-height:1;padding:2px 6px;}
-.modal-body{padding:22px 26px;}
-.msec{margin-bottom:20px;}
-.msec-title{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);margin-bottom:10px;}
-.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;}
-.mfl{font-size:11px;color:var(--g4);font-weight:600;}
-.mfv{font-size:13px;color:var(--g5);font-weight:600;margin-top:2px;}
-.qs-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.qs-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--g1);border-radius:6px;}
-.qs-lbl{font-size:11px;color:var(--g4);flex:1;}
-.qs-val{font-size:13px;font-weight:700;}
-/* COMPANIES TAB */
-.company-list{display:flex;flex-direction:column;gap:12px;}
-.co-card{background:#fff;border-radius:10px;box-shadow:var(--sh);padding:20px 22px;cursor:pointer;border:1.5px solid var(--g2);transition:all .15s;}
-.co-card:hover{border-color:var(--blue);box-shadow:0 4px 20px rgba(1,118,211,.12);}
-.co-card.tester{border-color:var(--blue-lt);background:#F0F7FF;}
-.co-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.co-name{font-size:16px;font-weight:700;color:var(--navy);}
+th{text-align:left;padding:10px 12px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--g4);border-bottom:2px solid var(--g2);}
+td{padding:10px 12px;border-bottom:1px solid var(--g1);vertical-align:middle;}
+tr:hover td{background:#FAFBFF;}
+.filters{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.fi{padding:8px 12px;border:1.5px solid var(--g2);border-radius:8px;font-size:13px;font-family:inherit;outline:none;}
+.fi:focus{border-color:var(--blue);}
+input.fi{flex:1;min-width:160px;}
+.toggle{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--g4);cursor:pointer;white-space:nowrap;}
+.co-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+.co-card{background:#fff;border-radius:10px;padding:18px;box-shadow:var(--sh);cursor:pointer;border:1.5px solid var(--g2);transition:all .15s;}
+.co-card:hover{border-color:var(--blue);transform:translateY(-1px);}
+.co-name{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:4px;}
 .co-meta{font-size:12px;color:var(--g4);margin-bottom:10px;}
-.co-dims{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
-.co-dim{padding:6px 8px;border-radius:6px;background:var(--g1);text-align:center;}
-.co-dim-lbl{font-size:9px;font-weight:700;color:var(--g4);letter-spacing:.5px;}
-.co-dim-val{font-size:14px;font-weight:800;}
-/* TALKING POINTS */
-.tp-card{background:#F8FFF8;border:1.5px solid #C8E8C8;border-radius:10px;padding:18px 20px;margin-bottom:14px;}
-.tp-title{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--green);margin-bottom:10px;}
-.tp-item{display:flex;gap:10px;margin-bottom:8px;}
-.tp-num{min-width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
-.tp-text{font-size:13px;color:var(--g5);line-height:1.55;}
-/* LIBRARY TAB */
-.lib-dim{margin-bottom:28px;}
-.lib-dim-title{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--blue-xlt);}
+.co-score{font-size:28px;font-weight:800;margin-bottom:6px;}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px;}
+.modal{background:#fff;border-radius:14px;max-width:760px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 16px 60px rgba(0,0,0,.25);}
+.modal-hd{padding:22px 24px 14px;border-bottom:1px solid var(--g2);display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-size:17px;font-weight:800;color:var(--navy);}
+.modal-x{width:30px;height:30px;border-radius:50%;border:none;background:var(--g1);cursor:pointer;font-size:16px;}
+.modal-body{padding:22px 24px;}
+.tp-box{background:#F0F4FA;border-radius:8px;padding:16px;margin-top:14px;}
+.tp-hd{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--navy);margin-bottom:10px;}
+.tp-row{display:flex;gap:8px;margin-bottom:8px;font-size:13px;line-height:1.55;}
+.tp-num{min-width:20px;height:20px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+.lib-section{background:#fff;border-radius:10px;padding:18px;box-shadow:var(--sh);margin-bottom:14px;}
+.lib-dim-title{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--g2);}
 .lib-tiers{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
-.lib-tier-card{padding:14px 16px;border-radius:8px;border:1.5px solid var(--g2);}
-.lib-tier-hd{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
-.lib-tier-desc{font-size:12px;color:var(--g5);line-height:1.55;margin-bottom:8px;}
-.lib-sf{font-size:11px;color:var(--blue);font-weight:600;margin-bottom:4px;}
-.lib-intervention{font-size:11px;color:var(--g4);line-height:1.5;font-style:italic;}
-.ind-list{display:flex;flex-direction:column;gap:7px;max-height:260px;overflow-y:auto;}
-.ind-row{display:flex;align-items:center;gap:10px;}
-.ind-nm{font-size:12px;color:var(--g5);width:175px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ind-bg{flex:1;height:16px;border-radius:4px;background:var(--g1);overflow:hidden;}
-.ind-fill{height:100%;background:var(--blue);border-radius:4px;opacity:.7;}
-.ind-ct{font-size:12px;font-weight:700;color:var(--g4);width:18px;text-align:right;}
-.empty{text-align:center;padding:60px 20px;}
-.empty-icon{font-size:48px;margin-bottom:14px;}
-.empty-title{font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px;}
-.empty-desc{font-size:14px;color:var(--g4);line-height:1.6;max-width:480px;margin:0 auto;}
-@media(max-width:768px){.stats-grid,.charts-2{grid-template-columns:1fr 1fr;}.dim-grid,.co-dims{grid-template-columns:1fr 1fr;}.qs-grid{grid-template-columns:1fr;}.lib-tiers{grid-template-columns:1fr 1fr;}}
+@media(max-width:700px){.lib-tiers{grid-template-columns:1fr 1fr;}}
+.lib-tier{border-radius:8px;padding:12px;border:1.5px solid var(--g2);}
+.lib-tier-lbl{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;}
+.lib-what{font-size:12px;color:var(--g5);line-height:1.5;margin-bottom:6px;}
+.lib-sf{font-size:11px;color:var(--blue);line-height:1.45;margin-bottom:4px;}
+.lib-int{font-size:11px;color:var(--green);line-height:1.45;}
+.dl-btn{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;background:#fff;border:1.5px solid var(--g2);color:var(--g4);cursor:pointer;margin-left:auto;display:inline-flex;align-items:center;gap:4px;}
+.dl-btn:hover{border-color:var(--blue);color:var(--blue);}
+.chart-hd{display:flex;align-items:center;margin-bottom:10px;}
+.chart-lbl{font-size:13px;font-weight:700;color:var(--navy);}
+.empty{text-align:center;padding:60px 20px;color:var(--g4);}
+.modal-tabs{display:flex;gap:2px;padding:0 24px;border-bottom:1px solid var(--g2);background:#FAFBFF;}
+.modal-tab{padding:10px 16px;font-size:12px;font-weight:600;color:var(--g4);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;}
+.modal-tab:hover{color:var(--navy);}
+.modal-tab.on{color:var(--blue);border-bottom-color:var(--blue);}
+.q-list{display:flex;flex-direction:column;gap:10px;}
+.q-card{background:#FAFBFF;border:1.5px solid var(--g2);border-radius:10px;padding:14px 16px;cursor:pointer;transition:all .15s;}
+.q-card:hover{border-color:var(--blue);background:#F0F6FF;}
+.q-card.open{border-color:var(--blue);background:#fff;}
+.q-domain{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--blue);margin-bottom:4px;}
+.q-text{font-size:13px;font-weight:600;color:var(--navy);margin-bottom:10px;}
+.q-bar-wrap{display:flex;flex-direction:column;gap:5px;}
+.q-bar-row{display:flex;align-items:center;gap:8px;}
+.q-bar-label{font-size:11px;color:var(--g4);width:24px;text-align:right;flex-shrink:0;font-weight:600;}
+.q-bar-track{flex:1;height:18px;background:var(--g1);border-radius:4px;overflow:hidden;position:relative;}
+.q-bar-fill{height:100%;border-radius:4px;transition:width .3s;}
+.q-bar-count{font-size:10px;font-weight:700;width:20px;flex-shrink:0;}
+.q-avg-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;margin-top:8px;}
+.resp-answers{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding-top:10px;border-top:1px solid var(--g2);}
+.resp-answer-row{display:flex;gap:8px;align-items:flex-start;font-size:12px;}
+.resp-name{font-weight:600;color:var(--navy);min-width:90px;flex-shrink:0;}
+.resp-score-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;flex-shrink:0;}
+.resp-answer-text{color:var(--g5);line-height:1.4;}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
-const { useState, useEffect, useMemo } = React;
-const { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, RadarChart: RC, PolarGrid, PolarAngleAxis, Radar, LineChart, Line, CartesianGrid, Legend } = Recharts;
+const {useState,useEffect,useMemo,useRef}=React;
 
-/* ═══ CONFIG ═══ */
-const ADMIN_PASSWORD    = "Martha314!";
-const GOOGLE_SHEETS_API = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
-const TESTER_DOMAINS    = ["salesforce.com"];
+const ADMIN_PASSWORD="Martha314!";
+const GOOGLE_SHEETS_API="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
+const TESTER_DOMAINS=["salesforce.com"];
+const LOGO="data:image/png;base64,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";
 
-/* ═══ SAMPLE DATA ═══ */
-const SAMPLE_DATA = [
-  {timestamp:"2024-01-15T10:23:00Z",fullName:"Alex Rivera",email:"arivera@techcorp.com",businessName:"TechCorp Inc",title:"SVP Sales",industry:"Technology: Software / SaaS",timeline:"1–3 Months",confidence:8,overallScore:2.3,overallTier:"Repeatable / Developing",emailDomain:"techcorp.com",isTester:false,DIM_Growth_Strategy:2.0,DIM_Sales_Process___Governance:2.2,DIM_Forecasting___Pipeline:2.5,DIM_Pricing___Quote_to_Cash:1.8,DIM_Enablement___Coaching:2.6,DIM_Data__CRM___AI:2.1,DIM_Operations___Lifecycle:2.4,topOutcome:"Improve forecast accuracy to within 5% each quarter"},
-  {timestamp:"2024-01-18T14:45:00Z",fullName:"Sarah Chen",email:"schen@techcorp.com",businessName:"TechCorp Inc",title:"VP Revenue",industry:"Technology: Software / SaaS",timeline:"1–3 Months",confidence:7,overallScore:2.1,overallTier:"Repeatable / Developing",emailDomain:"techcorp.com",isTester:false,DIM_Growth_Strategy:1.8,DIM_Sales_Process___Governance:2.0,DIM_Forecasting___Pipeline:2.3,DIM_Pricing___Quote_to_Cash:1.9,DIM_Enablement___Coaching:2.4,DIM_Data__CRM___AI:2.0,DIM_Operations___Lifecycle:2.2,topOutcome:"Build consistent pipeline across all reps"},
-  {timestamp:"2024-01-20T09:00:00Z",fullName:"Mike Johnson",email:"mjohnson@salesforce.com",businessName:"Salesforce",title:"AE",industry:"Technology: Software / SaaS",timeline:"1–3 Months",confidence:9,overallScore:3.8,overallTier:"Optimized / Agentic",emailDomain:"salesforce.com",isTester:true,DIM_Growth_Strategy:3.9,DIM_Sales_Process___Governance:3.8,DIM_Forecasting___Pipeline:3.7,DIM_Pricing___Quote_to_Cash:3.8,DIM_Enablement___Coaching:3.9,DIM_Data__CRM___AI:3.8,DIM_Operations___Lifecycle:3.6,topOutcome:"Test the assessment"},
-  {timestamp:"2024-02-01T11:30:00Z",fullName:"Jennifer Park",email:"jpark@manufact.com",businessName:"Precision Mfg",title:"SVP of Sales",industry:"Manufacturing & Industrial",timeline:"7–12 Months",confidence:6,overallScore:1.7,overallTier:"Ad Hoc / Reactive",emailDomain:"manufact.com",isTester:false,DIM_Growth_Strategy:1.5,DIM_Sales_Process___Governance:1.8,DIM_Forecasting___Pipeline:1.6,DIM_Pricing___Quote_to_Cash:1.5,DIM_Enablement___Coaching:2.0,DIM_Data__CRM___AI:1.7,DIM_Operations___Lifecycle:1.9,topOutcome:"Get reps to actually use Salesforce"},
-  {timestamp:"2024-02-10T08:55:00Z",fullName:"Lisa Thompson",email:"lthompson@finserv.com",businessName:"FinServ Partners",title:"CRO",industry:"Financial Services (Banking)",timeline:"1–3 Months",confidence:9,overallScore:3.4,overallTier:"Optimized / Agentic",emailDomain:"finserv.com",isTester:false,DIM_Growth_Strategy:3.6,DIM_Sales_Process___Governance:3.5,DIM_Forecasting___Pipeline:3.3,DIM_Pricing___Quote_to_Cash:3.2,DIM_Enablement___Coaching:3.4,DIM_Data__CRM___AI:3.6,DIM_Operations___Lifecycle:3.1,topOutcome:"Deploy Agentforce across our revenue team"},
+const QUESTIONS = [ { id:"q1",  domain:"Sales Process",   text:"Is your ICP (ideal customer profile) documented and used to qualify deals?",   answers:["Not defined — reps qualify based on gut feel","Defined informally; not consistently enforced","Documented and used by most teams to qualify opportunities","Operationalized in CRM, reviewed quarterly, and tied to routing rules"]}, { id:"q2",  domain:"Sales Process",   text:"Are sales stages defined with exit criteria and consistently followed?",   answers:["No common stages; each rep operates independently","Stages exist in CRM but inconsistently applied","Stages with exit criteria are used and enforced in pipeline reviews","Measured, coached, and continuously improved using conversion data"]}, { id:"q3",  domain:"CRM & Data",   text:"How well does your CRM opportunity structure reflect how your business actually sells?",   answers:["Poor fit — CRM is mostly a transactional log, not a sales tool","Partial fit — adapted but constrained by system limitations","Strong fit — CRM is aligned to actual sales motion and used daily","Strategic fit — CRM architecture is optimized for revenue operations"]}, { id:"q4",  domain:"Sales Process",   text:"How would you rate your lead management and qualification process?",   answers:["Inconsistent lead routing; no defined qualification framework","Basic routing and manual qualification in place","Defined methodology (BANT, MEDDPICC, SPICED) with reporting","AI-assisted scoring, fast response SLAs, and data-driven qualification"]}, { id:"q5",  domain:"Forecasting",   text:"How objective and accurate is your sales forecasting?",   answers:["Gut feel, low confidence — no real process","Manager judgment + spreadsheets; inconsistent accuracy","Criteria-based forecasting with a regular cadence and tracked accuracy","Data-driven with AI-assisted accuracy tracking and scenario modeling"]}, { id:"q6",  domain:"Pipeline Mgmt",   text:"How do you manage pipeline health?",   answers:["No standard — pipeline visibility is low and unreliable","Basic reviews only; no standardized KPIs","Pipeline KPIs tracked (coverage, aging, conversion) with weekly reviews","Predictive scoring, AI-guided early warning triggers, and stage health monitoring"]}, { id:"q7",  domain:"Pricing / CPQ",   text:"How controlled is your discounting and pricing approval process?",   answers:["Ad hoc — reps discount freely with no governance","Guidelines exist but exceptions are common and untracked","Policy and approval workflows enforced in the deal process","CPQ-enforced pricing with margin leakage analytics and deal-level visibility"]}, { id:"q8",  domain:"Quote-to-Cash",   text:"How integrated is your quote → order → invoice → payment process?",   answers:["Fully manual handoffs; no integration between systems","Partial integration; major steps still require manual effort","Integrated for most products with clear process ownership","End-to-end integrated with cycle time measurement and exception management"]}, { id:"q9",  domain:"AI & Automation",   text:"How would you rate your use of AI, automation, or intelligent agents in your sales process?",   answers:["No AI usage — fully manual processes","Early experimentation with scoring or summaries","AI used in coaching, scoring, or call summaries at scale","Agentic workflows that plan, reason, and take action across the revenue lifecycle"]}, { id:"q10", domain:"Sales Operations",   text:"How would you rate your sales operations and post-sales account management integration?",   answers:["Fragmented — sales and post-sales operate in silos with no shared visibility","Basic alignment — handoffs are defined but manual and inconsistently executed","Coordinated — clear ownership, structured handoffs, and shared CRM visibility","Integrated and proactive — shared KPIs, real-time insights, proactive account growth"]}, { id:"q11", domain:"Enablement",   text:"Are playbooks and messaging standardized by segment or use case?",   answers:["No playbooks — reps create their own approaches","Some documents exist but not consistently used","Used in onboarding and coaching; embedded in workflow","Measured for effectiveness, continuously updated, tied to win/loss data"]}, { id:"q12", domain:"Coaching",   text:"Do managers run a consistent, structured coaching cadence?",   answers:["Sporadic — coaching happens ad hoc, if at all","1:1s happen but are unstructured and deal-focused only","Structured coaching and deal reviews tied to skills development","Coaching tied to skills metrics, performance data, and business outcomes"]}, { id:"q13", domain:"CRM Adoption",   text:"How would you rate CRM adoption and data hygiene across your sales org?",   answers:["Low trust in CRM data; heavy Excel shadow systems are the norm","Moderate usage; required fields often incomplete or outdated","Strong adoption — consistent opportunity updates and next steps logged","CRM is the single source of truth with high behavioral alignment and automated capture"]}, { id:"q14", domain:"Data Governance",   text:"Do you have shared definitions for key metrics (MQL/SQL, stages, ARR, churn)?",   answers:["No shared definitions — every team measures differently","Partial alignment; frequent disputes over numbers","Definitions documented and used consistently across revenue teams","Governed with clear owners, change control, and a published metric catalog"]}, { id:"q15", domain:"Growth Strategy",   text:"Where is incremental profit most likely to come from in your business today?",   answers:["Primarily from new lead volume alone","Mostly new leads with very limited expansion motion","Balanced acquisition and account expansion","Primarily from systematically expanding and renewing existing accounts"]}, { id:"q16", domain:"Revenue Constraint",   text:"What is the biggest barrier to generating more revenue today?",   answers:["Insufficient high-quality new leads","Time lost chasing poor-fit or low-intent leads","Administrative and internal process burden on sellers","Post-sale servicing and order management friction impacting retention and expansion"]}, { id:"q17", domain:"Agility",   text:"How agile is your organization in updating pricing rules, approval workflows, or sales stages?",   answers:["IT-dependent — all changes are slow and require tickets","Minor changes can be made by sales ops with effort","Sales and ops can adjust key levers without engineering","Business users fully manage rules and strategies via a no-code UI"]}, { id:"q18", domain:"Partner / Data",   text:"How do external partners or 3rd-party data enhance your sales team's effectiveness?",   answers:["No external data or partnerships leveraged","Some 3rd-party data available; ad hoc partner collaboration","3rd-party data directly impacts lead and deal scoping; defined partner network","Integrated and automated 3rd-party data with a governed partner ecosystem"]},
 ];
 
-const TIER_INFO=[null,
-  {label:"Ad Hoc / Reactive",short:"Ad Hoc",cls:"b1",color:"#BA0517"},
-  {label:"Repeatable / Developing",short:"Repeatable",cls:"b2",color:"#FE5000"},
-  {label:"Defined / Measured",short:"Defined",cls:"b3",color:"#B8860B"},
-  {label:"Optimized / Agentic",short:"Optimized",cls:"b4",color:"#06A59A"},
-];
-const DIMENSIONS=["Growth Strategy","Sales Process & Governance","Forecasting & Pipeline","Pricing & Quote-to-Cash","Enablement & Coaching","Data, CRM & AI","Operations & Lifecycle"];
-const DIM_KEYS=["DIM_Growth_Strategy","DIM_Sales_Process___Governance","DIM_Forecasting___Pipeline","DIM_Pricing___Quote_to_Cash","DIM_Enablement___Coaching","DIM_Data__CRM___AI","DIM_Operations___Lifecycle"];
 
-/* Best practices library — drawn directly from the briefing doc */
-const BEST_PRACTICES = {
-  "Growth Strategy":{
-    1:{what:"Growth is reactive — new lead volume is the only lever; no intentional expansion motion.",sf:"Revenue type tags on Opportunities; no renewal/upsell pipeline defined.",intervention:"Define expansion plays, account segmentation model, and expansion KPIs in Salesforce. Identify top 20% of accounts for intentional growth outreach."},
-    2:{what:"Some expansion activity but it's unmeasured and not a managed motion.",sf:"Opportunity record types for new vs. expansion; basic account segmentation.",intervention:"Build a separate expansion pipeline in Salesforce, assign account owners, and create a renewal dashboard with 90-day advance visibility."},
-    3:{what:"Balanced acquisition and expansion; both are tracked but optimization is limited.",sf:"Account health scores, renewal pipeline with forecast categories, account segmentation.",intervention:"Implement automated account health scoring and proactive intervention triggers. Introduce Agentforce-ready signals for expansion opportunity detection."},
-    4:{what:"Expansion and renewal are the primary profit drivers; fully systematized and measured.",sf:"AI-assisted account scoring, automated expansion triggers, renewal forecasting.",intervention:"Extend into Agentforce agents that proactively surface expansion risk/opportunity and trigger seller action without manual pipeline review."},
-  },
-  "Sales Process & Governance":{
-    1:{what:"Each rep qualifies and stages deals independently — no common process.",sf:"Opportunity Stage field exists but is not enforced; no required fields by stage.",intervention:"Define ICP criteria and map to Lead/Opportunity fields. Implement Salesforce Path with required key fields and guidance text per stage."},
-    2:{what:"Process documentation exists but adoption is inconsistent — some reps follow it, others don't.",sf:"Path is configured but not actively coached to; required fields are minimal.",intervention:"Enforce stage progression discipline through Path key fields, conduct weekly pipeline reviews against stage criteria, and tie coaching to stage conversion metrics."},
-    3:{what:"Stages are defined, enforced, and used to drive forecast quality.",sf:"Path with required fields, in-app guidance, stage conversion dashboards.",intervention:"Layer AI-assisted qualification signals and next-best-action guidance. Pilot automated stage progression recommendations based on activity patterns."},
-    4:{what:"Process governance is a competitive advantage — data-driven and continuously improving.",sf:"Automated stage health monitoring, AI-guided qualification, dynamic playbook surfacing.",intervention:"Deploy qualification and pipeline governance agents via Agentforce. Connect process adherence data to seller performance reviews."},
-  },
-  "Forecasting & Pipeline":{
-    1:{what:"Forecasting is based on manager gut feel with no structured process.",sf:"Forecast Category field unused; no forecast hierarchy configured.",intervention:"Configure Salesforce Forecast Categories (Pipeline, Best Case, Commit, Closed). Establish a weekly forecast commit cadence with manager roll-up."},
-    2:{what:"A forecast process exists but accuracy is inconsistent and not formally tracked.",sf:"Forecast Categories in use; no accuracy tracking against actuals.",intervention:"Build a Forecast vs. Actual tracking dashboard. Introduce pipeline health KPIs: stage aging, coverage ratio, and next-step completion rates."},
-    3:{what:"Criteria-based forecasting is cadenced and tracked against actuals.",sf:"Forecast accuracy dashboards, pipeline coverage reports, stage aging alerts.",intervention:"Layer Einstein Forecasting or AI-assisted scenario modeling. Automate pipeline risk alerts and incorporate deal sentiment signals."},
-    4:{what:"Forecasting is data-driven, auditable, and continuously improving.",sf:"AI forecasting, predictive deal scoring, automated risk identification.",intervention:"Extend into Agentforce-powered pipeline review agents that surface risk, suggest actions, and update forecast categories without rep intervention."},
-  },
-  "Pricing & Quote-to-Cash":{
-    1:{what:"Discounting is ad hoc; quoting is manual and inconsistent.",sf:"No CPQ; discount fields exist but no approval workflows.",intervention:"Establish pricing guidelines and minimum approval thresholds. Deploy Salesforce CPQ for standard product lines with basic approval rules."},
-    2:{what:"Pricing guidelines exist but exceptions are frequent and untracked.",sf:"CPQ partially deployed; approval workflows for some products only.",intervention:"Complete CPQ rollout with Advanced Approvals for all product lines. Build discount governance reporting to surface leakage patterns."},
-    3:{what:"CPQ is in use with governed approvals; quote cycle time is tracked.",sf:"CPQ with Advanced Approvals, quote cycle time dashboard, margin visibility.",intervention:"Integrate order and invoice status into Salesforce to eliminate 'where is my order?' seller distraction. Connect CPQ to ERP for real-time pricing and availability."},
-    4:{what:"End-to-end quote-to-cash is integrated, measurable, and optimized.",sf:"CPQ + Order + ERP integration; automated renewal quoting; margin analytics.",intervention:"Extend into automated renewal management and AI-assisted deal structuring recommendations via Agentforce."},
-  },
-  "Enablement & Coaching":{
-    1:{what:"Enablement is ad hoc; coaching happens when managers have time.",sf:"No playbooks in Salesforce; coaching not tracked.",intervention:"Build 2–3 segment-specific playbooks and host them in Salesforce. Establish a biweekly structured coaching cadence with a defined skill rubric."},
-    2:{what:"Enablement content exists but is inconsistently applied and not embedded in workflow.",sf:"Some documents in Salesforce Files; coaching 1:1s exist but vary by manager.",intervention:"Embed playbooks in Salesforce workflow using In-App Guidance. Tie coaching sessions to observable opportunity-level behaviors in CRM."},
-    3:{what:"Enablement and coaching are structured, consistent, and tied to skill development.",sf:"In-App Guidance with analytics, coaching scorecards tied to CRM activity.",intervention:"Measure enablement effectiveness against win rate and stage conversion. Continuously update playbooks based on win/loss analysis."},
-    4:{what:"Enablement is a measured, data-driven function driving business outcomes.",sf:"Enablement analytics, AI-assisted coaching tools, real-time guidance agents.",intervention:"Deploy Agentforce coaching agents that surface deal-specific guidance at point of need based on opportunity characteristics and seller history."},
-  },
-  "Data, CRM & AI":{
-    1:{what:"CRM data is incomplete and untrustworthy; shadow systems (spreadsheets) dominate.",sf:"Low field completion rates; duplicate records common; adoption inconsistent.",intervention:"Simplify Salesforce to minimum required fields. Configure duplicate and matching rules. Deploy In-App Guidance to reduce friction. Run a data import cleanup sprint."},
-    2:{what:"Salesforce is used but adoption and data quality are uneven across the team.",sf:"Some required fields; basic duplicate rules; adoption varies by manager.",intervention:"Define and enforce data minimums by stage using Path. Establish shared metric definitions (MQL, SQL, ARR, Churn) across revenue teams. Publish a metric catalog."},
-    3:{what:"Salesforce is the system of record with strong adoption and trusted reporting.",sf:"High field completion, shared metric definitions, duplicate prevention, trusted dashboards.",intervention:"Pilot Einstein Lead Scoring and Opportunity Health. Introduce automated data capture (activity logging). Build the data foundation for Agentforce deployment."},
-    4:{what:"CRM data is clean, trusted, and the active foundation for intelligent automation.",sf:"Automated capture, AI scoring, clean data grounding Agentforce agents.",intervention:"Deploy Agentforce agents grounded in CRM data with deterministic Flow/API actions. Implement Einstein Trust Layer protections for safe agentic operation."},
-  },
-  "Operations & Lifecycle":{
-    1:{what:"Sales and post-sales operate in silos; handoffs are ad hoc and lossy.",sf:"No handoff artifacts in Salesforce; Cases not linked to Account revenue context.",intervention:"Define handoff ownership and create standard handoff checklists as Tasks in Salesforce. Link Cases to Account and Opportunity context for seller visibility."},
-    2:{what:"Handoff process exists but lacks consistency and feedback loops.",sf:"Handoff templates exist; some Cases visible to sales; no cycle time measurement.",intervention:"Implement standardized handoff packages triggered by Opportunity Close. Automate onboarding milestone tracking and expose service/order status to sellers."},
-    3:{what:"Lifecycle handoffs are structured, measured, and improving.",sf:"Automated handoff creation, onboarding milestones tracked, seller-facing service dashboard.",intervention:"Close the feedback loop between service outcomes and sales process. Reduce seller time diverted to order/service inquiries through self-serve portals."},
-    4:{what:"The revenue lifecycle is integrated and proactively managed.",sf:"Automated lifecycle monitoring, account health signals, proactive intervention triggers.",intervention:"Deploy Agentforce agents that monitor account health, detect churn risk, and trigger expansion or save workflows without human initiation."},
-  },
+const DIMS=["Growth Strategy","Sales Process & Governance","Forecasting & Pipeline","Pricing & Quote-to-Cash","Enablement & Coaching","Data, CRM & AI","Operations & Lifecycle"];
+const TNAMES=["","Ad Hoc","Developing","Defined","Optimized"];
+const TCOLORS=["","#BA0517","#FE5000","#B8860B","#06A59A"];
+const DSHORT={"Growth Strategy":"Growth","Sales Process & Governance":"Sales Process","Forecasting & Pipeline":"Forecasting","Pricing & Quote-to-Cash":"Pricing/CPQ","Enablement & Coaching":"Enablement","Data, CRM & AI":"Data & AI","Operations & Lifecycle":"Operations"};
+
+const getTier=s=>s>=3.5?4:s>=2.5?3:s>=1.5?2:1;
+const tcls=t=>['','t1','t2','t3','t4'][t]||'t1';
+const isTester=d=>TESTER_DOMAINS.some(td=>d&&d.toLowerCase().includes(td.toLowerCase()));
+const avg=a=>a.length?a.reduce((s,v)=>s+v,0)/a.length:0;
+const sc=s=>s>=3.5?'#06A59A':s>=2.5?'#B8860B':s>=1.5?'#FE5000':'#BA0517';
+const dk=d=>`DIM_${d.replace(/[^a-zA-Z0-9]/g,'_')}`;
+const getDS=(row,dim)=>{const v=parseFloat(row[dk(dim)]);return isNaN(v)?0:v;};
+
+const SAMPLE=[
+  {timestamp:"2026-02-01",fullName:"Sarah Chen",email:"sarah@techcorp.com",businessName:"TechCorp",title:"VP Sales",industry:"Technology: Software / SaaS",overallScore:"2.8",overallTier:"Defined",emailDomain:"techcorp.com",isTester:"false",confidence:"7",topOutcome:"Improve forecast accuracy",DIM_Growth_Strategy:"2.5",DIM_Sales_Process___Governance:"3.0",DIM_Forecasting___Pipeline:"2.8",DIM_Pricing___Quote_to_Cash:"2.5",DIM_Enablement___Coaching:"3.2",DIM_Data__CRM___AI:"2.6",DIM_Operations___Lifecycle:"3.0"},
+  {timestamp:"2026-02-05",fullName:"James Wilson",email:"jwilson@techcorp.com",businessName:"TechCorp",title:"Sales Ops",industry:"Technology: Software / SaaS",overallScore:"3.1",overallTier:"Defined",emailDomain:"techcorp.com",isTester:"false",confidence:"8",topOutcome:"Reduce time to close",DIM_Growth_Strategy:"3.0",DIM_Sales_Process___Governance:"3.2",DIM_Forecasting___Pipeline:"3.1",DIM_Pricing___Quote_to_Cash:"3.0",DIM_Enablement___Coaching:"3.4",DIM_Data__CRM___AI:"3.0",DIM_Operations___Lifecycle:"3.1"},
+  {timestamp:"2026-02-10",fullName:"Mark Rivera",email:"mark@medco.com",businessName:"MedCo",title:"CRO",industry:"Life Sciences & Pharma",overallScore:"1.9",overallTier:"Developing",emailDomain:"medco.com",isTester:"false",confidence:"4",topOutcome:"Get CRM adoption up",DIM_Growth_Strategy:"1.5",DIM_Sales_Process___Governance:"2.0",DIM_Forecasting___Pipeline:"1.8",DIM_Pricing___Quote_to_Cash:"2.0",DIM_Enablement___Coaching:"2.2",DIM_Data__CRM___AI:"1.5",DIM_Operations___Lifecycle:"2.2"},
+  {timestamp:"2026-02-14",fullName:"Lisa Park",email:"lisa@finserv.com",businessName:"FinServ Group",title:"Director of Sales",industry:"Financial Services (Banking)",overallScore:"3.6",overallTier:"Optimized",emailDomain:"finserv.com",isTester:"false",confidence:"9",topOutcome:"Build agentic workflows",DIM_Growth_Strategy:"3.8",DIM_Sales_Process___Governance:"3.5",DIM_Forecasting___Pipeline:"3.7",DIM_Pricing___Quote_to_Cash:"3.5",DIM_Enablement___Coaching:"3.6",DIM_Data__CRM___AI:"3.8",DIM_Operations___Lifecycle:"3.5"},
+  {timestamp:"2026-02-18",fullName:"Tom Brady",email:"tom@salesforce.com",businessName:"Salesforce",title:"AE",industry:"Technology: Software / SaaS",overallScore:"3.9",overallTier:"Optimized",emailDomain:"salesforce.com",isTester:"true",confidence:"10",topOutcome:"Test the tool",DIM_Growth_Strategy:"4.0",DIM_Sales_Process___Governance:"3.8",DIM_Forecasting___Pipeline:"3.9",DIM_Pricing___Quote_to_Cash:"3.8",DIM_Enablement___Coaching:"4.0",DIM_Data__CRM___AI:"4.0",DIM_Operations___Lifecycle:"3.8"},
+  {timestamp:"2026-02-20",fullName:"Anna Lee",email:"anna@retailco.com",businessName:"RetailCo",title:"VP RevOps",industry:"Retail",overallScore:"2.3",overallTier:"Developing",emailDomain:"retailco.com",isTester:"false",confidence:"5",topOutcome:"Better pipeline health",DIM_Growth_Strategy:"2.2",DIM_Sales_Process___Governance:"2.5",DIM_Forecasting___Pipeline:"2.0",DIM_Pricing___Quote_to_Cash:"2.5",DIM_Enablement___Coaching:"2.3",DIM_Data__CRM___AI:"2.1",DIM_Operations___Lifecycle:"2.5"},
+];
+
+const TP={"Growth Strategy":"Their growth motion appears primarily new-logo focused with limited expansion infrastructure. Ask what a 10% lift in retention and expansion would mean for margin vs. the same investment in net-new pipeline.","Sales Process & Governance":"Sales stage discipline and qualification rigor are inconsistently applied. Open a conversation around what it costs when deals slip late — and what enforced exit criteria could do for forecast confidence.","Forecasting & Pipeline":"Forecast accuracy is low and largely judgment-based. Ask how often leadership adjusts the number before the board call — and what it would mean to submit a forecast they actually believed.","Pricing & Quote-to-Cash":"Pricing governance is weak and discounting is largely unchecked. Explore what margin leakage looks like and whether they can quantify what ad-hoc approvals are costing them.","Enablement & Coaching":"Coaching is sporadic and not tied to skill or outcome data. Ask what ramp time looks like for new hires and whether top performers have anything in common that can be systematized.","Data, CRM & AI":"CRM trust and data quality are barriers to any intelligent tooling. Ask how often leadership makes decisions from Salesforce vs. spreadsheets — that gap is the real cost.","Operations & Lifecycle":"Post-sale handoffs are fragmented and account health is reactive. Explore what percentage of expansion opportunities are being missed due to lack of visibility into customer health."};
+
+const BP={"Growth Strategy":[{tier:1,what:"Growth is reactive — new lead volume is the only lever",sf:"No expansion pipeline; renewal/upsell not tracked",int:"Define expansion plays and account segmentation model"},{tier:2,what:"Some segmentation exists but expansion is informal",sf:"Opportunity types defined; inconsistent expansion pipeline",int:"Build a formal renewal and upsell motion with dedicated pipeline"},{tier:3,what:"Defined ICP, segmentation model, and expansion KPIs",sf:"Account tiers, expansion pipeline, renewal forecasting in CRM",int:"Instrument expansion metrics and tie to territory planning"},{tier:4,what:"Systematic acquisition and expansion with AI-assisted signals",sf:"Agentforce signals for expansion triggers; automated renewal workflows",int:"Deploy intelligent agents to surface expansion timing and risk"}],"Sales Process & Governance":[{tier:1,what:"No common process — each rep operates independently",sf:"CRM used as a log; no required fields or stage discipline",int:"Define and enforce stage exit criteria and required fields"},{tier:2,what:"Stages exist but inconsistently applied",sf:"Path to Purchase not fully adopted; some required fields",int:"Implement Salesforce Path with exit criteria and coaching nudges"},{tier:3,what:"Enforced qualification methodology with pipeline discipline",sf:"Path enforced, MEDDPICC fields, stage conversion tracked",int:"Connect qualification scores to forecast and coaching workflows"},{tier:4,what:"AI-assisted qualification and dynamic process optimization",sf:"Einstein Opportunity Scoring; In-App Guidance",int:"Use AI signals to flag off-process deals and coaching opportunities"}],"Forecasting & Pipeline":[{tier:1,what:"Gut-feel forecasting with no consistent methodology",sf:"No forecast categories used; pipeline data unreliable",int:"Introduce forecast categories and a weekly pipeline review cadence"},{tier:2,what:"Manager judgment with basic categories; inconsistent accuracy",sf:"Forecast categories in use; limited tracking vs. target",int:"Build a forecast accuracy dashboard and manager accountability process"},{tier:3,what:"Criteria-based forecasting with tracked accuracy over time",sf:"Forecast rollups, pipeline coverage KPIs, accuracy history",int:"Introduce scenario modeling and tie forecast to capacity planning"},{tier:4,what:"AI-assisted forecasting with high confidence and scenario modeling",sf:"Einstein Forecasting; pipeline health AI; automated early warnings",int:"Deploy predictive forecasting and automated pipeline intervention triggers"}],"Pricing & Quote-to-Cash":[{tier:1,what:"Ad hoc pricing — reps discount freely with no governance",sf:"No CPQ; approvals via email; no margin visibility",int:"Establish a pricing policy and basic approval workflow"},{tier:2,what:"Informal guidelines exist; exceptions are common",sf:"Basic approval rules; limited CPQ adoption",int:"Implement CPQ with approval tiers and discount thresholds"},{tier:3,what:"CPQ-enforced pricing with approval workflows and margin tracking",sf:"Salesforce CPQ with deal-level margin visibility",int:"Connect CPQ data to forecasting and deal desk analytics"},{tier:4,what:"Dynamic pricing with full quote-to-cash integration",sf:"Advanced Approvals, ERP integration, margin leakage analytics",int:"Automate renewal quoting and cross-sell bundles using CPQ"}],"Enablement & Coaching":[{tier:1,what:"No playbooks — reps create their own approaches",sf:"No CRM-embedded guidance; inconsistent messaging",int:"Document winning plays and build onboarding foundations"},{tier:2,what:"Some documents exist but not consistently used",sf:"Basic resource library; ad hoc coaching",int:"Embed playbooks in Salesforce with In-App Guidance"},{tier:3,what:"Structured coaching tied to skills development and pipeline",sf:"In-App Guidance, coaching scorecards, playbook metrics",int:"Connect coaching data to win rates and ramp time measurement"},{tier:4,what:"AI-powered coaching tied to outcomes and continuous optimization",sf:"Einstein Call Coaching; skill-to-outcome analytics",int:"Deploy conversation intelligence and automated coaching triggers"}],"Data, CRM & AI":[{tier:1,what:"Low CRM trust; Excel shadow systems are the norm",sf:"Missing required fields; no data governance",int:"Establish data governance, duplicate rules, and required field standards"},{tier:2,what:"Moderate adoption; data quality inconsistent",sf:"Some required fields; partial adoption of standard reports",int:"Run a data quality initiative; align team on CRM as system of record"},{tier:3,what:"CRM is system of record with clean, trusted data",sf:"Automated capture, shared dashboards, governance in place",int:"Build shared metric definitions and introduce predictive scoring"},{tier:4,what:"CRM as AI-ready foundation for intelligent automation",sf:"Einstein AI; clean data enabling Agentforce deployment",int:"Deploy Agentforce agents grounded in reliable CRM data"}],"Operations & Lifecycle":[{tier:1,what:"Sales and post-sales operate in silos",sf:"No shared handoff process; no CS visibility in CRM",int:"Define structured handoff artifacts and shared CRM access"},{tier:2,what:"Basic handoff defined but manually executed",sf:"Onboarding milestones partially tracked",int:"Build a formal onboarding and handoff process in Salesforce"},{tier:3,what:"Coordinated lifecycle with shared KPIs and account health",sf:"Health scores, onboarding milestones, proactive CS workflows",int:"Instrument account health metrics and connect to expansion triggers"},{tier:4,what:"Proactive lifecycle management with AI-assisted signals",sf:"Agentforce health monitoring; automated intervention playbooks",int:"Deploy intelligent account monitoring with automated risk alerts"}]};
+
+/* PNG DOWNLOAD */
+const dlPNG=(ref,name)=>{
+  if(!ref.current)return;
+  const s=ref.current;
+  const b=s.getBoundingClientRect();
+  const w=b.width||600,h=b.height||400;
+  const c=document.createElement('canvas');
+  c.width=w*2;c.height=h*2;
+  const ctx=c.getContext('2d');
+  ctx.scale(2,2);ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+  const ser=new XMLSerializer();
+  const str=ser.serializeToString(s);
+  const blob=new Blob([str],{type:'image/svg+xml'});
+  const url=URL.createObjectURL(blob);
+  const img=new Image();
+  img.onload=()=>{ctx.drawImage(img,0,0);URL.revokeObjectURL(url);const a=document.createElement('a');a.download=name+'.png';a.href=c.toDataURL('image/png');a.click();};
+  img.src=url;
+};
+const DlBtn=({r,n})=><button className="dl-btn" onClick={()=>dlPNG(r,n)}>⬇ PNG</button>;
+
+/* SVG CHARTS */
+const Radar=({scores,title})=>{
+  const ref=useRef();
+  const dims=Object.keys(scores);
+  if(!dims.length)return null;
+  const cx=200,cy=195,r=130,n=dims.length,step=(2*Math.PI)/n;
+  const pt=(v,i,mx=4)=>{const a=i*step-Math.PI/2,rr=(v/mx)*r;return{x:cx+rr*Math.cos(a),y:cy+rr*Math.sin(a)};};
+  const grid=[1,2,3,4].map(lv=>dims.map((_,i)=>pt(lv,i)).map(p=>`${p.x},${p.y}`).join(' '));
+  const dp=dims.map((d,i)=>pt(scores[d]||0,i));
+  const poly=dp.map(p=>`${p.x},${p.y}`).join(' ');
+  const sc2=s=>s<1.75?'#BA0517':s<2.5?'#FE5000':s<3.25?'#B8860B':'#06A59A';
+  return(<div><div className="chart-hd">{title&&<span className="chart-lbl">{title}</span>}<DlBtn r={ref} n={title||'radar'}/></div>
+    <svg ref={ref} width="400" height="390" viewBox="0 0 400 390" style={{maxWidth:'100%',background:'#fff'}}>
+      <rect width="400" height="390" fill="white"/>
+      {grid.map((pts,li)=><polygon key={li} points={pts} fill="none" stroke="#E5E5E5" strokeWidth="1"/>)}
+      {dims.map((_,i)=>{const p=pt(4,i);return<line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y} stroke="#E5E5E5" strokeWidth="1.5"/>;  })}
+      <polygon points={poly} fill="#0176D3" fillOpacity="0.13" stroke="#0176D3" strokeWidth="2.5"/>
+      {dp.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="5" fill="#0176D3" stroke="white" strokeWidth="2"/>)}
+      {dims.map((d,i)=>{const lp=pt(4.9,i);const s=scores[d]||0;const anchor=lp.x<cx-15?'end':lp.x>cx+15?'start':'middle';return(<g key={i}><text x={lp.x} y={lp.y-4} textAnchor={anchor} fontSize="10" fontWeight="700" fill="#032D60" fontFamily="sans-serif">{d.substring(0,13)}</text><text x={lp.x} y={lp.y+12} textAnchor={anchor} fontSize="11" fontWeight="800" fill={sc2(s)} fontFamily="sans-serif">{s.toFixed?s.toFixed(1):s}</text></g>);})}
+      <circle cx={cx} cy={cy} r="3" fill="#E5E5E5"/>
+    </svg></div>);
 };
 
-const getTier=a=>a<1.75?1:a<2.5?2:a<3.25?3:4;
-const scoreStyle=s=>s<1.75?{bar:"c1",val:"v1"}:s<2.5?{bar:"c2",val:"v2"}:s<3.25?{bar:"c3",val:"v3"}:{bar:"c4",val:"v4"};
-const scoreColor=s=>s<1.75?"#BA0517":s<2.5?"#FE5000":s<3.25?"#B8860B":"#06A59A";
-const fmtDate=ts=>new Date(ts).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-const arrAvg=arr=>arr.length?arr.reduce((a,b)=>a+b,0)/arr.length:0;
-const isTesterDomain=d=>TESTER_DOMAINS.includes((d||"").toLowerCase());
+const HBar=({data,vk,lk,colorFn,title,maxV})=>{
+  const ref=useRef();
+  const mx=maxV||Math.max(...data.map(d=>d[vk]||0),1);
+  const bH=26,gap=8,lW=150,cW=330,pT=8;
+  const H=pT+data.length*(bH+gap)+10;
+  return(<div><div className="chart-hd">{title&&<span className="chart-lbl">{title}</span>}<DlBtn r={ref} n={title||'bar'}/></div>
+    <svg ref={ref} width={lW+cW+50} height={H} style={{maxWidth:'100%',background:'#fff'}}>
+      <rect width={lW+cW+50} height={H} fill="white"/>
+      {data.map((item,i)=>{const y=pT+i*(bH+gap);const val=item[vk]||0;const bw=Math.max((val/mx)*(cW-10),val>0?3:0);const color=colorFn?colorFn(item,i):'#0176D3';const lbl=String(item[lk]||'');return(<g key={i}><text x={lW-6} y={y+bH/2+4} textAnchor="end" fontSize="11" fontWeight="600" fill="#444" fontFamily="sans-serif">{lbl.length>20?lbl.substring(0,18)+'…':lbl}</text><rect x={lW} y={y} width={cW-10} height={bH} fill="#F3F3F3" rx="3"/>{bw>0&&<rect x={lW} y={y} width={bw} height={bH} fill={color} rx="3"/>}{val>0&&<text x={lW+bw+5} y={y+bH/2+4} fontSize="11" fontWeight="700" fill={color} fontFamily="sans-serif">{typeof val==='number'?(Number.isInteger(val)?val:val.toFixed(2)):''}</text>}</g>);})}
+    </svg></div>);
+};
 
-const SFLogo=()=>(
-  <img src="https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg" height="32" style={{display:"block",filter:"brightness(0) invert(1)"}} alt="Salesforce"/>
+const LineC=({data,xk,yk,title})=>{
+  const ref=useRef();
+  if(!data.length)return null;
+  const W=520,H=200,pL=40,pR=20,pT=15,pB=35,cW=W-pL-pR,cH=H-pT-pB;
+  const xs=i=>pL+(i/(data.length-1||1))*cW;
+  const ys=v=>pT+cH-((v-1)/3)*cH;
+  const pts=data.map((d,i)=>`${xs(i)},${ys(d[yk]||0)}`).join(' ');
+  return(<div><div className="chart-hd">{title&&<span className="chart-lbl">{title}</span>}<DlBtn r={ref} n={title||'line'}/></div>
+    <svg ref={ref} width={W} height={H} style={{maxWidth:'100%',background:'#fff'}}>
+      <rect width={W} height={H} fill="white"/>
+      {[1,2,3,4].map(v=>(<g key={v}><line x1={pL} y1={ys(v)} x2={W-pR} y2={ys(v)} stroke="#E5E5E5" strokeWidth="1" strokeDasharray="4,3"/><text x={pL-5} y={ys(v)+4} textAnchor="end" fontSize="10" fill="#706E6B" fontFamily="sans-serif">{v}</text></g>))}
+      {data.map((d,i)=>(<text key={i} x={xs(i)} y={H-8} textAnchor="middle" fontSize="9" fill="#706E6B" fontFamily="sans-serif">{d[xk]||`#${i+1}`}</text>))}
+      <polyline points={pts} fill="none" stroke="#0176D3" strokeWidth="2.5"/>
+      {data.map((d,i)=>(<circle key={i} cx={xs(i)} cy={ys(d[yk]||0)} r="4" fill="#0176D3" stroke="white" strokeWidth="1.5"/>))}
+    </svg></div>);
+};
+
+const GBar=({data,keys,colors,title})=>{
+  const ref=useRef();
+  if(!data.length)return null;
+  const bW=20,bG=3,gG=14,pL=35,pB=65,pT=15,H=220,cH=H-pT-pB;
+  const gW=keys.length*(bW+bG)+gG;
+  const W=Math.max(data.length*gW+pL+20,400);
+  const mx=Math.max(...data.flatMap(d=>keys.map(k=>d[k]||0)),4);
+  const ys=v=>pT+cH-(v/mx)*cH;
+  return(<div style={{overflowX:'auto'}}><div className="chart-hd">{title&&<span className="chart-lbl">{title}</span>}<DlBtn r={ref} n={title||'grouped'}/></div>
+    <svg ref={ref} width={W} height={H} style={{background:'#fff'}}>
+      <rect width={W} height={H} fill="white"/>
+      {[1,2,3,4].map(v=>(<g key={v}><line x1={pL} y1={ys(v)} x2={W-10} y2={ys(v)} stroke="#E5E5E5" strokeWidth="1" strokeDasharray="3,3"/><text x={pL-4} y={ys(v)+4} textAnchor="end" fontSize="10" fill="#706E6B" fontFamily="sans-serif">{v}</text></g>))}
+      {data.map((d,di)=>{const gx=pL+di*gW;return(<g key={di}>{keys.map((k,ki)=>{const x=gx+ki*(bW+bG);const val=d[k]||0;const bH=Math.max((val/mx)*cH,val>0?2:0);return<rect key={k} x={x} y={ys(val)} width={bW} height={bH} fill={colors[ki]||'#0176D3'} rx="2"/>;})}<text x={gx+keys.length*(bW+bG)/2} y={H-pB+14} textAnchor="middle" fontSize="9" fill="#706E6B" fontFamily="sans-serif">{(d.dim||'').substring(0,9)}</text></g>);})}
+      {keys.map((k,i)=>(<g key={k}><rect x={pL+i*90} y={H-16} width="10" height="10" fill={colors[i]} rx="2"/><text x={pL+i*90+14} y={H-7} fontSize="10" fill="#444" fontFamily="sans-serif">{k}</text></g>))}
+    </svg></div>);
+};
+
+const ConfC=({data,title})=>{
+  const ref=useRef();
+  const mx=Math.max(...data.map(d=>d.count||0),1);
+  const bW=30,gap=5,pL=18,pT=15,pB=28,H=160,cH=H-pT-pB;
+  const W=pL+data.length*(bW+gap)+20;
+  return(<div><div className="chart-hd">{title&&<span className="chart-lbl">{title}</span>}<DlBtn r={ref} n={title||'conf'}/></div>
+    <svg ref={ref} width={W} height={H} style={{maxWidth:'100%',background:'#fff'}}>
+      <rect width={W} height={H} fill="white"/>
+      {data.map((d,i)=>{const x=pL+i*(bW+gap);const bH=Math.max((d.count/mx)*cH,d.count>0?3:0);const y=pT+cH-bH;return(<g key={i}><rect x={x} y={y} width={bW} height={bH} fill="#0176D3" rx="2"/>{d.count>0&&<text x={x+bW/2} y={y-3} textAnchor="middle" fontSize="10" fontWeight="700" fill="#0176D3" fontFamily="sans-serif">{d.count}</text>}<text x={x+bW/2} y={H-8} textAnchor="middle" fontSize="10" fill="#706E6B" fontFamily="sans-serif">{d.name}</text></g>);})}
+    </svg></div>);
+};
+
+/* HEATMAP */
+const HM=({row})=>{
+  const clrs={4:'#E0F7F6',3:'#FFF9C4',2:'#FFE8CC',1:'#FDECEA'};
+  const tclrs={4:'#06A59A',3:'#B8860B',2:'#FE5000',1:'#BA0517'};
+  return(<div className="hm-grid">{DIMS.map(d=>{const s=getDS(row,d);const t=getTier(s);return(<div key={d} className="hm-cell" style={{background:clrs[t]||clrs[1]}}><div className="hm-lbl">{DSHORT[d]||d}</div><div className="hm-val" style={{color:tclrs[t]||tclrs[1]}}>{s?s.toFixed(1):'-'}</div></div>);})}</div>);
+};
+
+/* TALKING POINTS */
+const TalkPts=({rows})=>{
+  if(!rows.length)return null;
+  const low=[...DIMS.map(d=>({dim:d,av:avg(rows.map(r=>getDS(r,d)).filter(Boolean))}))].sort((a,b)=>a.av-b.av).slice(0,3);
+  return(<div className="tp-box"><div className="tp-hd">💬 Consultant Talking Points</div>{low.map((l,i)=>(<div key={l.dim} className="tp-row"><div className="tp-num">{i+1}</div><div><strong>{l.dim}</strong> (avg {l.av.toFixed(1)}): {TP[l.dim]||'Explore current state and gaps.'}</div></div>))}</div>);
+};
+
+/* MODALS */
+const RespModal=({r,onClose})=>(
+  <div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()}>
+    <div className="modal">
+      <div className="modal-hd"><div className="modal-title">{r.fullName} — {r.businessName}</div><button className="modal-x" onClick={onClose}>✕</button></div>
+      <div className="modal-body">
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:14,marginBottom:16}}>
+          {[['Email',r.email],['Title',r.title],['Industry',r.industry],['Submitted',r.timestamp]].map(([l,v])=>(<div key={l}><div style={{fontSize:11,fontWeight:700,color:'#706E6B',marginBottom:2}}>{l}</div><div style={{fontSize:13}}>{v||'—'}</div></div>))}
+        </div>
+        <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:14}}>
+          <div style={{fontSize:32,fontWeight:800,color:sc(parseFloat(r.overallScore))}}>{parseFloat(r.overallScore).toFixed(2)}</div>
+          <div className={`tier-badge ${tcls(getTier(parseFloat(r.overallScore)))}`}>{TNAMES[getTier(parseFloat(r.overallScore))]}</div>
+          {r.confidence&&<div style={{fontSize:13,color:'#706E6B'}}>Confidence: {r.confidence}/10</div>}
+        </div>
+        <HM row={r}/>
+        {r.topOutcome&&<div style={{marginTop:14,padding:'10px 14px',background:'#F0F4FA',borderRadius:8,fontSize:13}}><strong>Top Outcome:</strong> {r.topOutcome}</div>}
+      </div>
+    </div>
+  </div>
 );
 
-function LoginScreen({onLogin}){
-  const [pw,setPw]=useState(""), [err,setErr]=useState(false);
-  const attempt=()=>{if(pw===ADMIN_PASSWORD)onLogin();else{setErr(true);setPw("");}};
-  return(
-    <div className="login-wrap">
-      <div className="login-card">
-        <div className="login-logo"><SFLogo style={{filter:"none"}}/></div>
-        <div className="login-title">Admin Dashboard</div>
-        <div className="login-sub">Sales Maturity Response Analytics</div>
-        {err&&<div className="login-err">Incorrect password. Try again.</div>}
-        <input className="login-input" type="password" placeholder="Enter admin password" value={pw} onChange={e=>{setPw(e.target.value);setErr(false);}} onKeyDown={e=>e.key==="Enter"&&attempt()}/>
-        <button className="login-btn" onClick={attempt}>Sign In →</button>
-        <div style={{fontSize:11,color:"var(--g4)",marginTop:14}}>Change password in CONFIG block at top of admin.html</div>
-      </div>
-    </div>
-  );
-}
+const CoModal=({co,onClose})=>{
+  const rows=co.rows||[];
+  const [tab,setTab]=useState('overview');
+  const [openQ,setOpenQ]=useState(null);
+  const aggRow=Object.fromEntries(DIMS.map(d=>[dk(d),avg(rows.map(r=>getDS(r,d)))]));
 
-function SetupBanner({configured}){
-  if(configured)return null;
-  return(
-    <div className="setup-banner">
-      <div className="setup-title">⚙️ Running on Sample Data — Connect Google Sheets to see real responses</div>
-      <div className="setup-body">
-        <strong>1.</strong> Add <code>doGet()</code> to your Apps Script (see comment at bottom of this file)<br/>
-        <strong>2.</strong> Create a new Deployment and copy the URL<br/>
-        <strong>3.</strong> Replace <code>https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec</code> in both <code>GOOGLE_SHEETS_API</code> fields in this file and in index.html
-      </div>
-    </div>
-  );
-}
+  // Get answer text for a row+question
+  const getAnswerText=(row,q)=>{
+    const score=parseInt(row[`Q_${q.id}_${(q.domain||'').replace(/\s+/g,'_')}`])||0;
+    if(!score)return null;
+    return{score,text:q.answers?.[score-1]||`Score: ${score}`};
+  };
 
-function EmptyState(){
-  return(
-    <div className="card"><div className="empty">
-      <div className="empty-icon">📋</div>
-      <div className="empty-title">No responses yet</div>
-      <div className="empty-desc">Once respondents complete the assessment, their data will appear here.</div>
-    </div></div>
-  );
-}
+  // Question score distribution for a question across all rows
+  const qDist=(q)=>{
+    const counts=[0,0,0,0];
+    rows.forEach(r=>{
+      const s=parseInt(r[`Q_${q.id}_${(q.domain||'').replace(/\s+/g,'_')}`])||0;
+      if(s>=1&&s<=4)counts[s-1]++;
+    });
+    const total=counts.reduce((a,b)=>a+b,0);
+    const wavg=total?counts.reduce((s,cnt,i)=>s+cnt*(i+1),0)/total:0;
+    return{counts,total,avg:wavg};
+  };
 
-/* ─── OVERVIEW TAB ─── */
-function OverviewTab({data}){
-  if(!data.length)return<EmptyState/>;
-  const real=data.filter(r=>!isTesterDomain(r.emailDomain));
-  const scores=real.map(r=>parseFloat(r.overallScore)||0);
-  const avgS=arrAvg(scores);
-  const tierCounts={1:0,2:0,3:0,4:0};
-  real.forEach(r=>{tierCounts[getTier(parseFloat(r.overallScore)||0)]++;});
-  const dimAvgs=DIMENSIONS.map((d,i)=>{
-    const vals=real.map(r=>parseFloat(r[DIM_KEYS[i]])||0).filter(v=>v>0);
-    return{dim:d,avg:vals.length?arrAvg(vals):0};
-  });
-  const industryMap={};
-  real.forEach(r=>{if(r.industry)industryMap[r.industry]=(industryMap[r.industry]||0)+1;});
-  const industries=Object.entries(industryMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const maxInd=industries[0]?.[1]||1;
-  const tlMap={};
-  real.forEach(r=>{if(r.timeline)tlMap[r.timeline]=(tlMap[r.timeline]||0)+1;});
-  const tlData=Object.entries(tlMap).map(([name,count])=>({name,count}));
-  const radarData=dimAvgs.map(d=>({subject:d.dim.length>16?d.dim.substring(0,15)+"…":d.dim,A:parseFloat(d.avg.toFixed(2)),fullMark:4}));
-  const confData=[1,2,3,4,5,6,7,8,9,10].map(n=>({name:String(n),count:real.filter(r=>parseInt(r.confidence)===n).length}));
-  const topT=getTier(avgS);
-  const companies=new Set(real.map(r=>r.emailDomain)).size;
-  const testers=data.filter(r=>isTesterDomain(r.emailDomain)).length;
-  return(
-    <div>
-      <div className="stats-grid">
-        <div className="stat-card"><div className="stat-lbl">Customer Responses</div><div className="stat-val">{real.length}</div><div className="stat-sub">{testers} tester{testers!==1?"s":""} excluded</div></div>
-        <div className="stat-card"><div className="stat-lbl">Avg Maturity Score</div><div className="stat-val" style={{color:scoreColor(avgS)}}>{avgS.toFixed(2)}</div><div className="stat-sub">out of 4.0</div></div>
-        <div className="stat-card"><div className="stat-lbl">Dominant Tier</div><div className="stat-val" style={{fontSize:17,paddingTop:6}}>{TIER_INFO[topT].short}</div><div className="stat-sub">{TIER_INFO[topT].label}</div></div>
-        <div className="stat-card"><div className="stat-lbl">Unique Companies</div><div className="stat-val">{companies}</div><div className="stat-sub">by email domain</div></div>
+  const barColor=s=>s>=3.5?'#06A59A':s>=2.5?'#B8860B':s>=1.5?'#FE5000':'#BA0517';
+
+  return(<div className="modal-bg" onClick={e=>e.target===e.currentTarget&&onClose()}>
+    <div className="modal" style={{maxWidth:820}}>
+      <div className="modal-hd">
+        <div>
+          <div className="modal-title">{co.isTester?'🧪 Testers':co.domain}</div>
+          <div style={{fontSize:12,color:'var(--g4)',marginTop:2}}>{rows.length} respondent{rows.length!==1?'s':''} · Avg {co.av.toFixed(2)} · {TNAMES[getTier(co.av)]}</div>
+        </div>
+        <button className="modal-x" onClick={onClose}>✕</button>
       </div>
-      <div className="charts-2">
-        <div className="card">
-          <div className="card-title">Tier Distribution (Customers Only)</div>
-          <div className="tier-bars">
-            {[4,3,2,1].map(t=>{
-              const ct=tierCounts[t],pct=real.length?Math.round(ct/real.length*100):0;
-              const colors={1:"#BA0517",2:"#FE5000",3:"#FFB75D",4:"#06A59A"};
-              return(<div key={t} className="tier-row">
-                <div className="tier-lbl"><span className={`badge b${t}`}>{TIER_INFO[t].short}</span></div>
-                <div className="tier-bg"><div className="tier-fill" style={{width:`${pct}%`,background:colors[t]}}>{pct>8?`${pct}% (${ct})`:""}</div></div>
-                <div className="tier-ct">{ct}</div>
-              </div>);
+      <div className="modal-tabs">
+        {[['overview','📊 Overview'],['questions','❓ Question Responses'],['respondents','👥 Respondents']].map(([id,lbl])=>(
+          <div key={id} className={`modal-tab ${tab===id?'on':''}`} onClick={()=>setTab(id)}>{lbl}</div>
+        ))}
+      </div>
+      <div className="modal-body">
+
+        {tab==='overview'&&(<div>
+          <div style={{display:'flex',gap:10,alignItems:'center',marginBottom:16}}>
+            <div style={{fontSize:36,fontWeight:800,color:sc(co.av)}}>{co.av.toFixed(2)}</div>
+            <div className={`tier-badge ${tcls(getTier(co.av))}`}>{TNAMES[getTier(co.av)]}</div>
+          </div>
+          <HM row={aggRow}/>
+          <TalkPts rows={rows}/>
+        </div>)}
+
+        {tab==='questions'&&(<div>
+          <p style={{fontSize:13,color:'var(--g4)',marginBottom:14}}>Click any question to see how each respondent answered.</p>
+          <div className="q-list">
+            {(typeof QUESTIONS!=='undefined'?QUESTIONS:[]).map((q,qi)=>{
+              const dist=qDist(q);
+              const isOpen=openQ===q.id;
+              const maxCount=Math.max(...dist.counts,1);
+              return(
+                <div key={q.id} className={`q-card ${isOpen?'open':''}`} onClick={()=>setOpenQ(isOpen?null:q.id)}>
+                  <div className="q-domain">{q.domain}</div>
+                  <div className="q-text">{q.text}</div>
+                  {dist.total>0?(
+                    <div>
+                      <div className="q-bar-wrap">
+                        {[1,2,3,4].map(score=>(
+                          <div key={score} className="q-bar-row">
+                            <div className="q-bar-label">{score}</div>
+                            <div className="q-bar-track">
+                              <div className="q-bar-fill" style={{width:`${(dist.counts[score-1]/maxCount)*100}%`,background:barColor(score)}}/>
+                            </div>
+                            <div className="q-bar-count" style={{color:barColor(score)}}>{dist.counts[score-1]||''}</div>
+                          </div>
+                        ))}
+                      </div>
+                      <div className={`q-avg-chip ${tcls(getTier(dist.avg))}`} style={{background:'var(--g1)'}}>
+                        Avg {dist.avg.toFixed(1)} · {TNAMES[getTier(dist.avg)]}
+                      </div>
+                    </div>
+                  ):<div style={{fontSize:12,color:'var(--g4)',fontStyle:'italic'}}>No responses recorded for this question.</div>}
+
+                  {isOpen&&dist.total>0&&(
+                    <div className="resp-answers">
+                      <div style={{fontSize:11,fontWeight:700,color:'var(--navy)',letterSpacing:'.5px',textTransform:'uppercase',marginBottom:4}}>Individual Responses</div>
+                      {rows.map((row,ri)=>{
+                        const ans=getAnswerText(row,q);
+                        if(!ans)return null;
+                        return(
+                          <div key={ri} className="resp-answer-row">
+                            <div className="resp-name">{row.fullName?.split(' ')[0]||'Resp '+(ri+1)}</div>
+                            <div className="resp-score-dot" style={{background:barColor(ans.score)}}>{ans.score}</div>
+                            <div className="resp-answer-text">{ans.text}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
             })}
           </div>
-        </div>
-        <div className="card">
-          <div className="card-title">Avg Score by Dimension</div>
-          <div className="dim-grid">
-            {dimAvgs.map((d,i)=>{const s=scoreStyle(d.avg);return(
-              <div key={i} className="dim-row">
-                <div className="dim-nm">{d.dim}</div>
-                <div className="dim-br"><div className="dim-bg"><div className={`dim-fill ${s.bar}`} style={{width:`${(d.avg/4)*100}%`}}/></div><div className={`dim-val ${s.val}`}>{d.avg.toFixed(2)}</div></div>
-              </div>
-            );})}
-          </div>
-        </div>
-      </div>
-      <div className="charts-2">
-        <div className="card">
-          <div className="card-title">Radar: Avg Maturity by Dimension</div>
-          <ResponsiveContainer width="100%" height={260}>
-            <RC data={radarData}><PolarGrid stroke="#E5E5E5"/><PolarAngleAxis dataKey="subject" tick={{fontSize:10,fill:"#032D60",fontWeight:600}}/><Radar name="Avg" dataKey="A" stroke="#0176D3" fill="#0176D3" fillOpacity={0.13} strokeWidth={2}/><Tooltip formatter={v=>[parseFloat(v).toFixed(2),"Avg Score"]}/></RC>
-          </ResponsiveContainer>
-        </div>
-        <div className="card">
-          <div className="card-title">Confidence Distribution</div>
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={confData} margin={{top:5,right:5,bottom:5,left:-20}}><CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5"/><XAxis dataKey="name" tick={{fontSize:11}}/><YAxis tick={{fontSize:11}}/><Tooltip/><Bar dataKey="count" fill="#0176D3" radius={[4,4,0,0]} name="Responses"/></BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-      <div className="charts-2">
-        <div className="card">
-          <div className="card-title">Top Industries</div>
-          <div className="ind-list">
-            {industries.map(([nm,ct])=>(<div key={nm} className="ind-row"><div className="ind-nm" title={nm}>{nm}</div><div className="ind-bg"><div className="ind-fill" style={{width:`${(ct/maxInd)*100}%`}}/></div><div className="ind-ct">{ct}</div></div>))}
-          </div>
-        </div>
-        <div className="card">
-          <div className="card-title">Sales Transformation Timeline</div>
-          <ResponsiveContainer width="100%" height={210}>
-            <BarChart data={tlData} margin={{top:5,right:5,bottom:40,left:-20}}><CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5"/><XAxis dataKey="name" tick={{fontSize:10}} angle={-20} textAnchor="end" interval={0}/><YAxis tick={{fontSize:11}}/><Tooltip/><Bar dataKey="count" fill="#06A59A" radius={[4,4,0,0]} name="Count"/></BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-    </div>
-  );
-}
+        </div>)}
 
-/* ─── RESPONSES TAB ─── */
-function ResponsesTab({data,onSelect}){
-  const [search,setSearch]=useState("");
-  const [tierFilter,setTierFilter]=useState("all");
-  const [showTesters,setShowTesters]=useState(false);
-  const [srt,setSrt]=useState("newest");
-  const filtered=useMemo(()=>{
-    let d=[...data];
-    if(!showTesters)d=d.filter(r=>!isTesterDomain(r.emailDomain));
-    if(search)d=d.filter(r=>(r.fullName+r.businessName+r.email+(r.industry||"")).toLowerCase().includes(search.toLowerCase()));
-    if(tierFilter!=="all")d=d.filter(r=>getTier(parseFloat(r.overallScore)||0)===parseInt(tierFilter));
-    if(srt==="newest")d.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
-    else if(srt==="oldest")d.sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
-    else if(srt==="high")d.sort((a,b)=>parseFloat(b.overallScore)-parseFloat(a.overallScore));
-    else d.sort((a,b)=>parseFloat(a.overallScore)-parseFloat(b.overallScore));
-    return d;
-  },[data,search,tierFilter,srt,showTesters]);
-  if(!data.length)return<EmptyState/>;
-  return(
-    <div>
-      <div className="filter-bar">
-        <input className="search" placeholder="🔍 Search name, company, email…" value={search} onChange={e=>setSearch(e.target.value)}/>
-        <select className="fsel" value={tierFilter} onChange={e=>setTierFilter(e.target.value)}>
-          <option value="all">All Tiers</option><option value="1">Ad Hoc</option><option value="2">Repeatable</option><option value="3">Defined</option><option value="4">Optimized</option>
-        </select>
-        <select className="fsel" value={srt} onChange={e=>setSrt(e.target.value)}>
-          <option value="newest">Newest</option><option value="oldest">Oldest</option><option value="high">Highest Score</option><option value="low">Lowest Score</option>
-        </select>
-        <label style={{display:"flex",alignItems:"center",gap:6,fontSize:13,color:"var(--g4)",cursor:"pointer",whiteSpace:"nowrap"}}>
-          <input type="checkbox" checked={showTesters} onChange={e=>setShowTesters(e.target.checked)}/> Show Testers
-        </label>
-        <span style={{fontSize:12,color:"var(--g4)",whiteSpace:"nowrap"}}>{filtered.length} of {data.length}</span>
-      </div>
-      <div className="card" style={{padding:0}}>
-        <div className="table-wrap">
-          <table>
-            <thead><tr><th>Date</th><th>Name</th><th>Company</th><th>Title</th><th>Score</th><th>Tier</th><th>Domain</th><th></th></tr></thead>
-            <tbody>
-              {filtered.map((r,i)=>{
-                const sc=parseFloat(r.overallScore)||0,t=getTier(sc),tester=isTesterDomain(r.emailDomain);
-                return(<tr key={i}>
-                  <td style={{fontSize:12,color:"var(--g4)",whiteSpace:"nowrap"}}>{fmtDate(r.timestamp)}</td>
-                  <td style={{fontWeight:600,whiteSpace:"nowrap"}}>{r.fullName}</td>
-                  <td>{r.businessName}</td>
-                  <td style={{fontSize:12,color:"var(--g4)"}}>{r.title}</td>
-                  <td><span style={{fontWeight:800,fontSize:15,color:scoreColor(sc)}}>{sc.toFixed(1)}</span></td>
-                  <td><span className={`badge ${tester?"btester":`b${t}`}`}>{tester?"🧪 Tester":TIER_INFO[t].short}</span></td>
-                  <td style={{fontSize:12,color:"var(--g4)"}}>{r.emailDomain}</td>
-                  <td><button className="btn btn-sm btn-outline" onClick={()=>onSelect(r)}>View →</button></td>
-                </tr>);
-              })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── COMPANIES TAB ─── */
-function CompaniesTab({data,onSelectCompany}){
-  const real=data.filter(r=>!isTesterDomain(r.emailDomain));
-  const testers=data.filter(r=>isTesterDomain(r.emailDomain));
-  const companyMap={};
-  real.forEach(r=>{
-    const d=r.emailDomain||"unknown";
-    if(!companyMap[d])companyMap[d]={domain:d,name:r.businessName||d,responses:[],isTester:false};
-    companyMap[d].responses.push(r);
-  });
-  const companies=Object.values(companyMap).sort((a,b)=>b.responses.length-a.responses.length);
-  const getDimAvgs=responses=>DIMENSIONS.map((d,i)=>{
-    const vals=responses.map(r=>parseFloat(r[DIM_KEYS[i]])||0).filter(v=>v>0);
-    return{dim:d,avg:vals.length?arrAvg(vals):0};
-  });
-  return(
-    <div>
-      {testers.length>0&&(
-        <div className="card co-card tester" style={{marginBottom:16,cursor:"pointer"}} onClick={()=>onSelectCompany({domain:"salesforce.com",name:"🧪 Testers",responses:testers,isTester:true})}>
-          <div className="co-header">
-            <div className="co-name">🧪 Testers <span className="badge btester" style={{marginLeft:8}}>@salesforce.com + tester domains</span></div>
-            <div style={{fontSize:13,color:"var(--g4)"}}>{testers.length} response{testers.length!==1?"s":""}</div>
-          </div>
-          <div style={{fontSize:12,color:"var(--g4)"}}>Excluded from customer analytics. Click to review.</div>
-        </div>
-      )}
-      {!companies.length&&<EmptyState/>}
-      <div className="company-list">
-        {companies.map(co=>{
-          const scores=co.responses.map(r=>parseFloat(r.overallScore)||0);
-          const avg=arrAvg(scores),t=getTier(avg);
-          const dimAs=getDimAvgs(co.responses);
-          return(
-            <div key={co.domain} className="co-card" onClick={()=>onSelectCompany(co)}>
-              <div className="co-header">
-                <div><div className="co-name">{co.name}</div><div style={{fontSize:11,color:"var(--g4)"}}>{co.domain}</div></div>
-                <div style={{textAlign:"right"}}>
-                  <div style={{fontSize:28,fontWeight:800,color:scoreColor(avg),lineHeight:1}}>{avg.toFixed(1)}</div>
-                  <div><span className={`badge b${t}`}>{TIER_INFO[t].short}</span></div>
-                  <div style={{fontSize:12,color:"var(--g4)",marginTop:4}}>{co.responses.length} respondent{co.responses.length!==1?"s":""}</div>
-                </div>
+        {tab==='respondents'&&(<div>
+          {rows.map((r,i)=>(
+            <div key={i} style={{display:'flex',gap:12,alignItems:'center',padding:'10px 0',borderBottom:'1px solid var(--g1)'}}>
+              <div style={{flex:1}}>
+                <div style={{fontSize:13,fontWeight:700}}>{r.fullName}</div>
+                <div style={{fontSize:12,color:'var(--g4)'}}>{r.title} · {r.email}</div>
               </div>
-              <div className="co-dims">
-                {dimAs.map((d,i)=>{const s=scoreStyle(d.avg);return(
-                  <div key={i} className="co-dim">
-                    <div className="co-dim-lbl">{d.dim.split(" ")[0]}</div>
-                    <div className={`co-dim-val ${s.val}`}>{d.avg.toFixed(1)}</div>
-                  </div>
-                );})}
+              <div style={{textAlign:'right'}}>
+                <div style={{fontSize:18,fontWeight:800,color:sc(parseFloat(r.overallScore))}}>{parseFloat(r.overallScore).toFixed(2)}</div>
+                <div className={`tier-badge ${tcls(getTier(parseFloat(r.overallScore)))}`}>{TNAMES[getTier(parseFloat(r.overallScore))]}</div>
               </div>
             </div>
-          );
-        })}
+          ))}
+        </div>)}
+
       </div>
     </div>
-  );
-}
+  </div>);
+};
 
-/* ─── LIBRARY TAB ─── */
-function LibraryTab(){
-  return(
-    <div>
-      <div className="card" style={{marginBottom:16,background:"#F0F7FF",border:"1.5px solid var(--blue-xlt)"}}>
-        <div style={{fontSize:13,color:"var(--navy)",fontWeight:600,marginBottom:4}}>📚 Consultant Reference Library</div>
-        <div style={{fontSize:13,color:"var(--g4)",lineHeight:1.6}}>This library is drawn directly from the Agent-Ready Briefing document. Use it to build your prescription after reviewing the diagnostic results. It is never visible to respondents.</div>
-      </div>
-      {DIMENSIONS.map(dim=>{
-        const bp=BEST_PRACTICES[dim];
-        if(!bp)return null;
-        return(
-          <div key={dim} className="lib-dim">
-            <div className="lib-dim-title">{dim}</div>
-            <div className="lib-tiers">
-              {[1,2,3,4].map(t=>{
-                const ti=TIER_INFO[t],b=bp[t];
-                if(!b)return null;
-                return(
-                  <div key={t} className="lib-tier-card">
-                    <div className="lib-tier-hd" style={{color:ti.color}}>Tier {t} — {ti.short}</div>
-                    <div className="lib-tier-desc"><strong>State:</strong> {b.what}</div>
-                    <div className="lib-sf">🔵 Salesforce signals: <span style={{fontWeight:400,color:"var(--g4)"}}>{b.sf}</span></div>
-                    <div className="lib-intervention">💡 {b.intervention}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-/* ─── COMPANY DETAIL MODAL ─── */
-function CompanyModal({company,onClose}){
-  if(!company)return null;
-  const responses=company.responses;
-  const scores=responses.map(r=>parseFloat(r.overallScore)||0);
-  const avg=arrAvg(scores),t=getTier(avg),ti=TIER_INFO[t];
-  const dimAvgs=DIMENSIONS.map((d,i)=>{
-    const vals=responses.map(r=>parseFloat(r[DIM_KEYS[i]])||0).filter(v=>v>0);
-    return{dim:d,avg:vals.length?arrAvg(vals):0,key:DIM_KEYS[i]};
-  });
-  const sorted=[...dimAvgs].sort((a,b)=>a.avg-b.avg);
-  const gaps=sorted.slice(0,3);
-  const TALKING_POINTS={
-    "Growth Strategy":"Their growth motion appears primarily new-logo focused with limited expansion infrastructure. Open a conversation around account segmentation and what a systematic renewal/upsell motion could mean for margin.",
-    "Sales Process & Governance":"Stage discipline and qualification consistency are areas of risk. Ask about how pipeline reviews are run today and whether reps are operating from a common playbook.",
-    "Forecasting & Pipeline":"Forecast confidence is low. This is often a symptom of CRM data quality and stage discipline gaps. Ask how accurate their last 3 quarters of forecasts were vs. actuals.",
-    "Pricing & Quote-to-Cash":"Pricing governance and quote cycle time are likely pain points. Ask how long a quote takes and how often deals require VP-level discount approvals.",
-    "Enablement & Coaching":"Coaching is likely inconsistent or unmeasured. Ask whether onboarding ramp time is tracked and how managers currently differentiate high vs. low performers.",
-    "Data, CRM & AI":"CRM trust and adoption are below the threshold needed for predictive tools. Ask how often leadership makes decisions from Salesforce reports vs. spreadsheets.",
-    "Operations & Lifecycle":"Post-sale handoffs and lifecycle visibility are creating friction. Ask how often sellers get pulled into 'where is my order?' conversations and what that costs in selling time.",
-  };
-  return(
-    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal">
-        <div className="modal-hd">
-          <div>
-            <div className="modal-title">{company.name}</div>
-            <div style={{fontSize:13,color:"var(--g4)",marginTop:3}}>{company.domain} · {responses.length} respondent{responses.length!==1?"s":""}</div>
-          </div>
-          <button className="modal-close" onClick={onClose}>×</button>
-        </div>
-        <div className="modal-body">
-          {/* Aggregate score */}
-          <div className="msec">
-            <div className="msec-title">Aggregate Maturity Score</div>
-            <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:12}}>
-              <div style={{fontSize:44,fontWeight:800,color:scoreColor(avg),lineHeight:1}}>{avg.toFixed(2)}<span style={{fontSize:18,opacity:.4}}>/4.0</span></div>
-              <span className={`badge b${t}`} style={{fontSize:12,padding:"5px 12px"}}>{ti.label}</span>
-            </div>
-            <div className="dim-grid">
-              {dimAvgs.map((d,i)=>{const s=scoreStyle(d.avg);return(
-                <div key={i} className="dim-row">
-                  <div className="dim-nm">{d.dim}</div>
-                  <div className="dim-br"><div className="dim-bg"><div className={`dim-fill ${s.bar}`} style={{width:`${(d.avg/4)*100}%`}}/></div><div className={`dim-val ${s.val}`}>{d.avg.toFixed(2)}</div></div>
-                </div>
-              );})}
-            </div>
-          </div>
-          {/* Talking points */}
-          {!company.isTester&&(
-            <div className="msec">
-              <div className="msec-title">Consultant Talking Points (Top 3 Gaps)</div>
-              <div className="tp-card">
-                <div className="tp-title">🎯 Opening conversation angles based on lowest-scoring dimensions</div>
-                {gaps.map((g,i)=>(
-                  <div key={i} className="tp-item">
-                    <div className="tp-num">{i+1}</div>
-                    <div className="tp-text"><strong>{g.dim}</strong> (avg {g.avg.toFixed(2)}): {TALKING_POINTS[g.dim]}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {/* Individual respondents */}
-          <div className="msec">
-            <div className="msec-title">Individual Respondents</div>
-            <div className="table-wrap">
-              <table>
-                <thead><tr><th>Name</th><th>Title</th><th>Score</th><th>Tier</th><th>Date</th></tr></thead>
-                <tbody>
-                  {responses.map((r,i)=>{const sc=parseFloat(r.overallScore)||0,rt=getTier(sc);return(
-                    <tr key={i}>
-                      <td style={{fontWeight:600}}>{r.fullName}</td>
-                      <td style={{fontSize:12,color:"var(--g4)"}}>{r.title}</td>
-                      <td><span style={{fontWeight:800,color:scoreColor(sc)}}>{sc.toFixed(1)}</span></td>
-                      <td><span className={`badge b${rt}`}>{TIER_INFO[rt].short}</span></td>
-                      <td style={{fontSize:12,color:"var(--g4)"}}>{fmtDate(r.timestamp)}</td>
-                    </tr>
-                  );})}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          {/* Stated priorities */}
-          <div className="msec">
-            <div className="msec-title">Stated Top Priorities</div>
-            {responses.filter(r=>r.topOutcome).map((r,i)=>(
-              <div key={i} style={{background:"var(--g1)",borderRadius:8,padding:"10px 14px",marginBottom:8,borderLeft:"3px solid var(--blue)"}}>
-                <div style={{fontSize:11,fontWeight:700,color:"var(--blue)",marginBottom:3}}>{r.fullName} — {r.title}</div>
-                <div style={{fontSize:13,color:"var(--g5)",fontStyle:"italic"}}>"{r.topOutcome}"</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── RESPONSE DETAIL MODAL ─── */
-function ResponseModal({record,onClose}){
-  if(!record)return null;
-  const sc=parseFloat(record.overallScore)||0,t=getTier(sc),ti=TIER_INFO[t];
-  const dimScores=Object.entries(record).filter(([k])=>k.startsWith("DIM_")).map(([k,v])=>{
-    const dim=k.replace("DIM_","").replace(/___/g," & ").replace(/__/g,", ").replace(/_/g," ");
-    return{dim,score:parseFloat(v)||0};
-  });
-  const qScores=Object.entries(record).filter(([k])=>k.startsWith("Q_")).map(([k,v])=>{
-    const parts=k.replace("Q_","").split("_");
-    return{id:parts[0],domain:parts.slice(1).join(" ").replace(/_/g," "),score:parseInt(v)||0};
-  });
-  return(
-    <div className="modal-overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="modal">
-        <div className="modal-hd">
-          <div><div className="modal-title">{record.fullName} — {record.businessName}</div><div style={{fontSize:13,color:"var(--g4)",marginTop:3}}>{fmtDate(record.timestamp)} · {record.industry}</div></div>
-          <button className="modal-close" onClick={onClose}>×</button>
-        </div>
-        <div className="modal-body">
-          <div className="msec">
-            <div className="msec-title">Contact</div>
-            <div className="mgrid">
-              {[["Name",record.fullName],["Title",record.title],["Email",record.email],["Company",record.businessName],["Industry",record.industry],["Timeline",record.timeline],["Confidence",record.confidence?`${record.confidence}/10`:"—"],["Domain",record.emailDomain]].map(([k,v])=>(
-                <div key={k}><div className="mfl">{k}</div><div className="mfv">{v||"—"}</div></div>
-              ))}
-            </div>
-          </div>
-          {record.topOutcome&&(
-            <div className="msec">
-              <div className="msec-title">Stated Priority</div>
-              <div style={{background:"var(--blue-xlt)",borderRadius:8,padding:"12px 14px",fontSize:14,color:"var(--navy)",fontStyle:"italic"}}>"{record.topOutcome}"</div>
-            </div>
-          )}
-          <div className="msec">
-            <div className="msec-title">Maturity Result</div>
-            <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:12}}>
-              <div style={{fontSize:44,fontWeight:800,color:scoreColor(sc),lineHeight:1}}>{sc.toFixed(1)}<span style={{fontSize:18,opacity:.4}}>/4.0</span></div>
-              <span className={`badge b${t}`} style={{fontSize:12,padding:"5px 12px"}}>{ti.label}</span>
-            </div>
-            <div className="dim-grid">
-              {dimScores.map((d,i)=>{const s=scoreStyle(d.score);return(
-                <div key={i} className="dim-row">
-                  <div className="dim-nm">{d.dim}</div>
-                  <div className="dim-br"><div className="dim-bg"><div className={`dim-fill ${s.bar}`} style={{width:`${(d.score/4)*100}%`}}/></div><div className={`dim-val ${s.val}`}>{d.score.toFixed(1)}</div></div>
-                </div>
-              );})}
-            </div>
-          </div>
-          {qScores.length>0&&(
-            <div className="msec">
-              <div className="msec-title">Question Scores</div>
-              <div className="qs-grid">
-                {qScores.map((q,i)=>{const s=scoreStyle(q.score);return(
-                  <div key={i} className="qs-row">
-                    <div className="qs-lbl">{q.id.toUpperCase()}: {q.domain}</div>
-                    <div className={`qs-val ${s.val}`}>{q.score}/4</div>
-                  </div>
-                );})}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── TRENDS TAB ─── */
-function TrendsTab({data}){
-  const real=data.filter(r=>!isTesterDomain(r.emailDomain));
-  if(real.length<2)return(<div className="card"><div className="empty"><div className="empty-icon">📈</div><div className="empty-title">Not enough data yet</div><div className="empty-desc">Trends appear once you have at least 2 customer responses.</div></div></div>);
+/* OVERVIEW TAB */
+function OverviewTab({data}){
+  const real=data.filter(r=>!isTester(r.emailDomain));
+  const scores=real.map(r=>parseFloat(r.overallScore)||0);
+  const avgS=avg(scores);
+  const tc={1:0,2:0,3:0,4:0};real.forEach(r=>{tc[getTier(parseFloat(r.overallScore)||0)]++;});
+  const domT=Object.entries(tc).sort((a,b)=>b[1]-a[1])[0];
+  const cos=new Set(real.map(r=>r.emailDomain).filter(Boolean));
+  const dimAvgs=DIMS.map(d=>({dim:DSHORT[d]||d,av:parseFloat(avg(real.map(r=>getDS(r,d))).toFixed(2))}));
+  const tierD=[1,2,3,4].map(t=>({name:TNAMES[t],count:tc[t]}));
+  const confD=Array.from({length:10},(_,i)=>({name:String(i+1),count:real.filter(r=>parseInt(r.confidence)===i+1).length}));
   const sorted=[...real].sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
-  const lineData=sorted.map((r,i)=>{
-    const w=sorted.slice(Math.max(0,i-4),i+1);
-    return{name:`#${i+1}`,score:parseFloat(r.overallScore)||0,rolling:parseFloat(arrAvg(w.map(x=>parseFloat(x.overallScore)||0)).toFixed(2)),date:fmtDate(r.timestamp)};
-  });
-  const half=Math.max(1,Math.floor(sorted.length/2));
-  const first=sorted.slice(0,half),second=sorted.slice(half);
-  const dimTrend=DIMENSIONS.map((d,i)=>{
-    const k=DIM_KEYS[i];
-    const f=arrAvg(first.map(r=>parseFloat(r[k])||0).filter(v=>v>0));
-    const s=arrAvg(second.map(r=>parseFloat(r[k])||0).filter(v=>v>0));
-    return{dim:d.length>18?d.substring(0,16)+"…":d,first:parseFloat(f.toFixed(2)),second:parseFloat(s.toFixed(2)),delta:parseFloat((s-f).toFixed(2))};
-  });
-  return(
-    <div>
-      <div className="card">
-        <div className="card-title">Score Over Time (Rolling 5-Response Average)</div>
-        <ResponsiveContainer width="100%" height={260}>
-          <LineChart data={lineData} margin={{top:5,right:20,bottom:5,left:-10}}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5"/>
-            <XAxis dataKey="name" tick={{fontSize:11}}/><YAxis domain={[1,4]} tick={{fontSize:11}}/>
-            <Tooltip formatter={(v,n)=>[parseFloat(v).toFixed(2),n==="score"?"Individual":"Rolling Avg"]} labelFormatter={(_,p)=>p[0]?.payload?.date||""}/>
-            <Legend/>
-            <Line type="monotone" dataKey="score" stroke="#C9C9C9" strokeWidth={1.5} dot={{r:4,fill:"#0176D3"}} name="score"/>
-            <Line type="monotone" dataKey="rolling" stroke="#0176D3" strokeWidth={2.5} dot={false} name="rolling"/>
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-      <div className="card">
-        <div className="card-title">Dimension Scores: First Half vs Second Half</div>
-        <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={dimTrend} margin={{top:5,right:20,bottom:55,left:-10}}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#E5E5E5"/>
-            <XAxis dataKey="dim" tick={{fontSize:10}} angle={-30} textAnchor="end" interval={0}/>
-            <YAxis domain={[0,4]} tick={{fontSize:11}}/><Tooltip/><Legend wrapperStyle={{paddingTop:20}}/>
-            <Bar dataKey="first" fill="#C9C9C9" radius={[3,3,0,0]} name="First Half"/>
-            <Bar dataKey="second" fill="#0176D3" radius={[3,3,0,0]} name="Second Half"/>
-          </BarChart>
-        </ResponsiveContainer>
-        <div style={{marginTop:10,display:"flex",flexWrap:"wrap",gap:7}}>
-          {dimTrend.map((d,i)=>{const up=d.delta>0.05,dn=d.delta<-0.05;return(
-            <div key={i} style={{fontSize:12,padding:"4px 10px",borderRadius:6,background:up?"var(--green-lt)":dn?"rgba(186,5,23,.07)":"var(--g1)",color:up?"var(--green)":dn?"var(--red)":"var(--g4)",fontWeight:600}}>
-              {up?"↑":dn?"↓":"→"} {d.dim}: {d.delta>0?"+":""}{d.delta}
-            </div>
-          );})}
-        </div>
-      </div>
+  const lineD=sorted.map((r,i)=>({name:`#${i+1}`,score:parseFloat(r.overallScore)||0}));
+  const half=Math.floor(real.length/2);
+  const h1=real.slice(0,half),h2=real.slice(half);
+  const dimT=DIMS.map(d=>({dim:DSHORT[d]||d,first:parseFloat(avg(h1.map(r=>getDS(r,d))).toFixed(2)),second:parseFloat(avg(h2.map(r=>getDS(r,d))).toFixed(2))}));
+  return(<div>
+    <div className="stat-grid">
+      <div className="stat-card"><div className="stat-label">Customer Responses</div><div className="stat-value">{real.length}</div></div>
+      <div className="stat-card"><div className="stat-label">Avg Maturity Score</div><div className="stat-value" style={{color:sc(avgS)}}>{avgS.toFixed(2)}</div></div>
+      <div className="stat-card"><div className="stat-label">Dominant Tier</div><div style={{marginTop:8}}><span className={`tier-badge ${tcls(parseInt(domT?.[0]))}`}>{TNAMES[parseInt(domT?.[0])]}</span></div></div>
+      <div className="stat-card"><div className="stat-label">Unique Companies</div><div className="stat-value">{cos.size}</div></div>
     </div>
-  );
+    <div className="g2col">
+      <div className="card"><HBar data={tierD} vk="count" lk="name" title="Tier Distribution" colorFn={(_,i)=>TCOLORS[i+1]} maxV={Math.max(...tierD.map(d=>d.count),1)}/></div>
+      <div className="card"><Radar scores={Object.fromEntries(dimAvgs.map(d=>[d.dim,d.av]))} title="Avg Maturity by Dimension"/></div>
+    </div>
+    <div className="g2col">
+      <div className="card"><HBar data={dimAvgs} vk="av" lk="dim" title="Avg Score by Dimension" colorFn={(item)=>sc(item.av)} maxV={4}/></div>
+      <div className="card"><ConfC data={confD} title="Confidence Distribution"/></div>
+    </div>
+    <div className="card"><LineC data={lineD} xk="name" yk="score" title="Score Over Time"/></div>
+    <div className="card"><GBar data={dimT} keys={["first","second"]} colors={["#C9C9C9","#0176D3"]} title="Dimension Scores: First Half vs Second Half"/></div>
+  </div>);
 }
 
-/* ─── APP ─── */
+/* ALL RESPONSES TAB */
+function AllResponsesTab({data}){
+  const [search,setSearch]=useState('');
+  const [tier,setTier]=useState('all');
+  const [sort,setSort]=useState('newest');
+  const [showT,setShowT]=useState(false);
+  const [sel,setSel]=useState(null);
+  const filtered=useMemo(()=>{
+    let rows=data;
+    if(!showT)rows=rows.filter(r=>!isTester(r.emailDomain));
+    if(tier!=='all')rows=rows.filter(r=>r.overallTier===tier);
+    if(search)rows=rows.filter(r=>(r.fullName+r.businessName+r.email+r.industry).toLowerCase().includes(search.toLowerCase()));
+    if(sort==='newest')rows=[...rows].sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+    else if(sort==='oldest')rows=[...rows].sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
+    else if(sort==='high')rows=[...rows].sort((a,b)=>(parseFloat(b.overallScore)||0)-(parseFloat(a.overallScore)||0));
+    else rows=[...rows].sort((a,b)=>(parseFloat(a.overallScore)||0)-(parseFloat(b.overallScore)||0));
+    return rows;
+  },[data,search,tier,sort,showT]);
+  return(<div>
+    <div className="filters">
+      <input className="fi" placeholder="Search name, company, industry…" value={search} onChange={e=>setSearch(e.target.value)}/>
+      <select className="fi" value={tier} onChange={e=>setTier(e.target.value)}><option value="all">All Tiers</option>{['Ad Hoc','Developing','Defined','Optimized'].map(t=><option key={t}>{t}</option>)}</select>
+      <select className="fi" value={sort} onChange={e=>setSort(e.target.value)}><option value="newest">Newest First</option><option value="oldest">Oldest First</option><option value="high">Highest Score</option><option value="low">Lowest Score</option></select>
+      <label className="toggle"><input type="checkbox" checked={showT} onChange={e=>setShowT(e.target.checked)}/> Show Testers</label>
+    </div>
+    <div className="card" style={{padding:0,overflowX:'auto'}}>
+      <table>
+        <thead><tr><th>Name</th><th>Company</th><th>Title</th><th>Industry</th><th>Score</th><th>Tier</th><th>Date</th></tr></thead>
+        <tbody>
+          {filtered.map((r,i)=>{const s=parseFloat(r.overallScore)||0;const t=getTier(s);return(<tr key={i} style={{cursor:'pointer'}} onClick={()=>setSel(r)}><td><span style={{fontWeight:600}}>{r.fullName}</span>{isTester(r.emailDomain)&&<span className="tester-badge">Tester</span>}</td><td>{r.businessName}</td><td style={{color:'var(--g4)'}}>{r.title}</td><td style={{color:'var(--g4)',fontSize:12}}>{r.industry}</td><td><span style={{fontWeight:800,color:sc(s)}}>{s.toFixed(2)}</span></td><td><span className={`tier-badge ${tcls(t)}`}>{TNAMES[t]}</span></td><td style={{color:'var(--g4)',fontSize:12}}>{String(r.timestamp).substring(0,10)}</td></tr>);})}
+          {!filtered.length&&<tr><td colSpan="7" style={{textAlign:'center',padding:'40px',color:'var(--g4)'}}>No responses match filters.</td></tr>}
+        </tbody>
+      </table>
+    </div>
+    {sel&&<RespModal r={sel} onClose={()=>setSel(null)}/>}
+  </div>);
+}
+
+/* COMPANIES TAB */
+function CompaniesTab({data}){
+  const [sel,setSel]=useState(null);
+  const groups={};
+  data.forEach(r=>{const d=r.emailDomain||'unknown';if(!groups[d])groups[d]=[];groups[d].push(r);});
+  const cos=Object.entries(groups).map(([domain,rows])=>({domain,rows,av:parseFloat(avg(rows.map(r=>parseFloat(r.overallScore)||0)).toFixed(2)),isTester:isTester(domain)}));
+  const testers=cos.filter(c=>c.isTester);
+  const customers=cos.filter(c=>!c.isTester).sort((a,b)=>b.av-a.av);
+  const CoCard=({co})=>(<div className="co-card" onClick={()=>setSel(co)}><div className="co-name">{co.isTester?'🧪 Testers':co.domain}</div><div className="co-meta">{co.rows.length} respondent{co.rows.length!==1?'s':''}</div><div className="co-score" style={{color:sc(co.av)}}>{co.av.toFixed(2)}</div><div style={{marginBottom:10}}><span className={`tier-badge ${tcls(getTier(co.av))}`}>{TNAMES[getTier(co.av)]}</span></div><HM row={Object.fromEntries(DIMS.map(d=>[dk(d),avg(co.rows.map(r=>getDS(r,d)))]))} /></div>);
+  return(<div>
+    {testers.length>0&&<div style={{marginBottom:22}}><div style={{fontSize:12,fontWeight:700,letterSpacing:'.6px',textTransform:'uppercase',color:'var(--g4)',marginBottom:10}}>🧪 Testers — excluded from analytics</div><div className="co-grid">{testers.map(c=><CoCard key={c.domain} co={c}/>)}</div></div>}
+    <div style={{fontSize:12,fontWeight:700,letterSpacing:'.6px',textTransform:'uppercase',color:'var(--g4)',marginBottom:10}}>Customer Companies</div>
+    {customers.length?<div className="co-grid">{customers.map(c=><CoCard key={c.domain} co={c}/>)}</div>:<div className="empty"><div style={{fontSize:32,marginBottom:8}}>🏢</div><div style={{fontSize:16,fontWeight:700,color:'var(--navy)',marginBottom:6}}>No customer companies yet</div><div style={{fontSize:13}}>Responses will appear here once submitted.</div></div>}
+    {sel&&<CoModal co={sel} onClose={()=>setSel(null)}/>}
+  </div>);
+}
+
+/* TRENDS TAB */
+function TrendsTab({data}){
+  const real=data.filter(r=>!isTester(r.emailDomain));
+  const sorted=[...real].sort((a,b)=>new Date(a.timestamp)-new Date(b.timestamp));
+  const lineD=sorted.map((r,i)=>({name:`#${i+1}`,score:parseFloat(r.overallScore)||0}));
+  const half=Math.floor(real.length/2);
+  const h1=real.slice(0,half),h2=real.slice(half);
+  const dimT=DIMS.map(d=>({dim:DSHORT[d]||d,first:parseFloat(avg(h1.map(r=>getDS(r,d))).toFixed(2)),second:parseFloat(avg(h2.map(r=>getDS(r,d))).toFixed(2))}));
+  return(<div>
+    <div className="card"><LineC data={lineD} xk="name" yk="score" title="Score Over Time"/></div>
+    <div className="card"><GBar data={dimT} keys={["first","second"]} colors={["#C9C9C9","#0176D3"]} title="First Half vs Second Half by Dimension"/></div>
+  </div>);
+}
+
+/* BEST PRACTICES TAB */
+function LibraryTab(){
+  return(<div>{Object.entries(BP).map(([dim,tiers])=>(<div key={dim} className="lib-section"><div className="lib-dim-title">{dim}</div><div className="lib-tiers">{tiers.map(({tier,what,sf,int:inv})=>(<div key={tier} className="lib-tier" style={{borderColor:TCOLORS[tier]+'55',background:tier===4?'#E0F7F622':tier===3?'#FFFDE744':tier===2?'#FFF3E044':'#FDECEA22'}}><div className="lib-tier-lbl" style={{color:TCOLORS[tier]}}>{TNAMES[tier]}</div><div className="lib-what">{what}</div><div className="lib-sf">🔵 {sf}</div><div className="lib-int">→ {inv}</div></div>))}</div></div>))}</div>);
+}
+
+/* APP */
 function App(){
   const [authed,setAuthed]=useState(false);
-  const [tab,setTab]=useState("overview");
-  const [data,setData]=useState(SAMPLE_DATA);
-  const [selectedResponse,setSelectedResponse]=useState(null);
-  const [selectedCompany,setSelectedCompany]=useState(null);
-  const [loading,setLoading]=useState(false);
+  const [pw,setPw]=useState('');
+  const [err,setErr]=useState(false);
+  const [tab,setTab]=useState('overview');
+  const [data,setData]=useState(SAMPLE);
+  const [live,setLive]=useState(false);
   const configured=GOOGLE_SHEETS_API!=="https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
 
   useEffect(()=>{
-    if(authed&&configured){
-      setLoading(true);
-      fetch(GOOGLE_SHEETS_API+"?action=getAll")
-        .then(r=>r.json()).then(d=>{if(d.data?.length)setData(d.data);})
-        .catch(()=>setData(SAMPLE_DATA)).finally(()=>setLoading(false));
-    }
+    if(!authed||!configured)return;
+    fetch(GOOGLE_SHEETS_API+'?action=getAll')
+      .then(r=>r.json())
+      .then(d=>{if(d.data?.length){setData(d.data);setLive(true);}})
+      .catch(()=>{});
   },[authed]);
 
-  if(!authed)return<LoginScreen onLogin={()=>setAuthed(true)}/>;
+  const login=()=>{if(pw===ADMIN_PASSWORD){setAuthed(true);}else{setErr(true);setPw('');}};
 
-  const totalCustomers=data.filter(r=>!isTesterDomain(r.emailDomain)).length;
-  return(
-    <div>
-      <nav className="nav">
-        <div className="nav-logo"><SFLogo/><div className="nav-div"/><span className="nav-title">Response Analytics Dashboard</span></div>
-        <div className="nav-right">
-          <span className="nav-count">{totalCustomers} customer responses</span>
-          <button className="nav-out" onClick={()=>setAuthed(false)}>Sign Out</button>
-        </div>
-      </nav>
-      <div className="tabs">
-        {[["overview","📊 Overview"],["responses","📋 All Responses"],["companies","🏢 Companies"],["trends","📈 Trends"],["library","📚 Best Practices"]].map(([id,lbl])=>(
-          <div key={id} className={`tab ${tab===id?"active":""}`} onClick={()=>setTab(id)}>{lbl}</div>
-        ))}
+  if(!authed)return(
+    <div className="login-wrap">
+      <div className="login-card">
+        <div style={{display:'flex',justifyContent:'center',marginBottom:20}}><img src={LOGO} height="42" alt="Salesforce"/></div>
+        <div className="login-title">Admin Dashboard</div>
+        <div className="login-sub">B2B Sales Maturity Diagnostic</div>
+        {err&&<div className="login-err">Incorrect password.</div>}
+        <input className="login-input" type="password" placeholder="Admin password" value={pw} onChange={e=>{setPw(e.target.value);setErr(false);}} onKeyDown={e=>e.key==='Enter'&&login()}/>
+        <button className="login-btn" onClick={login}>Sign In →</button>
       </div>
-      <div className="main">
-        <SetupBanner configured={configured}/>
-        {loading&&<div style={{textAlign:"center",padding:"40px",color:"var(--g4)"}}>Loading responses…</div>}
-        {!loading&&tab==="overview"&&<OverviewTab data={data}/>}
-        {!loading&&tab==="responses"&&<ResponsesTab data={data} onSelect={setSelectedResponse}/>}
-        {!loading&&tab==="companies"&&<CompaniesTab data={data} onSelectCompany={setSelectedCompany}/>}
-        {!loading&&tab==="trends"&&<TrendsTab data={data}/>}
-        {!loading&&tab==="library"&&<LibraryTab/>}
-      </div>
-      {selectedResponse&&<ResponseModal record={selectedResponse} onClose={()=>setSelectedResponse(null)}/>}
-      {selectedCompany&&<CompanyModal company={selectedCompany} onClose={()=>setSelectedCompany(null)}/>}
     </div>
   );
+
+  const TABS=[['overview','📊 Overview'],['responses','📋 All Responses'],['companies','🏢 Companies'],['trends','📈 Trends'],['library','📚 Best Practices']];
+  const content={overview:<OverviewTab data={data}/>,responses:<AllResponsesTab data={data}/>,companies:<CompaniesTab data={data}/>,trends:<TrendsTab data={data}/>,library:<LibraryTab/>};
+
+  return(<div>
+    <nav className="nav">
+      <div className="nav-left">
+        <img src={LOGO} height="34" alt="Salesforce"/>
+        <div className="nav-divider"/>
+        <span className="nav-label">Sales Maturity — Admin</span>
+      </div>
+      <button className="nav-out" onClick={()=>setAuthed(false)}>Sign Out</button>
+    </nav>
+    <div className="tabs">{TABS.map(([id,lbl])=><div key={id} className={`tab ${tab===id?'active':''}`} onClick={()=>setTab(id)}>{lbl}</div>)}</div>
+    <div className="main">
+      {!live&&configured&&<div className="banner">⚠️ Showing sample data — could not load from Google Sheets. Verify your Apps Script is deployed and the URL is correct.</div>}
+      {!configured&&<div className="banner">⚙️ Showing sample data — connect Google Sheets to see live responses.</div>}
+      {content[tab]}
+    </div>
+  </div>);
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
-<!--
-╔══════════════════════════════════════════════════════════════════════╗
-║  ADD THIS doGet() to your existing Apps Script (below doPost):      ║
-║                                                                      ║
-║  function doGet(e) {                                                 ║
-║    if (e.parameter.action === "getAll") {                            ║
-║      var sheet =                                                     ║
-║        SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();       ║
-║      var rows = sheet.getDataRange().getValues();                    ║
-║      if (rows.length < 2) return ContentService                      ║
-║        .createTextOutput(JSON.stringify({status:"ok",data:[]}))      ║
-║        .setMimeType(ContentService.MimeType.JSON);                   ║
-║      var headers = rows[0];                                          ║
-║      var data = rows.slice(1).map(function(row) {                   ║
-║        var obj = {};                                                 ║
-║        headers.forEach(function(h,i){ obj[h] = row[i]; });          ║
-║        return obj;                                                   ║
-║      });                                                             ║
-║      return ContentService                                           ║
-║        .createTextOutput(JSON.stringify({status:"ok",data:data}))    ║
-║        .setMimeType(ContentService.MimeType.JSON);                   ║
-║    }                                                                 ║
-║    if (e.parameter.action === "getQuestions") {                      ║
-║      var sheet =                                                     ║
-║        SpreadsheetApp.getActiveSpreadsheet()                         ║
-║          .getSheetByName("Questions");                               ║
-║      if (!sheet) return ContentService                               ║
-║        .createTextOutput(JSON.stringify({questions:[]}))             ║
-║        .setMimeType(ContentService.MimeType.JSON);                   ║
-║      var data = JSON.parse(sheet.getRange(1,1).getValue());          ║
-║      return ContentService                                           ║
-║        .createTextOutput(JSON.stringify({questions:data}))           ║
-║        .setMimeType(ContentService.MimeType.JSON);                   ║
-║    }                                                                 ║
-║  }                                                                   ║
-║                                                                      ║
-║  After editing, create a NEW Deployment and update the URL.         ║
-╚══════════════════════════════════════════════════════════════════════╝
--->
 </body>
 </html>
