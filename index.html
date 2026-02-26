@@ -208,7 +208,7 @@ const { useState , useRef } = React;
    ██                                                                      ██
    ████████████████████████████████████████████████████████████████████████ */
 
-const GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";
+const GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbxNKBVmPFc3OKrio5tMTAtmDhm0HHqvkcEAmF8uahf7aJGhJpBTLYkMfmysAICUAicxFA/exec";
 
 /* ════════════════════════════════════════════════════════════════════════════
    ████████████████████████████████████████████████████████████████████████
@@ -842,7 +842,13 @@ function App() {
       ...Object.fromEntries(QUESTIONS.map(q=>[`Q_${q.id}_${q.domain.replace(/\s+/g,"_")}`,answers[q.id]||""])),
       ...Object.fromEntries(Object.entries(dimScores).map(([d,s])=>[`DIM_${d.replace(/[^a-zA-Z0-9]/g,"_")}`,s])),
     };
-    // Fire and forget — don't block the user
+    // Save to localStorage so admin dashboard can read it
+    try{
+      const existing=JSON.parse(localStorage.getItem("sf_maturity_responses")||"[]");
+      existing.push(payload);
+      localStorage.setItem("sf_maturity_responses",JSON.stringify(existing));
+    }catch(e){}
+    // Also attempt Google Sheets (works if script is made public later)
     fetch(GOOGLE_SHEETS_WEBHOOK,{method:"POST",mode:"no-cors",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)}).catch(()=>{});
     // Go straight to ThankYou
     setStep(5);
@@ -909,9 +915,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 ║   • Open this HTML file in a text editor (Notepad, TextEdit, VS Code)        ║
 ║   • Find this line near the top of the <script> section:                     ║
 ║                                                                               ║
-║     const GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec";              ║
+║     const GOOGLE_SHEETS_WEBHOOK = "https://script.google.com/macros/s/AKfycbxNKBVmPFc3OKrio5tMTAtmDhm0HHqvkcEAmF8uahf7aJGhJpBTLYkMfmysAICUAicxFA/exec";              ║
 ║                                                                               ║
-║   • Replace https://script.google.com/a/macros/salesforce.com/s/AKfycbx6e8OBmuWhi-4sfJ8dsIoh1dlDZAy7pxkHR_snNxSDhdJQ3VOV0wBCEncpmqkT9fYe/exec with the URL you copied                ║
+║   • Replace https://script.google.com/macros/s/AKfycbxNKBVmPFc3OKrio5tMTAtmDhm0HHqvkcEAmF8uahf7aJGhJpBTLYkMfmysAICUAicxFA/exec with the URL you copied                ║
 ║   • Save the file                                                             ║
 ║                                                                               ║
 ║   STEP 5 — Test it                                                           ║
