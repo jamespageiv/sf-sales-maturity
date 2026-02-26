@@ -848,12 +848,14 @@ function App() {
       existing.push(payload);
       localStorage.setItem("sf_maturity_responses",JSON.stringify(existing));
     }catch(e){}
-    // Send to Google Sheets — text/plain avoids CORS preflight
-    fetch(GOOGLE_SHEETS_WEBHOOK, {
-      method: "POST",
-      mode: "no-cors",
-      body: JSON.stringify(payload)
-    }).catch(()=>{});
+    // Send via script tag — guaranteed no CORS issues
+    try {
+      const encoded = encodeURIComponent(JSON.stringify(payload));
+      const script = document.createElement("script");
+      script.src = GOOGLE_SHEETS_WEBHOOK + "?callback=cb&data=" + encoded;
+      window.cb = ()=>{ document.body.removeChild(script); };
+      document.body.appendChild(script);
+    } catch(e) {}
     // Go straight to ThankYou
     setStep(5);
     scroll();
